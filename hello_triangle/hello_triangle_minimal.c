@@ -39,10 +39,9 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 
   WGpuCanvasContext canvasContext = wgpu_canvas_get_canvas_context("canvas");
 
-  WGpuSwapChainDescriptor swapChainDesc = {};
+  WGpuSwapChainDescriptor swapChainDesc = WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER;
   swapChainDesc.device = device;
   swapChainDesc.format = wgpu_canvas_context_get_swap_chain_preferred_format(canvasContext, adapter);
-  swapChainDesc.usage = WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT;
 
   swapChain = wgpu_canvascontext_configure_swap_chain(canvasContext, &swapChainDesc);
 

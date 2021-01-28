@@ -10,6 +10,13 @@ const char *wgpu_enum_to_string(int enumValue)
   return (enumValue >= 0 && enumValue < sizeof(wgpuStrings)/sizeof(wgpuStrings[0])) ? wgpuStrings[enumValue] : "(invalid WebGPU enum)";
 }
 
+const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER = {
+};
+
+const WGpuSwapChainDescriptor WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  .usage = WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT
+};
+
 const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {
   .blend = (WGpuBlendState) {
     .color = (WGpuBlendComponent) {

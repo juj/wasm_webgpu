@@ -393,6 +393,7 @@ typedef struct WGpuDeviceDescriptor
   uint32_t maxVertexAttributes;
   uint32_t maxVertexBufferArrayStride;
 } WGpuDeviceDescriptor;
+extern const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 typedef struct WGpuSwapChainDescriptor
 {
@@ -400,6 +401,7 @@ typedef struct WGpuSwapChainDescriptor
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_USAGE_FLAGS usage;
 } WGpuSwapChainDescriptor;
+extern const WGpuSwapChainDescriptor WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 typedef struct WGpuShaderModuleDescriptor
 {
@@ -565,10 +567,12 @@ typedef struct WGpuRenderPassDescriptor
   WGpuQuerySet occlusionQuerySet;
 } WGpuRenderPassDescriptor;
 
+/*
 typedef struct WGpuSamplerDescriptor
 {
   // TODO https://gpuweb.github.io/gpuweb/#dictdef-gpusamplerdescriptor
 } WGpuSamplerDescriptor;
+*/
 
 const char *wgpu_enum_to_string(int enumValue);
 
