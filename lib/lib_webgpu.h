@@ -630,7 +630,7 @@ WGpuTexture wgpu_swap_chain_get_current_texture(WGpuSwapChain swapChain);
 
 // Returns an optimal GPUTextureFormat to use for swap chains with this context and the given device.
 // TODO: How can a single "optimal" format work? (optimal for which usage? gamma? sRGB? HDR? other color spaces?)
-WGPU_TEXTURE_FORMAT wgpu_canvascontext_get_swap_chain_preferred_format(WGpuCanvasContext canvasContext, WGpuAdapter adapter);
+WGPU_TEXTURE_FORMAT wgpu_canvas_context_get_swap_chain_preferred_format(WGpuCanvasContext canvasContext, WGpuAdapter adapter);
 
 // Configures the swap chain for this canvas, and returns a new GPUSwapChain object representing it. Destroys any swapchain previously returned by configureSwapChain, including all of the textures it has produced.
 WGpuSwapChain wgpu_canvascontext_configure_swap_chain(WGpuCanvasContext canvasContext, const WGpuSwapChainDescriptor *descriptor);

@@ -71,7 +71,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 
   WGpuSwapChainDescriptor swapChainDesc = {};
   swapChainDesc.device = device;
-  swapChainDesc.format = wgpu_canvascontext_get_swap_chain_preferred_format(canvasContext, adapter);
+  swapChainDesc.format = wgpu_canvas_context_get_swap_chain_preferred_format(canvasContext, adapter);
   printf("Preferred swap chain format: %s\n", wgpu_enum_to_string(swapChainDesc.format));
   swapChainDesc.usage = WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT;
 
