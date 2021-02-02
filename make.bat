@@ -4,6 +4,7 @@
 @set ARGS_DEBUG_OPTIMIZED=-DNDEBUG -O3 -g2 -s WASM=0
 @set ARGS_RELEASE=-DNDEBUG --closure 0 --closure-args "--externs lib/webgpu_closure_externs.js" -O3
 
+:: Add -s SINGLE_FILE=1 -mbulk-memory for smaller build sizes.
 @set ARGS=--js-library lib\lib_webgpu.js lib\lib_webgpu.cpp -Ilib -s MINIMAL_RUNTIME=2 -s ENVIRONMENT=web -s TEXTDECODER=2 -s SUPPORT_ERRNO=0 --shell-file shell.html -s TOTAL_STACK=16KB -s INITIAL_MEMORY=128KB
 
 call emcc hello_triangle\hello_triangle_verbose.c -o out\hello_triangle_verbose.html %ARGS% %ARGS_DEBUG%
