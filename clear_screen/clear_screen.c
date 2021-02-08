@@ -8,30 +8,13 @@ WGpuSwapChain swapChain;
 WGpuDevice device;
 WGpuQueue defaultQueue;
 
-double hue2rgb(double v1, double v2, double vh)
+double hue2color(double hue)
 {
-  if (vh < 0.0) vh += 1.0;
-  if (vh > 1.0) vh -= 1.0;
-  if (vh < 1.0 / 6.0) return v1 + (v2 - v1) * 6.0 * vh;
-  if (vh < 1.0 / 2.0) return v2;
-  if (vh < 2.0 / 3.0) return v1 + (v2 - v1) * (2.0 / 3.0 - vh) * 6.0;
-  return v1;
-}
-
-void hsl2rgb(double hue, double saturation, double luminance, double *outRed, double *outGreen, double *outBlue)
-{
-  if (saturation < 1e-4)
-  {
-    *outRed = *outGreen = *outBlue = luminance;
-    return;
-  }
-
-  double v2 = (luminance < 0.5) ? (luminance * (1.0 + saturation)) : (luminance + saturation - saturation * luminance);
-  double v1 = 2.0 * luminance - v2;
-
-  *outRed   = hue2rgb(v1, v2, hue + 1.0 / 3.0);
-  *outGreen = hue2rgb(v1, v2, hue);
-  *outBlue  = hue2rgb(v1, v2, hue - 1.0 / 3.0);
+  hue = emscripten_math_fmod(hue, 1.0);
+  if (hue < 1.0 / 6.0) return 6.0 * hue;
+  if (hue < 1.0 / 2.0) return 1;
+  if (hue < 2.0 / 3.0) return 4.0 - 6.0 * hue;
+  return 0;
 }
 
 EM_BOOL raf(double time, void *userData)
@@ -41,9 +24,11 @@ EM_BOOL raf(double time, void *userData)
   WGpuRenderPassColorAttachment colorAttachment = {};
   colorAttachment.view = wgpu_texture_create_view(wgpu_swap_chain_get_current_texture(swapChain), 0);
 
-  double hue = emscripten_math_fmod(time * 0.00005, 1.0);
-  hsl2rgb(hue, 1.0, 0.5, &colorAttachment.loadColor[0], &colorAttachment.loadColor[1], &colorAttachment.loadColor[2]);
-  colorAttachment.loadColor[3] = 0.05;
+  double hue = time * 0.00005;
+  colorAttachment.loadColor[0] = hue2color(hue + 1.0 / 3.0);
+  colorAttachment.loadColor[1] = hue2color(hue);
+  colorAttachment.loadColor[2] = hue2color(hue - 1.0 / 3.0);
+  colorAttachment.loadColor[3] = 1.0;
 
   WGpuRenderPassDescriptor passDesc = {};
   passDesc.numColorAttachments = 1;
