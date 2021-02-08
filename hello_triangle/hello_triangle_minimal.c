@@ -29,7 +29,7 @@ EM_BOOL raf(double time, void *userData)
 
   wgpu_queue_submit_one_and_destroy(defaultQueue, commandBuffer);
 
-  return EM_TRUE;
+  return EM_FALSE; // Render just one frame, static content
 }
 
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)

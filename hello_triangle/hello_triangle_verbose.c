@@ -50,7 +50,7 @@ EM_BOOL raf(double time, void *userData)
     numLiveObjects = numLiveNow;
   }
 
-  return EM_TRUE;
+  return EM_TRUE; // This is static content, but keep rendering to debug leaking WebGPU objects above
 }
 
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
