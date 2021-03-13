@@ -449,6 +449,8 @@ typedef struct WGpuStencilFaceState
 
 typedef struct WGpuDepthStencilState
 {
+  // Pass format == WGPU_TEXTURE_FORMAT_INVALID (integer value 0)
+  // to disable depth+stenciling altogether.
   WGPU_TEXTURE_FORMAT format;
 
   EM_BOOL depthWriteEnabled;
