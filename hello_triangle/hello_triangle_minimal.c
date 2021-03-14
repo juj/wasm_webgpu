@@ -35,7 +35,7 @@ EM_BOOL raf(double time, void *userData)
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 {
   device = result;
-  defaultQueue = wgpu_device_get_default_queue(device);
+  defaultQueue = wgpu_device_get_queue(device);
 
   WGpuCanvasContext canvasContext = wgpu_canvas_get_canvas_context("canvas");
 

@@ -59,7 +59,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   assert(wgpu_is_device(result));
   device = result;
   assert(wgpu_device_get_adapter(device) == adapter);
-  defaultQueue = wgpu_device_get_default_queue(device);
+  defaultQueue = wgpu_device_get_queue(device);
   assert(wgpu_is_queue(defaultQueue));
 
   // TODO: read device.features and device.limits;

@@ -4,6 +4,12 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
+#define _WGPU_DEFAULT_VALUE(x) = x
+#else
+#define _WGPU_DEFAULT_VALUE(x)
+#endif
+
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -23,274 +29,13 @@ typedef int WGpuRenderPassEncoder;
 typedef int WGpuQuerySet;
 typedef int WGpuCommandBuffer;
 typedef int WGpuQueue;
+typedef int WGpuBuffer;
 
-typedef int WGPU_POWER_PREFERENCE;
-#define WGPU_POWER_PREFERENCE_INVALID 0
-#define WGPU_POWER_PREFERENCE_LOW_POWER 1
-#define WGPU_POWER_PREFERENCE_HIGH_PERFORMANCE 2
+// Use double to represent a JavaScript number that can
+// address 2^53 == 9007199254740992 = ~9.0 petabytes.
+typedef double double_int53_t;
 
-typedef int WGPU_TEXTURE_DIMENSION;
-#define WGPU_TEXTURE_DIMENSION_INVALID 0
-#define WGPU_TEXTURE_DIMENSION_1D 3
-#define WGPU_TEXTURE_DIMENSION_2D 4
-#define WGPU_TEXTURE_DIMENSION_3D 5
-
-typedef int WGPU_TEXTURE_VIEW_DIMENSION;
-#define WGPU_TEXTURE_VIEW_DIMENSION_INVALID 0
-#define WGPU_TEXTURE_VIEW_DIMENSION_1D 3
-#define WGPU_TEXTURE_VIEW_DIMENSION_2D 4
-#define WGPU_TEXTURE_VIEW_DIMENSION_2D_ARRAY 6
-#define WGPU_TEXTURE_VIEW_DIMENSION_CUBE 7
-#define WGPU_TEXTURE_VIEW_DIMENSION_CUBE_ARRAY 8
-#define WGPU_TEXTURE_VIEW_DIMENSION_3D 5
-
-typedef int WGPU_TEXTURE_ASPECT;
-#define WGPU_TEXTURE_ASPECT_INVALID 0
-#define WGPU_TEXTURE_ASPECT_ALL 9
-#define WGPU_TEXTURE_ASPECT_STENCIL_ONLY 10
-#define WGPU_TEXTURE_ASPECT_DEPTH_ONLY 11
-
-typedef int WGPU_TEXTURE_FORMAT;
-#define WGPU_TEXTURE_FORMAT_INVALID 0
-#define WGPU_TEXTURE_FORMAT_R8UNORM 12
-#define WGPU_TEXTURE_FORMAT_R8SNORM 13
-#define WGPU_TEXTURE_FORMAT_R8UINT 14
-#define WGPU_TEXTURE_FORMAT_R8SINT 15
-#define WGPU_TEXTURE_FORMAT_R16UINT 16
-#define WGPU_TEXTURE_FORMAT_R16SINT 17
-#define WGPU_TEXTURE_FORMAT_R16FLOAT 18
-#define WGPU_TEXTURE_FORMAT_RG8UNORM 19
-#define WGPU_TEXTURE_FORMAT_RG8SNORM 20
-#define WGPU_TEXTURE_FORMAT_RG8UINT 21
-#define WGPU_TEXTURE_FORMAT_RG8SINT 22
-#define WGPU_TEXTURE_FORMAT_R32UINT 23
-#define WGPU_TEXTURE_FORMAT_R32SINT 24
-#define WGPU_TEXTURE_FORMAT_R32FLOAT 25
-#define WGPU_TEXTURE_FORMAT_RG16UINT 26
-#define WGPU_TEXTURE_FORMAT_RG16SINT 27
-#define WGPU_TEXTURE_FORMAT_RG16FLOAT 28
-#define WGPU_TEXTURE_FORMAT_RGBA8UNORM 29
-#define WGPU_TEXTURE_FORMAT_RGBA8UNORM_SRGB 30
-#define WGPU_TEXTURE_FORMAT_RGBA8SNORM 31
-#define WGPU_TEXTURE_FORMAT_RGBA8UINT 32
-#define WGPU_TEXTURE_FORMAT_RGBA8SINT 33
-#define WGPU_TEXTURE_FORMAT_BGRA8UNORM 34
-#define WGPU_TEXTURE_FORMAT_BGRA8UNORM_SRGB 35
-#define WGPU_TEXTURE_FORMAT_RGB9E5UFLOAT 36
-#define WGPU_TEXTURE_FORMAT_RGB10A2UNORM 37
-#define WGPU_TEXTURE_FORMAT_RG11B10UFLOAT 38
-#define WGPU_TEXTURE_FORMAT_RG32UINT 39
-#define WGPU_TEXTURE_FORMAT_RG32SINT 40
-#define WGPU_TEXTURE_FORMAT_RG32FLOAT 41
-#define WGPU_TEXTURE_FORMAT_RGBA16UINT 42
-#define WGPU_TEXTURE_FORMAT_RGBA16SINT 43
-#define WGPU_TEXTURE_FORMAT_RGBA16FLOAT 44
-#define WGPU_TEXTURE_FORMAT_RGBA32UINT 45
-#define WGPU_TEXTURE_FORMAT_RGBA32SINT 46
-#define WGPU_TEXTURE_FORMAT_RGBA32FLOAT 47
-#define WGPU_TEXTURE_FORMAT_STENCIL8 48
-#define WGPU_TEXTURE_FORMAT_DEPTH16UNORM 49
-#define WGPU_TEXTURE_FORMAT_DEPTH24PLUS 50
-#define WGPU_TEXTURE_FORMAT_DEPTH24PLUS_STENCIL8 51
-#define WGPU_TEXTURE_FORMAT_DEPTH32FLOAT 52
-#define WGPU_TEXTURE_FORMAT_BC1_RGBA_UNORM 53
-#define WGPU_TEXTURE_FORMAT_BC1_RGBA_UNORM_SRGB 54
-#define WGPU_TEXTURE_FORMAT_BC2_RGBA_UNORM 55
-#define WGPU_TEXTURE_FORMAT_BC2_RGBA_UNORM_SRGB 56
-#define WGPU_TEXTURE_FORMAT_BC3_RGBA_UNORM 57
-#define WGPU_TEXTURE_FORMAT_BC3_RGBA_UNORM_SRGB 58
-#define WGPU_TEXTURE_FORMAT_BC4_R_UNORM 59
-#define WGPU_TEXTURE_FORMAT_BC4_R_SNORM 60
-#define WGPU_TEXTURE_FORMAT_BC5_RG_UNORM 61
-#define WGPU_TEXTURE_FORMAT_BC5_RG_SNORM 62
-#define WGPU_TEXTURE_FORMAT_BC6H_RGB_UFLOAT 63
-#define WGPU_TEXTURE_FORMAT_BC6H_RGB_FLOAT 64
-#define WGPU_TEXTURE_FORMAT_BC7_RGBA_UNORM 65
-#define WGPU_TEXTURE_FORMAT_BC7_RGBA_UNORM_SRGB 66
-#define WGPU_TEXTURE_FORMAT_DEPTH24UNORM_STENCIL8 67
-#define WGPU_TEXTURE_FORMAT_DEPTH32FLOAT_STENCIL8 68
-
-typedef int WGPU_ADDRESS_MODE;
-#define WGPU_ADDRESS_MODE_INVALID 0
-#define WGPU_ADDRESS_MODE_CLAMP_TO_EDGE 69
-#define WGPU_ADDRESS_MODE_REPEAT 70
-#define WGPU_ADDRESS_MODE_MIRROR_REPEAT 71
-
-typedef int WGPU_FILTER_MODE;
-#define WGPU_FILTER_MODE_INVALID 0
-#define WGPU_FILTER_MODE_NEAREST 72
-#define WGPU_FILTER_MODE_LINEAR 73
-
-typedef int WGPU_COMPARE_FUNCTION;
-#define WGPU_COMPARE_FUNCTION_INVALID 0
-#define WGPU_COMPARE_FUNCTION_NEVER 74
-#define WGPU_COMPARE_FUNCTION_LESS 75
-#define WGPU_COMPARE_FUNCTION_EQUAL 76
-#define WGPU_COMPARE_FUNCTION_LESS_EQUAL 77
-#define WGPU_COMPARE_FUNCTION_GREATER 78
-#define WGPU_COMPARE_FUNCTION_NOT_EQUAL 79
-#define WGPU_COMPARE_FUNCTION_GREATER_EQUAL 80
-#define WGPU_COMPARE_FUNCTION_ALWAYS 81
-
-typedef int WGPU_BUFFER_BINDING_TYPE;
-#define WGPU_BUFFER_BINDING_TYPE_INVALID 0
-#define WGPU_BUFFER_BINDING_TYPE_UNIFORM 82
-#define WGPU_BUFFER_BINDING_TYPE_STORAGE 83
-#define WGPU_BUFFER_BINDING_TYPE_READ_ONLY_STORAGE 84
-
-typedef int WGPU_SAMPLER_BINDING_TYPE;
-#define WGPU_SAMPLER_BINDING_TYPE_INVALID 0
-#define WGPU_SAMPLER_BINDING_TYPE_FILTERING 85
-#define WGPU_SAMPLER_BINDING_TYPE_NON_FILTERING 86
-#define WGPU_SAMPLER_BINDING_TYPE_COMPARISON 87
-
-typedef int WGPU_TEXTURE_SAMPLE_TYPE;
-#define WGPU_TEXTURE_SAMPLE_TYPE_INVALID 0
-#define WGPU_TEXTURE_SAMPLE_TYPE_FLOAT 88
-#define WGPU_TEXTURE_SAMPLE_TYPE_UNFILTERABLE_FLOAT 89
-#define WGPU_TEXTURE_SAMPLE_TYPE_DEPTH 90
-#define WGPU_TEXTURE_SAMPLE_TYPE_SINT 91
-#define WGPU_TEXTURE_SAMPLE_TYPE_UINT 92
-
-typedef int WGPU_STORAGE_TEXTURE_ACCESS;
-#define WGPU_STORAGE_TEXTURE_ACCESS_INVALID 0
-#define WGPU_STORAGE_TEXTURE_ACCESS_READ_ONLY 93
-#define WGPU_STORAGE_TEXTURE_ACCESS_WRITE_ONLY 94
-
-typedef int WGPU_COMPILATION_MESSAGE_TYPE;
-#define WGPU_COMPILATION_MESSAGE_TYPE_INVALID 0
-#define WGPU_COMPILATION_MESSAGE_TYPE_ERROR 95
-#define WGPU_COMPILATION_MESSAGE_TYPE_WARNING 96
-#define WGPU_COMPILATION_MESSAGE_TYPE_INFO 97
-
-typedef int WGPU_PRIMITIVE_TOPOLOGY;
-#define WGPU_PRIMITIVE_TOPOLOGY_INVALID 0
-#define WGPU_PRIMITIVE_TOPOLOGY_POINT_LIST 98
-#define WGPU_PRIMITIVE_TOPOLOGY_LINE_LIST 99
-#define WGPU_PRIMITIVE_TOPOLOGY_LINE_STRIP 100
-#define WGPU_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST 101
-#define WGPU_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP 102
-
-typedef int WGPU_FRONT_FACE;
-#define WGPU_FRONT_FACE_INVALID 0
-#define WGPU_FRONT_FACE_CCW 103
-#define WGPU_FRONT_FACE_CW 104
-
-typedef int WGPU_CULL_MODE;
-#define WGPU_CULL_MODE_INVALID 0
-#define WGPU_CULL_MODE_NONE 105
-#define WGPU_CULL_MODE_FRONT 106
-#define WGPU_CULL_MODE_BACK 107
-
-typedef int WGPU_BLEND_FACTOR;
-#define WGPU_BLEND_FACTOR_INVALID 0
-#define WGPU_BLEND_FACTOR_ZERO 108
-#define WGPU_BLEND_FACTOR_ONE 109
-#define WGPU_BLEND_FACTOR_SRC_COLOR 110
-#define WGPU_BLEND_FACTOR_ONE_MINUS_SRC_COLOR 111
-#define WGPU_BLEND_FACTOR_SRC_ALPHA 112
-#define WGPU_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA 113
-#define WGPU_BLEND_FACTOR_DST_COLOR 114
-#define WGPU_BLEND_FACTOR_ONE_MINUS_DST_COLOR 115
-#define WGPU_BLEND_FACTOR_DST_ALPHA 116
-#define WGPU_BLEND_FACTOR_ONE_MINUS_DST_ALPHA 117
-#define WGPU_BLEND_FACTOR_SRC_ALPHA_SATURATED 118
-#define WGPU_BLEND_FACTOR_BLEND_COLOR 119
-#define WGPU_BLEND_FACTOR_ONE_MINUS_BLEND_COLOR 120
-
-typedef int WGPU_BLEND_OPERATION;
-#define WGPU_BLEND_OPERATION_INVALID 0
-#define WGPU_BLEND_OPERATION_ADD 121
-#define WGPU_BLEND_OPERATION_SUBTRACT 122
-#define WGPU_BLEND_OPERATION_REVERSE_SUBTRACT 123
-#define WGPU_BLEND_OPERATION_MIN 124
-#define WGPU_BLEND_OPERATION_MAX 125
-
-typedef int WGPU_STENCIL_OPERATION;
-#define WGPU_STENCIL_OPERATION_INVALID 0
-#define WGPU_STENCIL_OPERATION_KEEP 126
-#define WGPU_STENCIL_OPERATION_ZERO 108
-#define WGPU_STENCIL_OPERATION_REPLACE 127
-#define WGPU_STENCIL_OPERATION_INVERT 128
-#define WGPU_STENCIL_OPERATION_INCREMENT_CLAMP 129
-#define WGPU_STENCIL_OPERATION_DECREMENT_CLAMP 130
-#define WGPU_STENCIL_OPERATION_INCREMENT_WRAP 131
-#define WGPU_STENCIL_OPERATION_DECREMENT_WRAP 132
-
-typedef int WGPU_INDEX_FORMAT;
-#define WGPU_INDEX_FORMAT_INVALID 0
-#define WGPU_INDEX_FORMAT_UINT16 133
-#define WGPU_INDEX_FORMAT_UINT32 134
-
-typedef int WGPU_VERTEX_FORMAT;
-#define WGPU_VERTEX_FORMAT_INVALID 0
-#define WGPU_VERTEX_FORMAT_UCHAR2 135
-#define WGPU_VERTEX_FORMAT_UCHAR4 136
-#define WGPU_VERTEX_FORMAT_CHAR2 137
-#define WGPU_VERTEX_FORMAT_CHAR4 138
-#define WGPU_VERTEX_FORMAT_UCHAR2NORM 139
-#define WGPU_VERTEX_FORMAT_UCHAR4NORM 140
-#define WGPU_VERTEX_FORMAT_CHAR2NORM 141
-#define WGPU_VERTEX_FORMAT_CHAR4NORM 142
-#define WGPU_VERTEX_FORMAT_USHORT2 143
-#define WGPU_VERTEX_FORMAT_USHORT4 144
-#define WGPU_VERTEX_FORMAT_SHORT2 145
-#define WGPU_VERTEX_FORMAT_SHORT4 146
-#define WGPU_VERTEX_FORMAT_USHORT2NORM 147
-#define WGPU_VERTEX_FORMAT_USHORT4NORM 148
-#define WGPU_VERTEX_FORMAT_SHORT2NORM 149
-#define WGPU_VERTEX_FORMAT_SHORT4NORM 150
-#define WGPU_VERTEX_FORMAT_HALF2 151
-#define WGPU_VERTEX_FORMAT_HALF4 152
-#define WGPU_VERTEX_FORMAT_FLOAT 88
-#define WGPU_VERTEX_FORMAT_FLOAT2 153
-#define WGPU_VERTEX_FORMAT_FLOAT3 154
-#define WGPU_VERTEX_FORMAT_FLOAT4 155
-#define WGPU_VERTEX_FORMAT_UINT 92
-#define WGPU_VERTEX_FORMAT_UINT2 156
-#define WGPU_VERTEX_FORMAT_UINT3 157
-#define WGPU_VERTEX_FORMAT_UINT4 158
-#define WGPU_VERTEX_FORMAT_INT 159
-#define WGPU_VERTEX_FORMAT_INT2 160
-#define WGPU_VERTEX_FORMAT_INT3 161
-#define WGPU_VERTEX_FORMAT_INT4 162
-
-typedef int WGPU_INPUT_STEP_MODE;
-#define WGPU_INPUT_STEP_MODE_INVALID 0
-#define WGPU_INPUT_STEP_MODE_VERTEX 163
-#define WGPU_INPUT_STEP_MODE_INSTANCE 164
-
-typedef int WGPU_LOAD_OP;
-#define WGPU_LOAD_OP_INVALID 0
-#define WGPU_LOAD_OP_LOAD 165
-
-typedef int WGPU_STORE_OP;
-#define WGPU_STORE_OP_INVALID 0
-#define WGPU_STORE_OP_STORE 166
-#define WGPU_STORE_OP_CLEAR 167
-
-typedef int WGPU_QUERY_TYPE;
-#define WGPU_QUERY_TYPE_INVALID 0
-#define WGPU_QUERY_TYPE_OCCLUSION 168
-#define WGPU_QUERY_TYPE_PIPELINE_STATISTICS 169
-#define WGPU_QUERY_TYPE_TIMESTAMP 170
-
-typedef int WGPU_PIPELINE_STATISTIC_NAME;
-#define WGPU_PIPELINE_STATISTIC_NAME_INVALID 0
-#define WGPU_PIPELINE_STATISTIC_NAME_VERTEX_SHADER_INVOCATIONS 171
-#define WGPU_PIPELINE_STATISTIC_NAME_CLIPPER_INVOCATIONS 172
-#define WGPU_PIPELINE_STATISTIC_NAME_CLIPPER_PRIMITIVES_OUT 173
-#define WGPU_PIPELINE_STATISTIC_NAME_FRAGMENT_SHADER_INVOCATIONS 174
-#define WGPU_PIPELINE_STATISTIC_NAME_COMPUTE_SHADER_INVOCATIONS 175
-
-typedef int WGPU_DEVICE_LOST_REASON;
-#define WGPU_DEVICE_LOST_REASON_INVALID 0
-#define WGPU_DEVICE_LOST_REASON_DESTROYED 176
-
-typedef int WGPU_ERROR_FILTER;
-#define WGPU_ERROR_FILTER_INVALID 0
-#define WGPU_ERROR_FILTER_OUT_OF_MEMORY 177
-#define WGPU_ERROR_FILTER_VALIDATION 178
+#include "lib_webgpu_strings.h"
 
 typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_DEPTH_CLAMPING            0x01
@@ -410,9 +155,9 @@ typedef struct WGpuShaderModuleDescriptor
 
 typedef struct WGpuVertexAttribute
 {
-  WGPU_VERTEX_FORMAT format;
   uint64_t offset;
   uint32_t shaderLocation;
+  WGPU_VERTEX_FORMAT format;
 } WGpuVertexAttribute;
 
 typedef struct WGpuVertexBufferLayout
@@ -433,10 +178,10 @@ typedef struct WGpuVertexState
 
 typedef struct WGpuPrimitiveState
 {
-  WGPU_PRIMITIVE_TOPOLOGY topology;
-  WGPU_INDEX_FORMAT stripIndexFormat;
-  WGPU_FRONT_FACE frontFace;
-  WGPU_CULL_MODE cullMode;
+  WGPU_PRIMITIVE_TOPOLOGY topology; // Defaults to WGPU_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST ('triangle-list')
+  WGPU_INDEX_FORMAT stripIndexFormat; // Defaults to undefined, must be explicitly specified if WGPU_PRIMITIVE_TOPOLOGY_LINE_STRIP ('line-strip') or WGPU_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP ('triangle-strip') is used.
+  WGPU_FRONT_FACE frontFace; // Defaults to WGPU_FRONT_FACE_CCW ('ccw')
+  WGPU_CULL_MODE cullMode; // Defaults to WGPU_CULL_MODE_NONE ('none')
 } WGpuPrimitiveState;
 
 typedef struct WGpuStencilFaceState
@@ -569,6 +314,13 @@ typedef struct WGpuRenderPassDescriptor
   WGpuQuerySet occlusionQuerySet;
 } WGpuRenderPassDescriptor;
 
+typedef struct WGpuBufferDescriptor
+{
+  uint64_t size;
+  WGPU_BUFFER_USAGE_FLAGS usage;
+  EM_BOOL mappedAtCreation; // Note: it is valid to set mappedAtCreation to true without MAP_READ or MAP_WRITE in usage. This can be used to set the buffer’s initial data.
+} WGpuBufferDescriptor;
+
 /*
 typedef struct WGpuSamplerDescriptor
 {
@@ -639,16 +391,16 @@ WGpuTexture wgpu_swap_chain_get_current_texture(WGpuSwapChain swapChain);
 WGPU_TEXTURE_FORMAT wgpu_canvas_context_get_swap_chain_preferred_format(WGpuCanvasContext canvasContext, WGpuAdapter adapter);
 
 // Configures the swap chain for this canvas, and returns a new GPUSwapChain object representing it. Destroys any swapchain previously returned by configureSwapChain, including all of the textures it has produced.
-WGpuSwapChain wgpu_canvascontext_configure_swap_chain(WGpuCanvasContext canvasContext, const WGpuSwapChainDescriptor *descriptor);
+WGpuSwapChain wgpu_canvascontext_configure_swap_chain(WGpuCanvasContext canvasContext, const WGpuSwapChainDescriptor *swapChainDesc);
 
 WGpuAdapter wgpu_device_get_adapter(WGpuDevice device);
-WGpuShaderModule wgpu_device_create_shader_module(WGpuDevice device, const WGpuShaderModuleDescriptor *descriptor);
+WGpuShaderModule wgpu_device_create_shader_module(WGpuDevice device, const WGpuShaderModuleDescriptor *shaderModuleDesc);
 WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc);
 WGpuCommandEncoder wgpu_device_create_command_encoder(WGpuDevice device, const WGpuCommandEncoderDescriptor *commandEncoderDesc);
-WGpuQueue wgpu_device_get_default_queue(WGpuDevice device);
+WGpuQueue wgpu_device_get_queue(WGpuDevice device);
 // TODO: Add wgpu_device_get_features - or a common wgpu_device_get_properties() that returns both features+limits, like with adapter?
 // TODO: Add wgpu_device_get_limits
-// TODO: Add wgpu_device_create_buffer
+WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescriptor *bufferDesc);
 // TODO: Add wgpu_device_create_texture
 // TODO: Add wgpu_device_create_sampler
 // TODO: Add wgpu_device_create_bind_group_layout
@@ -665,9 +417,10 @@ WGpuQueue wgpu_device_get_default_queue(WGpuDevice device);
 
 // TODO: If there are wgpu_device_create_compute_pipeline_async() and wgpu_device_create_render_pipeline_async(), why not wgpu_device_create_shader_module_async()?
 
-// wgpu_buffer_map_async()
-// wgpu_buffer_get_mapped_range()
-// wgpu_buffer_unmap()
+// TODO: wgpu_buffer_map_async()
+void wgpu_buffer_read_mapped_range(WGpuBuffer buffer, double_int53_t offset, double_int53_t size, void *dst);
+void wgpu_buffer_write_mapped_range(WGpuBuffer buffer, double_int53_t offset, double_int53_t size, const void *src);
+void wgpu_buffer_unmap(WGpuBuffer buffer);
 
 // TODO: Add WGpuBindGroupLayout wgpu_render_pipeline_get_bind_group_layout(unsigned long index);
 
@@ -694,8 +447,8 @@ void wgpu_render_pass_encoder_set_pipeline(WGpuRenderPassEncoder passEncoder, WG
 // wgpu_render_pass_encoder_pop_debug_group()
 // wgpu_render_pass_encoder_insert_debug_marker()
 // wgpu_render_pass_encoder_set_index_buffer()
-// wgpu_render_pass_encoder_set_vertex_buffer()
-void wgpu_render_pass_encoder_draw(WGpuRenderPassEncoder passEncoder, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance);
+void wgpu_render_pass_encoder_set_vertex_buffer(WGpuRenderPassEncoder passEncoder, int32_t slot, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(0));
+void wgpu_render_pass_encoder_draw(WGpuRenderPassEncoder passEncoder, uint32_t vertexCount, uint32_t instanceCount _WGPU_DEFAULT_VALUE(1), uint32_t firstVertex _WGPU_DEFAULT_VALUE(0), uint32_t firstInstance _WGPU_DEFAULT_VALUE(0));
 // wgpu_render_pass_encoder_draw_indexed()
 // wgpu_render_pass_encoder_draw_indirect()
 // wgpu_render_pass_encoder_draw_indexed_indirect()
