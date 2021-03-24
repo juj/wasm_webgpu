@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <stdio.h>
-#include <emscripten/miniprintf.h>
+#include <miniprintf.h>
 #include "lib_webgpu.h"
 
 WGpuAdapter adapter;
