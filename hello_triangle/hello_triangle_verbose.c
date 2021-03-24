@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdio.h>
+#include <emscripten/miniprintf.h>
 #include "lib_webgpu.h"
 
 WGpuAdapter adapter;
@@ -46,7 +47,7 @@ EM_BOOL raf(double time, void *userData)
   int numLiveNow = wgpu_get_num_live_objects();
   if (numLiveNow != numLiveObjects)
   {
-    printf("Num live WebGPU objects: %u\n", numLiveNow);
+    emscripten_mini_stdio_printf("Num live WebGPU objects: %u\n", numLiveNow);
     numLiveObjects = numLiveNow;
   }
 
@@ -72,7 +73,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   WGpuSwapChainDescriptor swapChainDesc = WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER;
   swapChainDesc.device = device;
   swapChainDesc.format = wgpu_canvas_context_get_swap_chain_preferred_format(canvasContext, adapter);
-  printf("Preferred swap chain format: %s\n", wgpu_enum_to_string(swapChainDesc.format));
+  emscripten_mini_stdio_printf("Preferred swap chain format: %s\n", wgpu_enum_to_string(swapChainDesc.format));
 
   swapChain = wgpu_canvascontext_configure_swap_chain(canvasContext, &swapChainDesc);
   assert(wgpu_is_swap_chain(swapChain));
@@ -135,9 +136,9 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 #ifndef NDEBUG
   WGpuAdapterProperties properties;
   wgpu_adapter_get_properties(adapter, &properties);
-  printf("Adapter name: %s\n", properties.name);
+  emscripten_mini_stdio_printf("Adapter name: %s\n", properties.name);
 
-#define TEST_FEATURE(x) printf("Adapter supports feature " #x ": %s\n", (properties.features & (x) ? "yes" : "no"))
+#define TEST_FEATURE(x) emscripten_mini_stdio_printf("Adapter supports feature " #x ": %s\n", (properties.features & (x) ? "yes" : "no"))
   TEST_FEATURE(WGPU_FEATURE_DEPTH_CLAMPING);
   TEST_FEATURE(WGPU_FEATURE_DEPTH24UNORM_STENCIL8);
   TEST_FEATURE(WGPU_FEATURE_DEPTH32FLOAT_STENCIL8);
@@ -145,7 +146,7 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
   TEST_FEATURE(WGPU_FEATURE_TEXTURE_COMPRESSION_BC);
   TEST_FEATURE(WGPU_FEATURE_TIMESTAMP_QUERY);
 
-#define ADAPTER_LIMIT(x) printf("Adapter limit " #x ": %u\n", properties. x);
+#define ADAPTER_LIMIT(x) emscripten_mini_stdio_printf("Adapter limit " #x ": %u\n", properties. x);
   ADAPTER_LIMIT(maxTextureDimension1D);
   ADAPTER_LIMIT(maxTextureDimension2D);
   ADAPTER_LIMIT(maxTextureDimension3D);
