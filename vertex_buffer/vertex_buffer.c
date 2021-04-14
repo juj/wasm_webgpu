@@ -82,7 +82,7 @@ void divide(const float2 *v0, const float2 *v1, const float2 *v2, int recursionL
     { w1, COLOR(w1) },
     { w3, COLOR(w3) }
   };
-  memcpy(bufferData + numVertices*sizeof(vertex), data, sizeof(data));
+  wgpu_buffer_write_mapped_range(buffer, 0, numVertices*sizeof(vertex), data, sizeof(data));
   numVertices += 8;
 
   if (--recursionLimit > 0)
@@ -132,6 +132,15 @@ void CreateGeometryAndRender()
     { 12.f, -4.0f },
   };
 
+  WGpuBufferDescriptor bufferDesc = {};
+  bufferDesc.size = MAX_VERTICES * sizeof(vertex);
+  bufferDesc.usage = WGPU_BUFFER_USAGE_VERTEX;
+  bufferDesc.mappedAtCreation = EM_TRUE;
+
+  wgpu_object_destroy(buffer);
+  buffer = wgpu_device_create_buffer(device, &bufferDesc);
+  wgpu_buffer_get_mapped_range(buffer, 0, WGPU_MAP_MAX_LENGTH);
+
   int w, h;
   emscripten_get_canvas_element_size("canvas", &w, &h);
   float viewportXScale = (float)h/w;
@@ -139,15 +148,6 @@ void CreateGeometryAndRender()
     v[i].x *= viewportXScale;
   divide(&v[0], &v[1], &v[2], RECURSION_LIMIT);
 
-  WGpuBufferDescriptor bufferDesc = {};
-  bufferDesc.size = numVertices * sizeof(vertex);
-  bufferDesc.usage = WGPU_BUFFER_USAGE_VERTEX;
-  bufferDesc.mappedAtCreation = EM_TRUE;
-
-  wgpu_object_destroy(buffer);
-  buffer = wgpu_device_create_buffer(device, &bufferDesc);
-  wgpu_buffer_write_mapped_range(buffer, 0, bufferDesc.size, bufferData);
-  free(bufferData);
   wgpu_buffer_unmap(buffer);
 
   Render();

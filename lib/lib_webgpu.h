@@ -35,6 +35,8 @@ typedef int WGpuBuffer;
 // address 2^53 == 9007199254740992 = ~9.0 petabytes.
 typedef double double_int53_t;
 
+typedef double_int53_t WGpuBufferMappedRangeStartOffset;
+
 #include "lib_webgpu_strings.h"
 
 typedef int WGPU_FEATURES_BITFIELD;
@@ -418,8 +420,12 @@ WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescript
 // TODO: If there are wgpu_device_create_compute_pipeline_async() and wgpu_device_create_render_pipeline_async(), why not wgpu_device_create_shader_module_async()?
 
 // TODO: wgpu_buffer_map_async()
-void wgpu_buffer_read_mapped_range(WGpuBuffer buffer, double_int53_t offset, double_int53_t size, void *dst);
-void wgpu_buffer_write_mapped_range(WGpuBuffer buffer, double_int53_t offset, double_int53_t size, const void *src);
+// Calls buffer.getMappedRange(). Returns `startOffset`, which is used as an ID token to wgpu_buffer_read/write_mapped_range().
+#define WGPU_MAP_MAX_LENGTH -1
+
+WGpuBufferMappedRangeStartOffset wgpu_buffer_get_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAP_MAX_LENGTH));
+void wgpu_buffer_read_mapped_range(WGpuBuffer buffer, WGpuBufferMappedRangeStartOffset startOffset, double_int53_t subOffset, void *dst, double_int53_t size);
+void wgpu_buffer_write_mapped_range(WGpuBuffer buffer, WGpuBufferMappedRangeStartOffset startOffset, double_int53_t subOffset, const void *src, double_int53_t size);
 void wgpu_buffer_unmap(WGpuBuffer buffer);
 
 // TODO: Add WGpuBindGroupLayout wgpu_render_pipeline_get_bind_group_layout(unsigned long index);
