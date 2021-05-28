@@ -1,0 +1,9 @@
+interface ImageBitmap {};
+interface ImageData {};
+interface HTMLImageElement {};
+interface HTMLCanvasElement {};
+interface HTMLVideoElement {};
+interface OffscreenCanvas {};
+interface undefined {};
+interface Event {};
+dictionary EventInit {};
