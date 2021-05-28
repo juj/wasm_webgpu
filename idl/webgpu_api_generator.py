@@ -6,29 +6,20 @@ import WebIDL
 import re
 
 p = WebIDL.Parser()
-#p.parse(open('webidl.idl', 'r').read(), filename='webidl.idl')
 def load_and_fixup_idl(filename):
   src = open(filename, 'r').read()
-  src = src.replace('[AllowShared] BufferSource', 'BufferSource')
-  src = src.replace('[Exposed=(Window,Worker)]', '')
-  src = src.replace('WebGLRenderingContext includes WebGLRenderingContextBase;', '')
-  src = src.replace('WebGLRenderingContext includes WebGLRenderingContextOverloads;', '')
-  src = src.replace('[Exposed=Window] readonly attribute (HTMLCanvasElement or OffscreenCanvas) canvas;', '')
-  src = src.replace('[Exposed=Worker] readonly attribute OffscreenCanvas canvas;', '')
   src = src.replace('readonly attribute FrozenArray<GPUCompilationMessage> messages;', '')
-  src = src.replace('Navigator includes NavigatorGPU;', '')
-  src = src.replace('[Exposed=Window]', '')
-  src = src.replace('[Exposed=(Window, DedicatedWorker)]', '')
-  src = src.replace('[SameObject]', '')
   src = re.sub(r'\[..*?\]', '', src)
   src = src.replace('float lodMaxClamp = 0xffffffff;', '')
   src = src.replace('''[
     Exposed=(Window, DedicatedWorker)
 ]''', '')
+  src = src.replace('record<DOMString, GPUSize32> nonGuaranteedLimits = {};', '')
+  print(src)
   return src
 
 p.parse(load_and_fixup_idl('common.idl'), filename='common.idl')
-p.parse('''interface EventTarget {}; interface EventHandler {};
+p.parse('''interface EventTarget {}; interface EventHandler {}; interface Navigator {}; interface WorkerNavigator {};
 ''' + load_and_fixup_idl('webgpu.idl'), filename='webgpu.idl')
 data = p.finish();
 

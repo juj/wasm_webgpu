@@ -35,15 +35,12 @@ interface GPUSupportedFeatures {
 enum GPUPredefinedColorSpace {
     "srgb",
 };
-/*
+
 interface mixin NavigatorGPU {
     [SameObject] readonly attribute GPU gpu;
 };
-*/
 Navigator includes NavigatorGPU;
-/*
 WorkerNavigator includes NavigatorGPU;
-*/
 
 [Exposed=(Window, DedicatedWorker)]
 interface GPU {
@@ -70,7 +67,7 @@ interface GPUAdapter {
 
 dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
     sequence<GPUFeatureName> nonGuaranteedFeatures = [];
-    //record<DOMString, GPUSize32> nonGuaranteedLimits = {};
+    record<DOMString, GPUSize32> nonGuaranteedLimits = {};
 };
 
 enum GPUFeatureName {
