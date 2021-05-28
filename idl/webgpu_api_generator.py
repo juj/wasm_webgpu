@@ -72,10 +72,17 @@ for key, values in enums.items():
 open('../lib/lib_webgpu_strings.h', 'w').write(webgpu_strings_h)
 
 wgpu_strings = ["'%s'" % x for x in wgpu_strings]
-wgpu_strings[0] = 'void 0'
+wgpu_strings[0] = ''
 wgpu_strings_string = ','.join(wgpu_strings)
 
 js_lib = open('../lib/lib_webgpu.js', 'r').read()
-js_lib = re.sub(r'wgpuStrings: \[void 0,.*?\]', 'wgpuStrings: [%s]' % wgpu_strings_string, js_lib)
-js_lib = re.sub(r'// Global constant string table for all WebGPU strings.*', '// Global constant string table for all WebGPU strings. Contains %d entries, using %d bytes.' % (len(wgpu_strings), len(wgpu_strings_string)), js_lib)
+
+new_strings = 'wgpuStrings: [%s]' % wgpu_strings_string
+js_lib = re.sub(r'wgpuStrings: \[,.*?\]', new_strings, js_lib)
+assert(new_strings in js_lib)
+
+new_comment = '// Global constant string table for all WebGPU strings. Contains %d entries, using %d bytes.' % (len(wgpu_strings), len(wgpu_strings_string))
+js_lib = re.sub(r'// Global constant string table for all WebGPU strings.*', new_comment, js_lib)
+assert(new_comment in js_lib)
+
 open('../lib/lib_webgpu.js', 'w').write(js_lib)
