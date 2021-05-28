@@ -25,10 +25,10 @@ EM_BOOL raf(double time, void *userData)
   colorAttachment.view = wgpu_texture_create_view(wgpu_swap_chain_get_current_texture(swapChain), 0);
 
   double hue = time * 0.00005;
-  colorAttachment.loadColor[0] = hue2color(hue + 1.0 / 3.0);
-  colorAttachment.loadColor[1] = hue2color(hue);
-  colorAttachment.loadColor[2] = hue2color(hue - 1.0 / 3.0);
-  colorAttachment.loadColor[3] = 1.0;
+  colorAttachment.loadColor.r = hue2color(hue + 1.0 / 3.0);
+  colorAttachment.loadColor.g = hue2color(hue);
+  colorAttachment.loadColor.b = hue2color(hue - 1.0 / 3.0);
+  colorAttachment.loadColor.a = 1.0;
 
   WGpuRenderPassDescriptor passDesc = {};
   passDesc.numColorAttachments = 1;
@@ -50,7 +50,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   WGpuSwapChainDescriptor swapChainDesc = WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER;
   swapChainDesc.device = device;
   swapChainDesc.format = wgpu_canvas_context_get_swap_chain_preferred_format(canvasContext, adapter);
-  swapChain = wgpu_canvascontext_configure_swap_chain(canvasContext, &swapChainDesc);
+  swapChain = wgpu_canvas_context_configure_swap_chain(canvasContext, &swapChainDesc);
 
   emscripten_request_animation_frame_loop(raf, 0);
 }

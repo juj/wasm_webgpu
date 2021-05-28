@@ -25,7 +25,7 @@ EM_BOOL raf(double time, void *userData)
   assert(swapChainTexture == swapChainTexture2);
 
   colorAttachment.view = wgpu_texture_create_view(swapChainTexture, 0);
-  colorAttachment.loadColor[3] = 1.0;
+  colorAttachment.loadColor.a = 1.0;
   assert(wgpu_is_texture_view(colorAttachment.view));
 
   WGpuRenderPassDescriptor passDesc = {};
@@ -75,7 +75,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   swapChainDesc.format = wgpu_canvas_context_get_swap_chain_preferred_format(canvasContext, adapter);
   emscripten_mini_stdio_printf("Preferred swap chain format: %s\n", wgpu_enum_to_string(swapChainDesc.format));
 
-  swapChain = wgpu_canvascontext_configure_swap_chain(canvasContext, &swapChainDesc);
+  swapChain = wgpu_canvas_context_configure_swap_chain(canvasContext, &swapChainDesc);
   assert(wgpu_is_swap_chain(swapChain));
 
   const char *vertexShader =

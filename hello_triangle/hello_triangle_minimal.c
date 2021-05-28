@@ -14,7 +14,7 @@ EM_BOOL raf(double time, void *userData)
 
   WGpuRenderPassColorAttachment colorAttachment = {};
   colorAttachment.view = wgpu_texture_create_view(wgpu_swap_chain_get_current_texture(swapChain), 0);
-  colorAttachment.loadColor[3] = 1.0;
+  colorAttachment.loadColor.a = 1.0;
 
   WGpuRenderPassDescriptor passDesc = {};
   passDesc.numColorAttachments = 1;
@@ -43,7 +43,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   swapChainDesc.device = device;
   swapChainDesc.format = wgpu_canvas_context_get_swap_chain_preferred_format(canvasContext, adapter);
 
-  swapChain = wgpu_canvascontext_configure_swap_chain(canvasContext, &swapChainDesc);
+  swapChain = wgpu_canvas_context_configure_swap_chain(canvasContext, &swapChainDesc);
 
   const char *vertexShader =
     "const pos : array<vec2<f32>, 3> = array<vec2<f32>, 3>("
