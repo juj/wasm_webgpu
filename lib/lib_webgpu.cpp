@@ -13,6 +13,71 @@ const char *wgpu_enum_to_string(int enumValue)
 const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER = {
 };
 
+const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  .height = 1,
+  .depthOrArrayLayers = 1,
+  .mipLevelCount = 1,
+  .sampleCount = 1,
+  .dimension = WGPU_TEXTURE_DIMENSION_2D
+};
+
+const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  .aspect = WGPU_TEXTURE_ASPECT_ALL,
+  .baseMipLevel = 0,
+  .baseArrayLayer = 0
+};
+
+const WGpuExternalTextureDescriptor WGPU_EXTERNAL_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  .colorSpace = WGPU_PREDEFINED_COLOR_SPACE_SRGB
+};
+
+const WGpuSamplerDescriptor WGPU_SAMPLER_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  .addressModeU = WGPU_ADDRESS_MODE_CLAMP_TO_EDGE,
+  .addressModeV = WGPU_ADDRESS_MODE_CLAMP_TO_EDGE,
+  .addressModeW = WGPU_ADDRESS_MODE_CLAMP_TO_EDGE,
+  .magFilter = WGPU_FILTER_MODE_NEAREST,
+  .minFilter = WGPU_FILTER_MODE_NEAREST,
+  .mipmapFilter = WGPU_FILTER_MODE_NEAREST,
+  .lodMinClamp = 0,
+  .lodMaxClamp = __builtin_inf() // TODO change this after spec is fixed
+};
+
+const WGpuBindGroupLayoutEntry WGPU_BUFFER_BINDING_LAYOUT_ENTRY_DEFAULT_INITIALIZER = {
+};
+
+const WGpuBufferBindingLayout WGPU_BUFFER_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
+  .type = WGPU_BUFFER_BINDING_TYPE_UNIFORM,
+  .hasDynamicOffset = EM_FALSE,
+  .minBindingSize = 0
+};
+
+const WGpuSamplerBindingLayout WGPU_SAMPLER_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
+  .type = WGPU_SAMPLER_BINDING_TYPE_FILTERING
+};
+
+const WGpuTextureBindingLayout WGPU_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
+  .sampleType = WGPU_TEXTURE_SAMPLE_TYPE_FLOAT,
+  .viewDimension = WGPU_TEXTURE_VIEW_DIMENSION_2D,
+};
+
+const WGpuBufferBinding WGPU_BUFFER_BINDING_DEFAULT_INITIALIZER = {
+  .offset = 0
+};
+
+const WGpuCommandEncoderDescriptor WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  .measureExecutionTime = EM_FALSE
+};
+
+const WGpuImageDataLayout WGPU_IMAGE_DATA_LAYOUT_DEFAULT_INITIALIZER = {
+  .offset = 0
+};
+
+const WGpuImageCopyBuffer WGPU_IMAGE_COPY_BUFFER_DEFAULT_INITIALIZER = {};
+
+const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
+  .viewDimension = WGPU_TEXTURE_VIEW_DIMENSION_2D
+};
+
 const WGpuSwapChainDescriptor WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER = {
   .usage = WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT,
   .compositingAlphaMode = WGPU_CANVAS_COMPOSITING_ALPHA_MODE_OPAQUE
@@ -61,6 +126,23 @@ const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITI
     .count = 1,
     .mask = 0xFFFFFFFFu,
   },
+};
+
+extern const WGpuImageCopyExternalImage WGPU_IMAGE_COPY_EXTERNAL_IMAGE_DEFAULT_INITIALIZER = {
+  .origin = (WGpuOrigin2D) {
+    .x = 0,
+    .y = 0
+  }
+};
+
+extern const WGpuImageCopyTexture WGPU_IMAGE_COPY_TEXTURE_DEFAULT_INITIALIZER = {
+  .mipLevel = 0,
+  .origin = (WGpuOrigin3D) {
+    .x = 0,
+    .y = 0,
+    .z = 0
+  },
+  .aspect = WGPU_TEXTURE_ASPECT_ALL
 };
 
 } // ~extern "C"

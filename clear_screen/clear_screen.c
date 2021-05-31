@@ -29,6 +29,7 @@ EM_BOOL raf(double time, void *userData)
   colorAttachment.loadColor.g = hue2color(hue);
   colorAttachment.loadColor.b = hue2color(hue - 1.0 / 3.0);
   colorAttachment.loadColor.a = 1.0;
+  colorAttachment.storeOp = WGPU_STORE_OP_STORE;
 
   WGpuRenderPassDescriptor passDesc = {};
   passDesc.numColorAttachments = 1;

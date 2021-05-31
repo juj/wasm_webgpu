@@ -60,7 +60,7 @@ dictionary GPUObjectDescriptorBase {
 };
 */
 #define WGPU_OBJECT_LABEL_MAX_LENGTH 256
-typedef struct WGpuObjectDescriptorBase // TODO: Actually use this, or remove
+typedef struct WGpuObjectDescriptorBase // TODO: Currently unused. Actually use this, or remove
 {
   char label[WGPU_OBJECT_LABEL_MAX_LENGTH];
 } WGpuObjectDescriptorBase;
@@ -119,7 +119,7 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_DEPTH24UNORM_STENCIL8     0x02
 #define WGPU_FEATURE_DEPTH32FLOAT_STENCIL8     0x04
 #define WGPU_FEATURE_PIPELINE_STATISTICS_QUERY 0x08
-#define WGPU_FEATURE_TEXTURE_COMPRESSION_BC    0x10 // TODO what is this? Why not other compression formats in this bitfield? TODO: Propose direct texture format supported queries
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_BC    0x10 // TODO Why no other compression formats in this bitfield? TODO: Propose direct texture format supported queries
 #define WGPU_FEATURE_TIMESTAMP_QUERY           0x20
 
 /*
@@ -195,13 +195,16 @@ EM_BOOL wgpu_is_adapter(WGpuObjectBase object);
 int wgpu_adapter_get_name(WGpuAdapter adapter, char *dstName, int dstNameSize);
 
 // Returns a bitfield of all the supported features on this adapter.
-WGPU_FEATURES_BITFIELD wgpu_adapter_get_features(WGpuAdapter adapter);
+WGPU_FEATURES_BITFIELD wgpu_adapter_or_device_get_features(WGpuAdapter adapter);
+#define wgpu_adapter_get_features wgpu_adapter_or_device_get_features
 
 // Returns true if the given feature is supported by this adapter.
-EM_BOOL wgpu_adapter_supports_feature(WGpuAdapter adapter, WGPU_FEATURES_BITFIELD feature);
+EM_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapter, WGPU_FEATURES_BITFIELD feature);
+#define wgpu_adapter_supports_feature wgpu_adapter_or_device_supports_feature
 
 // Populates the adapter.limits field of the given adapter to the provided structure.
-void wgpu_adapter_get_limits(WGpuAdapter adapter, WGpuAdapterLimits *limits);
+void wgpu_adapter_or_device_get_limits(WGpuAdapter adapter, WGpuAdapterLimits *limits);
+#define wgpu_adapter_get_limits wgpu_adapter_or_device_get_limits
 
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 
@@ -291,24 +294,37 @@ typedef int WGpuDevice;
 // Returns true if the given handle references a valid GPUDevice.
 EM_BOOL wgpu_is_device(WGpuObjectBase object);
 
-WGPU_FEATURES_BITFIELD wgpu_device_get_features(WGpuDevice device);
-EM_BOOL wgpu_device_supports_feature(WGpuDevice device, WGPU_FEATURES_BITFIELD feature);
+#define wgpu_device_get_features wgpu_adapter_or_device_get_features
+#define wgpu_device_supports_feature wgpu_adapter_or_device_supports_feature
+#define wgpu_device_get_limits wgpu_adapter_or_device_get_limits
+
 WGpuAdapter wgpu_device_get_adapter(WGpuDevice device);
-// TODO: Add wgpu_device_get_limits - what type is it? "readonly attribute object limits;"
 
 WGpuQueue wgpu_device_get_queue(WGpuDevice device);
 
 WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescriptor *bufferDesc);
-WGpuTexture wgpu_device_create_texture(WGpuDevice device, const WGpuTextureDescriptor *textureDesc); // TODO implement
-WGpuSampler wgpu_device_create_sampler(WGpuDevice device, const WGpuSamplerDescriptor *textureDesc); // TODO implement
+WGpuTexture wgpu_device_create_texture(WGpuDevice device, const WGpuTextureDescriptor *textureDesc);
+WGpuSampler wgpu_device_create_sampler(WGpuDevice device, const WGpuSamplerDescriptor *samplerDesc);
 WGpuExternalTexture wgpu_device_import_external_texture(WGpuDevice device, const WGpuExternalTextureDescriptor *externalTextureDesc); // TODO implement
 
-WGpuBindGroupLayout wgpu_device_create_bind_group_layout(WGpuDevice device, const WGpuBindGroupLayoutDescriptor *bindGroupLayoutDesc); // TODO implement
-WGpuPipelineLayout wgpu_device_create_pipeline_layout(WGpuDevice device, const WGpuPipelineLayoutDescriptor *pipelineLayoutDesc); // TODO implement
-WGpuBindGroup wgpu_device_create_bind_group(WGpuDevice device, const WGpuBindGroupDescriptor *bindGroupDesc); // TODO implement
+// N.b. not currently using signature WGpuBindGroupLayout wgpu_device_create_bind_group_layout(WGpuDevice device, const WGpuBindGroupLayoutDescriptor *bindGroupLayoutDesc);
+// since WGpuBindGroupLayoutDescriptor is a single element struct consisting only of a single array. (if it is expanded in the future, switch to using that signature)
+WGpuBindGroupLayout wgpu_device_create_bind_group_layout(WGpuDevice device, const WGpuBindGroupLayoutEntry *bindGroupLayoutEntries, int numEntries);
+
+// N.b. not currently using signature WGpuPipelineLayout wgpu_device_create_pipeline_layout(WGpuDevice device, const WGpuPipelineLayoutDescriptor *pipelineLayoutDesc);
+// since WGpuPipelineLayoutDescriptor is a single element struct consisting only of a single array. (if it is expanded in the future, switch to using that signature)
+WGpuPipelineLayout wgpu_device_create_pipeline_layout(WGpuDevice device, const WGpuBindGroupLayout *bindGroupLayouts, int numLayouts);
+
+// N.b. not currently using signature WGpuBindGroup wgpu_device_create_bind_group(WGpuDevice device, const WGpuBindGroupDescriptor *bindGroupDesc);
+// since WGpuBindGroupDescriptor is a such a light struct. (if it is expanded in the future, switch to using that signature)
+WGpuBindGroup wgpu_device_create_bind_group(WGpuDevice device, WGpuBindGroupLayout bindGroupLayout, const WGpuBindGroupEntry *entries, int numEntries);
 
 WGpuShaderModule wgpu_device_create_shader_module(WGpuDevice device, const WGpuShaderModuleDescriptor *shaderModuleDesc);
-WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuComputePipelineDescriptor *computePipelineDesc); // TODO implement
+
+// N.b. not currently using signature WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuComputePipelineDescriptor *computePipelineDesc);
+// since WGpuComputePipelineDescriptor is a such a light struct. (if it is expanded in the future, switch to using that signature)
+WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuShaderModule computeModule, const char *entryPoint);
+
 WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc);
 
 typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, void *userData);
@@ -425,8 +441,16 @@ dictionary GPUTextureDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuTextureDescriptor
 {
-  // TODO
+  uint32_t width;
+  uint32_t height; // default = 1;
+  uint32_t depthOrArrayLayers; // default = 1;
+  uint32_t mipLevelCount; // default = 1;
+  uint32_t sampleCount; // default = 1;
+  WGPU_TEXTURE_DIMENSION dimension; // default = WGPU_TEXTURE_DIMENSION_2D
+  WGPU_TEXTURE_FORMAT format;
+  WGPU_TEXTURE_USAGE_FLAGS usage;
 } WGpuTextureDescriptor;
+extern const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 /*
 enum GPUTextureDimension {
@@ -485,13 +509,13 @@ typedef struct WGpuTextureViewDescriptor
 {
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_VIEW_DIMENSION dimension;
-  WGPU_TEXTURE_ASPECT aspect;
-  uint32_t baseMipLevel;
+  WGPU_TEXTURE_ASPECT aspect; // default = WGPU_TEXTURE_ASPECT_ALL
+  uint32_t baseMipLevel; // default = 0
   uint32_t mipLevelCount;
-  uint32_t baseArrayLayer;
+  uint32_t baseArrayLayer; // default = 0
   uint32_t arrayLayerCount;
 } WGpuTextureViewDescriptor;
-extern const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 /*
 enum GPUTextureViewDimension {
@@ -687,7 +711,7 @@ typedef struct WGpuExternalTextureDescriptor
   char source[512]; // CSS selector for a source HTMLVideoElement
   WGPU_PREDEFINED_COLOR_SPACE colorSpace;
 } WGpuExternalTextureDescriptor;
-extern const WGpuExternalTextureDescriptor WGPU_EXTERNAL_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuExternalTextureDescriptor WGPU_EXTERNAL_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 /*
 [Exposed=Window]
@@ -724,9 +748,9 @@ typedef struct WGpuSamplerDescriptor
   float lodMinClamp;
   float lodMaxClamp;
   WGPU_COMPARE_FUNCTION compare;
-  unsigned short maxAnisotropy;
+  uint32_t maxAnisotropy; // N.b. this is 32-bit wide in the bindings implementation for simplicity, unlike in the IDL which specifies a unsigned short.
 } WGpuSamplerDescriptor;
-extern const WGpuSamplerDescriptor WGPU_SAMPLER_DESCRIPTOR_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuSamplerDescriptor WGPU_SAMPLER_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 /*
 enum GPUAddressMode {
@@ -790,10 +814,7 @@ dictionary GPUBindGroupLayoutDescriptor : GPUObjectDescriptorBase {
     required sequence<GPUBindGroupLayoutEntry> entries;
 };
 */
-typedef struct WGpuBindGroupLayoutDescriptor
-{
-    // TODO
-} WGpuBindGroupLayoutDescriptor;
+// Currently not used
 
 /*
 typedef [EnforceRange] unsigned long GPUShaderStageFlags;
@@ -821,10 +842,15 @@ dictionary GPUBindGroupLayoutEntry {
     GPUExternalTextureBindingLayout externalTexture;
 };
 */
-typedef struct WGpuBindGroupLayoutEntry
-{
-    // TODO
-} WGpuBindGroupLayoutEntry;
+typedef int WGPU_BIND_GROUP_LAYOUT_TYPE;
+#define WGPU_BIND_GROUP_LAYOUT_TYPE_INVALID 0
+#define WGPU_BIND_GROUP_LAYOUT_TYPE_BUFFER 1
+#define WGPU_BIND_GROUP_LAYOUT_TYPE_SAMPLER 2
+#define WGPU_BIND_GROUP_LAYOUT_TYPE_TEXTURE 3
+#define WGPU_BIND_GROUP_LAYOUT_TYPE_STORAGE_TEXTURE 4
+#define WGPU_BIND_GROUP_LAYOUT_TYPE_EXTERNAL_TEXTURE 5
+
+// typedef struct WGpuBindGroupLayoutEntry at the end of this file.
 
 /*
 enum GPUBufferBindingType {
@@ -852,7 +878,7 @@ typedef struct WGpuBufferBindingLayout
   EM_BOOL hasDynamicOffset;
   uint64_t minBindingSize;
 } WGpuBufferBindingLayout;
-extern const WGpuBufferBindingLayout WGPU_BUFFER_BINDING_LAYOUT_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuBufferBindingLayout WGPU_BUFFER_BINDING_LAYOUT_DEFAULT_INITIALIZER;
 
 /*
 enum GPUSamplerBindingType {
@@ -876,7 +902,7 @@ typedef struct WGpuSamplerBindingLayout
 {
   WGPU_SAMPLER_BINDING_TYPE type;
 } WGpuSamplerBindingLayout;
-extern const WGpuSamplerBindingLayout WGPU_SAMPLER_BINDING_LAYOUT_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuSamplerBindingLayout WGPU_SAMPLER_BINDING_LAYOUT_DEFAULT_INITIALIZER;
 
 /*
 enum GPUTextureSampleType {
@@ -907,7 +933,7 @@ typedef struct WGpuTextureBindingLayout
   WGPU_TEXTURE_SAMPLE_TYPE sampleType;
   WGPU_TEXTURE_VIEW_DIMENSION viewDimension;
 } WGpuTextureBindingLayout;
-extern const WGpuTextureBindingLayout WGPU_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuTextureBindingLayout WGPU_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER;
 
 /*
 enum GPUStorageTextureAccess {
@@ -933,7 +959,7 @@ typedef struct WGpuStorageTextureBindingLayout
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_VIEW_DIMENSION viewDimension;
 } WGpuStorageTextureBindingLayout;
-extern const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER;
 
 /*
 dictionary GPUExternalTextureBindingLayout {
@@ -941,6 +967,7 @@ dictionary GPUExternalTextureBindingLayout {
 */
 typedef struct WGpuExternalTextureBindingLayout
 {
+  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size.
 } WGpuExternalTextureBindingLayout;
 
 /*
@@ -959,10 +986,7 @@ dictionary GPUBindGroupDescriptor : GPUObjectDescriptorBase {
     required sequence<GPUBindGroupEntry> entries;
 };
 */
-typedef struct WGpuBindGroupDescriptor
-{
-  // TODO implement
-} WGpuBindGroupDescriptor;
+// Currently unused
 
 /*
 typedef (GPUSampler or GPUTextureView or GPUBufferBinding or GPUExternalTexture) GPUBindingResource;
@@ -974,7 +998,8 @@ dictionary GPUBindGroupEntry {
 */
 typedef struct WGpuBindGroupEntry
 {
-  // TODO implement
+  uint32_t binding;
+  WGpuObjectBase resource;
 } WGpuBindGroupEntry;
 
 /*
@@ -986,9 +1011,11 @@ dictionary GPUBufferBinding {
 */
 typedef struct WGpuBufferBinding
 {
-  // TODO implement
+  WGpuBuffer buffer;
+  uint64_t offset;
+  uint64_t size;
 } WGpuBufferBinding;
-extern const WGpuBufferBinding WGPU_BUFFER_BINDING_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuBufferBinding WGPU_BUFFER_BINDING_DEFAULT_INITIALIZER;
 
 /*
 [Exposed=Window, Serializable]
@@ -1005,10 +1032,7 @@ dictionary GPUPipelineLayoutDescriptor : GPUObjectDescriptorBase {
     required sequence<GPUBindGroupLayout> bindGroupLayouts;
 };
 */
-typedef struct WGpuPipelineLayoutDescriptor
-{
-  // TODO implement
-} WGpuPipelineLayoutDescriptor;
+// Currently unused.
 
 /*
 [Exposed=Window, Serializable]
@@ -1105,10 +1129,7 @@ dictionary GPUComputePipelineDescriptor : GPUPipelineDescriptorBase {
     required GPUProgrammableStage compute;
 };
 */
-typedef struct WGpuComputePipelineDescriptor
-{
-  // TODO: implement
-} WGpuComputePipelineDescriptor;
+// Currently unused.
 
 /*
 [Exposed=Window, Serializable]
@@ -1527,6 +1548,7 @@ dictionary GPUCommandBufferDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuCommandBufferDescriptor
 {
+  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size. Remove this once label is added
   // TODO: add label
 } WGpuCommandBufferDescriptor;
 
@@ -1580,19 +1602,23 @@ typedef int WGpuCommandEncoder;
 EM_BOOL wgpu_is_command_encoder(WGpuObjectBase object);
 
 WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder commandEncoder, const WGpuRenderPassDescriptor *renderPassDesc);
-WGpuComputePassEncoder wgpu_command_encoder_begin_compute_pass(WGpuCommandEncoder commandEncoder, const WGpuComputePassDescriptor *computePassDesc); // TODO implement
-void wgpu_command_encoder_copy_buffer_to_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer source, double_int53_t sourceOffset, WGpuBuffer destination, double_int53_t destinationOffset, double_int53_t size); // TODO implement
-void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, WGpuImageCopyBuffer source, WGpuImageCopyTexture destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1)); // TODO implement
-void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, WGpuImageCopyTexture source, WGpuImageCopyBuffer destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1)); // TODO implement
-void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, WGpuImageCopyTexture source, WGpuImageCopyTexture destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1)); // TODO implement
+WGpuComputePassEncoder wgpu_command_encoder_begin_compute_pass(WGpuCommandEncoder commandEncoder, const WGpuComputePassDescriptor *computePassDesc _WGPU_DEFAULT_VALUE(0));
+void wgpu_command_encoder_copy_buffer_to_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer source, double_int53_t sourceOffset, WGpuBuffer destination, double_int53_t destinationOffset, double_int53_t size);
+void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyBuffer *source, const WGpuImageCopyTexture *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source, const WGpuImageCopyBuffer *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source, const WGpuImageCopyTexture *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 
-void wgpu_command_encoder_push_debug_group(WGpuCommandEncoder commandEncoder, const char *groupLabel); // TODO implement
-void wgpu_command_encoder_pop_debug_group(WGpuCommandEncoder commandEncoder); // TODO implement
-void wgpu_command_encoder_insert_debug_marker(WGpuCommandEncoder commandEncoder, const char *markerLabel); // TODO implement
+void wgpu_encoder_push_debug_group(WGpuCommandEncoder commandEncoder, const char *groupLabel);
+void wgpu_encoder_pop_debug_group(WGpuCommandEncoder commandEncoder);
+void wgpu_encoder_insert_debug_marker(WGpuCommandEncoder commandEncoder, const char *markerLabel);
+#define wgpu_command_encoder_push_debug_group wgpu_encoder_push_debug_group
+#define wgpu_command_encoder_pop_debug_group wgpu_encoder_pop_debug_group
+#define wgpu_command_encoder_insert_debug_marker wgpu_encoder_insert_debug_marker
 
-void wgpu_command_encoder_write_timestamp(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t queryIndex); // TODO implement
+void wgpu_encoder_write_timestamp(WGpuObjectBase encoder, WGpuQuerySet querySet, uint32_t queryIndex);
+#define wgpu_command_encoder_write_timestamp wgpu_encoder_write_timestamp
 
-void wgpu_command_encoder_resolve_query_set(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t firstQuery, uint32_t queryCount, WGpuBuffer destination, double_int53_t destinationOffset); // TODO implement
+void wgpu_command_encoder_resolve_query_set(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t firstQuery, uint32_t queryCount, WGpuBuffer destination, double_int53_t destinationOffset);
 
 WGpuCommandBuffer wgpu_command_encoder_finish(WGpuCommandEncoder commandEncoder);
 
@@ -1607,7 +1633,7 @@ typedef struct WGpuCommandEncoderDescriptor
 {
   EM_BOOL measureExecutionTime;
 } WGpuCommandEncoderDescriptor;
-extern const WGpuCommandEncoderDescriptor WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuCommandEncoderDescriptor WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 /*
 dictionary GPUImageDataLayout {
@@ -1622,7 +1648,7 @@ typedef struct WGpuImageDataLayout
   uint32_t bytesPerRow;
   uint32_t rowsPerImage;
 } WGpuImageDataLayout;
-extern const WGpuImageDataLayout WGPU_IMAGE_DATA_LAYOUT_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuImageDataLayout WGPU_IMAGE_DATA_LAYOUT_DEFAULT_INITIALIZER;
 
 /*
 dictionary GPUImageCopyBuffer : GPUImageDataLayout {
@@ -1636,7 +1662,7 @@ typedef struct WGpuImageCopyBuffer
   uint32_t rowsPerImage;
   WGpuBuffer buffer;
 } WGpuImageCopyBuffer;
-extern const WGpuImageCopyBuffer WGPU_IMAGE_COPY_BUFFER_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuImageCopyBuffer WGPU_IMAGE_COPY_BUFFER_DEFAULT_INITIALIZER;
 
 /*
 dictionary GPUImageCopyTexture {
@@ -1674,11 +1700,11 @@ interface mixin GPUProgrammablePassEncoder {
 typedef int WGpuProgrammablePassEncoder;
 // Returns true if the given handle references a valid GPUProgrammablePassEncoder.
 EM_BOOL wgpu_is_programmable_pass_encoder(WGpuObjectBase object);
-void wgpu_programmable_pass_encoder_set_bind_group(WGpuProgrammablePassEncoder encoder, uint32_t index, WGpuBindGroup bindGroup, uint32_t *dynamicOffsets _WGPU_DEFAULT_VALUE(0), uint32_t numDynamicOffsets _WGPU_DEFAULT_VALUE(0)); // TODO implement
+void wgpu_programmable_pass_encoder_set_bind_group(WGpuProgrammablePassEncoder encoder, uint32_t index, WGpuBindGroup bindGroup, uint32_t *dynamicOffsets _WGPU_DEFAULT_VALUE(0), uint32_t numDynamicOffsets _WGPU_DEFAULT_VALUE(0));
 
-void wgpu_programmable_pass_encoder_push_debug_group(WGpuProgrammablePassEncoder encoder, const char *groupLabel); // TODO implement
-void wgpu_programmable_pass_encoder_pop_debug_group(WGpuProgrammablePassEncoder encoder); // TODO implement
-void wgpu_programmable_pass_encoder_insert_debug_marker(WGpuProgrammablePassEncoder encoder, const char *markerLabel); // TODO implement
+#define wgpu_programmable_pass_encoder_push_debug_group wgpu_encoder_push_debug_group
+#define wgpu_programmable_pass_encoder_pop_debug_group wgpu_encoder_pop_debug_group
+#define wgpu_programmable_pass_encoder_insert_debug_marker wgpu_encoder_insert_debug_marker
 
 /*
 [Exposed=Window]
@@ -1701,21 +1727,25 @@ typedef int WGpuComputePassEncoder;
 // Returns true if the given handle references a valid GPUComputePassEncoder.
 EM_BOOL wgpu_is_compute_pass_encoder(WGpuObjectBase object);
 
-void wgpu_compute_pass_encoder_set_pipeline(WGpuComputePassEncoder encoder, WGpuComputePipeline pipeline); // TODO implement
-void wgpu_compute_pass_encoder_dispatch(WGpuComputePassEncoder encoder, uint32_t x, uint32_t y _WGPU_DEFAULT_VALUE(1), uint32_t z _WGPU_DEFAULT_VALUE(1)); // TODO implement
-void wgpu_compute_pass_encoder_dispatch_indirect(WGpuComputePassEncoder encoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset); // TODO implement
+void wgpu_encoder_set_pipeline(WGpuRenderEncoderBase passEncoder, WGpuRenderPipeline renderPipeline);
+#define wgpu_compute_pass_encoder_set_pipeline wgpu_encoder_set_pipeline
+void wgpu_compute_pass_encoder_dispatch(WGpuComputePassEncoder encoder, uint32_t x, uint32_t y _WGPU_DEFAULT_VALUE(1), uint32_t z _WGPU_DEFAULT_VALUE(1));
+void wgpu_compute_pass_encoder_dispatch_indirect(WGpuComputePassEncoder encoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
 
-void wgpu_compute_pass_encoder_begin_pipeline_statistics_query(WGpuComputePassEncoder encoder, WGpuQuerySet querySet, uint32_t queryIndex); // TODO implement
-void wgpu_compute_pass_encoder_end_pipeline_statistics_query(WGpuComputePassEncoder encoder); // TODO implement
+void wgpu_encoder_begin_pipeline_statistics_query(WGpuComputePassEncoder encoder, WGpuQuerySet querySet, uint32_t queryIndex);
+void wgpu_encoder_end_pipeline_statistics_query(WGpuComputePassEncoder encoder);
+#define wgpu_compute_pass_encoder_begin_pipeline_statistics_query wgpu_encoder_begin_pipeline_statistics_query
+#define wgpu_compute_pass_encoder_end_pipeline_statistics_query wgpu_encoder_end_pipeline_statistics_query
 
-void wgpu_compute_pass_encoder_write_timestamp(WGpuComputePassEncoder encoder, WGpuQuerySet querySet, uint32_t queryIndex); // TODO implement
+#define wgpu_compute_pass_encoder_write_timestamp wgpu_encoder_write_timestamp
 
-void wgpu_compute_pass_encoder_end_pass(WGpuComputePassEncoder encoder); // TODO implement
+void wgpu_encoder_end_pass(WGpuRenderPassEncoder encoder);
+#define wgpu_compute_pass_encoder_end_pass wgpu_encoder_end_pass
 
 #define wgpu_compute_pass_encoder_set_bind_group wgpu_programmable_pass_encoder_set_bind_group
-#define wgpu_compute_pass_encoder_push_debug_group wgpu_programmable_pass_encoder_push_debug_group
-#define wgpu_compute_pass_encoder_pop_debug_group wgpu_programmable_pass_encoder_pop_debug_group
-#define wgpu_compute_pass_encoder_insert_debug_marker wgpu_programmable_pass_encoder_insert_debug_marker
+#define wgpu_compute_pass_encoder_push_debug_group wgpu_encoder_push_debug_group
+#define wgpu_compute_pass_encoder_pop_debug_group wgpu_encoder_pop_debug_group
+#define wgpu_compute_pass_encoder_insert_debug_marker wgpu_encoder_insert_debug_marker
 
 /*
 dictionary GPUComputePassDescriptor : GPUObjectDescriptorBase {
@@ -1723,7 +1753,7 @@ dictionary GPUComputePassDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuComputePassDescriptor
 {
-
+  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size.
 } WGpuComputePassDescriptor;
 
 /*
@@ -1748,15 +1778,15 @@ typedef int WGpuRenderEncoderBase;
 // Returns true if the given handle references a valid GPURenderEncoderBase.
 EM_BOOL wgpu_is_render_encoder_base(WGpuObjectBase object);
 
-void wgpu_render_encoder_base_set_pipeline(WGpuRenderEncoderBase passEncoder, WGpuRenderPipeline renderPipeline);
-void wgpu_render_encoder_base_set_index_buffer(WGpuRenderEncoderBase passEncoder, WGpuBuffer buffer, WGPU_INDEX_FORMAT indexFormat, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(0)); // TODO implement
+#define wgpu_render_encoder_base_set_pipeline wgpu_encoder_set_pipeline
+void wgpu_render_encoder_base_set_index_buffer(WGpuRenderEncoderBase passEncoder, WGpuBuffer buffer, WGPU_INDEX_FORMAT indexFormat, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(0));
 void wgpu_render_encoder_base_set_vertex_buffer(WGpuRenderEncoderBase passEncoder, int32_t slot, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(0));
 
 void wgpu_render_encoder_base_draw(WGpuRenderPassEncoder passEncoder, uint32_t vertexCount, uint32_t instanceCount _WGPU_DEFAULT_VALUE(1), uint32_t firstVertex _WGPU_DEFAULT_VALUE(0), uint32_t firstInstance _WGPU_DEFAULT_VALUE(0));
-void wgpu_render_encoder_base_draw_indexed(WGpuRenderPassEncoder passEncoder, uint32_t indexCount, uint32_t instanceCount _WGPU_DEFAULT_VALUE(1), uint32_t firstVertex _WGPU_DEFAULT_VALUE(0), int32_t baseVertex _WGPU_DEFAULT_VALUE(0), uint32_t firstInstance _WGPU_DEFAULT_VALUE(0)); // TODO implement
+void wgpu_render_encoder_base_draw_indexed(WGpuRenderPassEncoder passEncoder, uint32_t indexCount, uint32_t instanceCount _WGPU_DEFAULT_VALUE(1), uint32_t firstVertex _WGPU_DEFAULT_VALUE(0), int32_t baseVertex _WGPU_DEFAULT_VALUE(0), uint32_t firstInstance _WGPU_DEFAULT_VALUE(0));
 
-void wgpu_render_encoder_base_draw_indirect(WGpuRenderPassEncoder passEncoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset); // TODO implement
-void wgpu_render_encoder_base_draw_indexed_indirect(WGpuRenderPassEncoder passEncoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset); // TODO implement
+void wgpu_render_encoder_base_draw_indirect(WGpuRenderPassEncoder passEncoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
+void wgpu_render_encoder_base_draw_indexed_indirect(WGpuRenderPassEncoder passEncoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
 
 /*
 [Exposed=Window]
@@ -1790,31 +1820,31 @@ typedef int WGpuRenderPassEncoder;
 // Returns true if the given handle references a valid GPURenderPassEncoder.
 EM_BOOL wgpu_is_render_pass_encoder(WGpuObjectBase object);
 
-void wgpu_render_pass_encoder_set_viewport(WGpuRenderPassEncoder encoder, float x, float y, float width, float height, float minDepth, float maxDepth); // TODO implement
+void wgpu_render_pass_encoder_set_viewport(WGpuRenderPassEncoder encoder, float x, float y, float width, float height, float minDepth, float maxDepth);
 
-void wgpu_render_pass_encoder_set_scissor_rect(WGpuRenderPassEncoder encoder, uint32_t x, uint32_t y, uint32_t width, uint32_t height); // TODO implement
+void wgpu_render_pass_encoder_set_scissor_rect(WGpuRenderPassEncoder encoder, uint32_t x, uint32_t y, uint32_t width, uint32_t height);
 
-void wgpu_render_pass_encoder_set_blend_constant(WGpuRenderPassEncoder encoder, double r, double g, double b, double a); // TODO implement
-void wgpu_render_pass_encoder_set_stencil_reference(WGpuRenderPassEncoder encoder, uint32_t stencilValue); // TODO implement
+void wgpu_render_pass_encoder_set_blend_constant(WGpuRenderPassEncoder encoder, double r, double g, double b, double a);
+void wgpu_render_pass_encoder_set_stencil_reference(WGpuRenderPassEncoder encoder, uint32_t stencilValue);
 
-void wgpu_render_pass_encoder_begin_occlusion_query(WGpuRenderPassEncoder encoder, int32_t queryIndex); // TODO implement
-void wgpu_render_pass_encoder_end_occlusion_query(WGpuRenderPassEncoder encoder); // TODO implement
+void wgpu_render_pass_encoder_begin_occlusion_query(WGpuRenderPassEncoder encoder, int32_t queryIndex);
+void wgpu_render_pass_encoder_end_occlusion_query(WGpuRenderPassEncoder encoder);
 
-void wgpu_render_pass_encoder_begin_pipeline_statistics_query(WGpuRenderPassEncoder encoder, WGpuQuerySet querySet, uint32_t queryIndex); // TODO implement
-void wgpu_render_pass_encoder_end_pipeline_statistics_query(WGpuRenderPassEncoder encoder); // TODO implement
+#define wgpu_render_pass_encoder_begin_pipeline_statistics_query wgpu_encoder_begin_pipeline_statistics_query
+#define wgpu_render_pass_encoder_end_pipeline_statistics_query wgpu_encoder_end_pipeline_statistics_query
 
-void wgpu_render_pass_encoder_write_timestamp(WGpuRenderPassEncoder encoder, WGpuQuerySet querySet, uint32_t queryIndex); // TODO implement
+#define wgpu_render_pass_encoder_write_timestamp wgpu_encoder_write_timestamp
 
-void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, WGpuRenderBundle *bundles, int numBundles); // TODO implement
+void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, WGpuRenderBundle *bundles, int numBundles);
 
-void wgpu_render_pass_encoder_end_pass(WGpuRenderPassEncoder encoder); // TODO implement
+#define wgpu_render_pass_encoder_end_pass wgpu_encoder_end_pass
 
 #define wgpu_render_pass_encoder_set_bind_group wgpu_programmable_pass_encoder_set_bind_group
 #define wgpu_render_pass_encoder_push_debug_group wgpu_programmable_pass_encoder_push_debug_group
 #define wgpu_render_pass_encoder_pop_debug_group wgpu_programmable_pass_encoder_pop_debug_group
 #define wgpu_render_pass_encoder_insert_debug_marker wgpu_programmable_pass_encoder_insert_debug_marker
 
-#define wgpu_render_pass_encoder_set_pipeline wgpu_render_encoder_base_set_pipeline
+#define wgpu_render_pass_encoder_set_pipeline wgpu_encoder_set_pipeline
 #define wgpu_render_pass_encoder_set_index_buffer wgpu_render_encoder_base_set_index_buffer
 #define wgpu_render_pass_encoder_set_vertex_buffer wgpu_render_encoder_base_set_vertex_buffer
 #define wgpu_render_pass_encoder_draw wgpu_render_encoder_base_draw
@@ -1907,6 +1937,7 @@ dictionary GPURenderBundleDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuRenderBundleDescriptor
 {
+  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size. Remove this once label is added
   // TODO add label
 } WGpuRenderBundleDescriptor;
 
@@ -1929,7 +1960,7 @@ void wgpu_render_bundle_encoder_finish(const WGpuRenderBundleDescriptor *renderB
 #define wgpu_render_bundle_encoder_pop_debug_group wgpu_programmable_pass_encoder_pop_debug_group
 #define wgpu_render_bundle_encoder_insert_debug_marker wgpu_programmable_pass_encoder_insert_debug_marker
 
-#define wgpu_render_bundle_encoder_set_pipeline wgpu_render_encoder_base_set_pipeline
+#define wgpu_render_bundle_encoder_set_pipeline wgpu_encoder_set_pipeline
 #define wgpu_render_bundle_encoder_set_index_buffer wgpu_render_encoder_base_set_index_buffer
 #define wgpu_render_bundle_encoder_set_vertex_buffer wgpu_render_encoder_base_set_vertex_buffer
 #define wgpu_render_bundle_encoder_draw wgpu_render_encoder_base_draw
@@ -1946,6 +1977,7 @@ dictionary GPURenderBundleEncoderDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuRenderBundleEncoderDescriptor
 {
+  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size. Remove this once implemented
   // TODO implement
 } WGpuRenderBundleEncoderDescriptor;
 
@@ -1997,9 +2029,9 @@ void wgpu_queue_submit_multiple_and_destroy(WGpuQueue queue, int numCommandBuffe
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
 void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmittedWorkDoneCallback, void *userData); // TODO implement
 
-void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, void *data, double_int53_t size); // TODO implement, TODO other buffer sources?
-void wgpu_queue_write_texture(WGpuQueue queue, WGpuImageCopyTexture destination, WGpuImageDataLayout dataLayout, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1)); // TODO implement, TODO buffer sources?
-void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, WGpuImageCopyExternalImage source, WGpuImageCopyTexture destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1)); // TODO implement
+void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, void *data, double_int53_t size); // TODO other buffer sources?
+void wgpu_queue_write_texture(WGpuQueue queue, WGpuImageCopyTexture destination, void *data, uint32_t bytesPerBlockRow, uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1)); // TODO other buffer sources?
+void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, WGpuImageCopyExternalImage source, WGpuImageCopyTexture destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 
 /*
 [Exposed=Window]
@@ -2317,7 +2349,7 @@ typedef struct WGpuImageCopyExternalImage
   WGpuObjectBase source; // TODO add wgpu_acquire_dom_element_using_css_selector(const char *cssSelector); and wgpu_release_dom_element_using_css_selector(WGpuObjectBase object);
   WGpuOrigin2D origin;
 } WGpuImageCopyExternalImage;
-extern const WGpuImageCopyExternalImage WGPU_IMAGE_COPY_EXTERNAL_IMAGE_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuImageCopyExternalImage WGPU_IMAGE_COPY_EXTERNAL_IMAGE_DEFAULT_INITIALIZER;
 
 typedef struct WGpuImageCopyTexture
 {
@@ -2326,7 +2358,7 @@ typedef struct WGpuImageCopyTexture
   WGpuOrigin3D origin;
   WGPU_TEXTURE_ASPECT aspect;
 } WGpuImageCopyTexture;
-extern const WGpuImageCopyTexture WGPU_IMAGE_COPY_TEXTURE_DEFAULT_INITIALIZER; // TODO implement
+extern const WGpuImageCopyTexture WGPU_IMAGE_COPY_TEXTURE_DEFAULT_INITIALIZER;
 
 typedef struct WGpuDepthStencilState
 {
@@ -2376,9 +2408,22 @@ typedef struct WGpuRenderPipelineDescriptor
 } WGpuRenderPipelineDescriptor;
 extern const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
+typedef struct WGpuBindGroupLayoutEntry
+{
+  uint32_t binding;
+  WGPU_SHADER_STAGE_FLAGS visibility;
+  WGPU_BIND_GROUP_LAYOUT_TYPE type;
+  uint32_t _dummyPadding64Bits; // Explicitly present to pad 'buffer' to 64-bit alignment
 
-
-
+  union {
+    WGpuBufferBindingLayout buffer;
+    WGpuSamplerBindingLayout sampler;
+    WGpuTextureBindingLayout texture;
+    WGpuStorageTextureBindingLayout storageTexture;
+    WGpuExternalTextureBindingLayout externalTexture;
+  } layout;
+} WGpuBindGroupLayoutEntry;
+extern const WGpuBindGroupLayoutEntry WGPU_BUFFER_BINDING_LAYOUT_ENTRY_DEFAULT_INITIALIZER;
 
 #ifdef __cplusplus
 } // ~extern "C"
