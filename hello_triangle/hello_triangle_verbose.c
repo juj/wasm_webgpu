@@ -67,7 +67,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 
   presentationContext = wgpu_canvas_get_canvas_context("canvas");
   assert(presentationContext);
-  assert(wgpu_is_canvas_context(presentationContext));
+  assert(wgpu_is_presentation_context(presentationContext));
 
   WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
