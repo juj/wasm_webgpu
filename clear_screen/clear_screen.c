@@ -4,9 +4,9 @@
 #include "lib_webgpu.h"
 
 WGpuAdapter adapter;
-WGpuSwapChain swapChain;
 WGpuDevice device;
 WGpuQueue defaultQueue;
+WGpuPresentationContext presentationContext;
 
 double hue2color(double hue)
 {
@@ -22,7 +22,7 @@ EM_BOOL raf(double time, void *userData)
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
 
   WGpuRenderPassColorAttachment colorAttachment = {};
-  colorAttachment.view = wgpu_texture_create_view(wgpu_swap_chain_get_current_texture(swapChain), 0);
+  colorAttachment.view = wgpu_texture_create_view(wgpu_presentation_context_get_current_texture(presentationContext), 0);
 
   double hue = time * 0.00005;
   colorAttachment.loadColor.r = hue2color(hue + 1.0 / 3.0);
@@ -46,12 +46,12 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   device = result;
   defaultQueue = wgpu_device_get_queue(device);
 
-  WGpuCanvasContext canvasContext = wgpu_canvas_get_canvas_context("canvas");
+  presentationContext = wgpu_canvas_get_canvas_context("canvas");
 
-  WGpuSwapChainDescriptor swapChainDesc = WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER;
-  swapChainDesc.device = device;
-  swapChainDesc.format = wgpu_canvas_context_get_swap_chain_preferred_format(canvasContext, adapter);
-  swapChain = wgpu_canvas_context_configure_swap_chain(canvasContext, &swapChainDesc);
+  WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
+  config.device = device;
+  config.format = wgpu_presentation_context_get_preferred_format(presentationContext, adapter);
+  wgpu_presentation_context_configure(presentationContext, &config);
 
   emscripten_request_animation_frame_loop(raf, 0);
 }

@@ -3,7 +3,7 @@
 #include "lib_webgpu.h"
 
 WGpuAdapter adapter;
-WGpuSwapChain swapChain;
+WGpuPresentationContext presentationContext;
 WGpuDevice device;
 WGpuQueue defaultQueue;
 WGpuRenderPipeline renderPipeline;
@@ -13,7 +13,7 @@ EM_BOOL raf(double time, void *userData)
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
 
   WGpuRenderPassColorAttachment colorAttachment = {};
-  colorAttachment.view = wgpu_texture_create_view(wgpu_swap_chain_get_current_texture(swapChain), 0);
+  colorAttachment.view = wgpu_texture_create_view(wgpu_presentation_context_get_current_texture(presentationContext), 0);
   colorAttachment.loadColor.a = 1.0;
 
   WGpuRenderPassDescriptor passDesc = {};
@@ -37,13 +37,12 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   device = result;
   defaultQueue = wgpu_device_get_queue(device);
 
-  WGpuCanvasContext canvasContext = wgpu_canvas_get_canvas_context("canvas");
+  presentationContext = wgpu_canvas_get_canvas_context("canvas");
 
-  WGpuSwapChainDescriptor swapChainDesc = WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER;
-  swapChainDesc.device = device;
-  swapChainDesc.format = wgpu_canvas_context_get_swap_chain_preferred_format(canvasContext, adapter);
-
-  swapChain = wgpu_canvas_context_configure_swap_chain(canvasContext, &swapChainDesc);
+  WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
+  config.device = device;
+  config.format = wgpu_presentation_context_get_preferred_format(presentationContext, adapter);
+  wgpu_presentation_context_configure(presentationContext, &config);
 
   const char *vertexShader =
     "const pos : array<vec2<f32>, 3> = array<vec2<f32>, 3>("
@@ -81,7 +80,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   renderPipelineDesc.fragment.entryPoint = "main";
 
   WGpuColorTargetState colorTarget = WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER;
-  colorTarget.format = swapChainDesc.format;
+  colorTarget.format = config.format;
   renderPipelineDesc.fragment.numTargets = 1;
   renderPipelineDesc.fragment.targets = &colorTarget;
 

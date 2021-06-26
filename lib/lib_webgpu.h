@@ -67,7 +67,7 @@ typedef struct WGpuObjectDescriptorBase // TODO: Currently unused. Actually use 
 
 /*
 [Exposed=Window]
-interface GPUAdapterLimits {
+interface GPUSupportedLimits {
     readonly attribute unsigned long maxTextureDimension1D;
     readonly attribute unsigned long maxTextureDimension2D;
     readonly attribute unsigned long maxTextureDimension3D;
@@ -87,7 +87,7 @@ interface GPUAdapterLimits {
     readonly attribute unsigned long maxVertexBufferArrayStride;
 };
 */
-typedef struct WGpuAdapterLimits
+typedef struct WGpuSupportedLimits
 {
   uint32_t maxTextureDimension1D;
   uint32_t maxTextureDimension2D;
@@ -106,7 +106,7 @@ typedef struct WGpuAdapterLimits
   uint32_t maxVertexBuffers;
   uint32_t maxVertexAttributes;
   uint32_t maxVertexBufferArrayStride;
-} WGpuAdapterLimits;
+} WGpuSupportedLimits;
 
 /*
 [Exposed=Window]
@@ -151,6 +151,7 @@ WGpuAdapter navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions 
 /*
 dictionary GPURequestAdapterOptions {
     GPUPowerPreference powerPreference;
+    boolean forceSoftware = false;
 };
 */
 typedef struct WGpuRequestAdapterOptions
@@ -163,7 +164,9 @@ typedef struct WGpuRequestAdapterOptions
   //       agent may select different adapters given the same power preference. Typically, given the same hardware configuration and
   //       state and powerPreference, the user agent is likely to select the same adapter.
   WGPU_POWER_PREFERENCE powerPreference;
+  EM_BOOL forceSoftware;
 } WGpuRequestAdapterOptions;
+extern const WGpuRequestAdapterOptions WGPU_REQUEST_ADAPTER_OPTIONS_DEFAULT_INITIALIZER;
 
 /*
 enum GPUPowerPreference {
@@ -181,7 +184,8 @@ typedef int WGPU_POWER_PREFERENCE;
 interface GPUAdapter {
     readonly attribute DOMString name;
     [SameObject] readonly attribute GPUSupportedFeatures features;
-    [SameObject] readonly attribute GPUAdapterLimits limits;
+    [SameObject] readonly attribute WGpuSupportedLimits limits;
+    readonly attribute boolean isSoftware;
 
     Promise<GPUDevice> requestDevice(optional GPUDeviceDescriptor descriptor = {});
 };
@@ -203,8 +207,10 @@ EM_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapter, WGPU_FEATUR
 #define wgpu_adapter_supports_feature wgpu_adapter_or_device_supports_feature
 
 // Populates the adapter.limits field of the given adapter to the provided structure.
-void wgpu_adapter_or_device_get_limits(WGpuAdapter adapter, WGpuAdapterLimits *limits);
+void wgpu_adapter_or_device_get_limits(WGpuAdapter adapter, WGpuSupportedLimits *limits);
 #define wgpu_adapter_get_limits wgpu_adapter_or_device_get_limits
+
+EM_BOOL wgpu_adapter_is_software(WGpuAdapter adapter);
 
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 
@@ -212,13 +218,13 @@ void wgpu_adapter_request_device_async(WGpuAdapter adapter, const WGpuDeviceDesc
 
 /*
 dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
-    sequence<GPUFeatureName> nonGuaranteedFeatures = [];
-    record<DOMString, GPUSize32> nonGuaranteedLimits = {};
+    sequence<GPUFeatureName> requiredFeatures = [];
+    record<DOMString, GPUSize32> requiredLimits = {};
 };
 */
 typedef struct WGpuDeviceDescriptor
 {
-  WGPU_FEATURES_BITFIELD nonGuaranteedFeatures;
+  WGPU_FEATURES_BITFIELD requiredFeatures;
   uint32_t maxTextureDimension1D;
   uint32_t maxTextureDimension2D;
   uint32_t maxTextureDimension3D;
@@ -262,7 +268,7 @@ typedef int WGPU_FEATURE_NAME;
 [Exposed=(Window, DedicatedWorker), Serializable]
 interface GPUDevice : EventTarget {
     [SameObject] readonly attribute GPUSupportedFeatures features;
-    readonly attribute object limits;
+    [SameObject] readonly attribute GPUSupportedLimits limits;
 
     [SameObject] readonly attribute GPUQueue queue;
 
@@ -1109,11 +1115,15 @@ interface mixin GPUPipelineBase {
 dictionary GPUProgrammableStage {
     required GPUShaderModule module;
     required USVString entryPoint;
+    record<USVString, GPUPipelineConstantValue> constants;
 };
 */
 // TODO: implement
 
 /*
+
+typedef double GPUPipelineConstantValue; // May represent WGSL’s bool, f32, i32, u32.
+
 [Exposed=Window, Serializable]
 interface GPUComputePipeline {
 };
@@ -1676,6 +1686,14 @@ dictionary GPUImageCopyTexture {
 // Defined at the end of this file
 
 /*
+dictionary GPUImageCopyTextureTagged : GPUImageCopyTexture {
+    GPUPredefinedColorSpace colorSpace = "srgb";
+    boolean premultipliedAlpha = false;
+};
+*/
+// Defined at the end of this file
+
+/*
 dictionary GPUImageCopyExternalImage {
     required (ImageBitmap or HTMLCanvasElement or OffscreenCanvas) source;
     GPUOrigin2D origin = {};
@@ -1914,13 +1932,13 @@ typedef int WGPU_LOAD_OP;
 /*
 enum GPUStoreOp {
     "store",
-    "clear"
+    "discard"
 };
 */
 typedef int WGPU_STORE_OP;
 #define WGPU_STORE_OP_INVALID 0
 #define WGPU_STORE_OP_STORE 172
-#define WGPU_STORE_OP_CLEAR 173
+#define WGPU_STORE_OP_DISCARD 173
 
 /*
 [Exposed=Window]
@@ -2004,7 +2022,7 @@ interface GPUQueue {
 
     undefined copyExternalImageToTexture(
         GPUImageCopyExternalImage source,
-        GPUImageCopyTexture destination,
+        GPUImageCopyTextureTagged destination,
         GPUExtent3D copySize);
 };
 GPUQueue includes GPUObjectBase;
@@ -2031,8 +2049,8 @@ typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData)
 void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmittedWorkDoneCallback, void *userData); // TODO implement
 
 void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, void *data, double_int53_t size); // TODO other buffer sources?
-void wgpu_queue_write_texture(WGpuQueue queue, WGpuImageCopyTexture destination, void *data, uint32_t bytesPerBlockRow, uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1)); // TODO other buffer sources?
-void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, WGpuImageCopyExternalImage source, WGpuImageCopyTexture destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_queue_write_texture(WGpuQueue queue, const WGpuImageCopyTexture *destination, void *data, uint32_t bytesPerBlockRow, uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1)); // TODO other buffer sources?
+void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuImageCopyExternalImage *source, const WGpuImageCopyTextureTagged *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 
 /*
 [Exposed=Window]
@@ -2092,21 +2110,25 @@ typedef int WGPU_PIPELINE_STATISTIC_NAME;
 
 /*
 [Exposed=Window]
-interface GPUCanvasContext {
-    GPUSwapChain configureSwapChain(GPUSwapChainDescriptor descriptor);
+interface GPUPresentationContext {
+    undefined configure(GPUPresentationConfiguration configuration);
+    undefined unconfigure();
 
-    GPUTextureFormat getSwapChainPreferredFormat(GPUAdapter adapter);
+    GPUTextureFormat getPreferredFormat(GPUAdapter adapter);
+    GPUTexture getCurrentTexture();
 };
 */
-typedef int WGpuCanvasContext;
+typedef int WGpuPresentationContext;
 // Returns true if the given handle references a valid GPUCanvasContext.
-EM_BOOL wgpu_is_canvas_context(WGpuObjectBase object);
-// Configures the swap chain for this canvas, and returns a new GPUSwapChain object representing it. Destroys any swapchain previously returned by configureSwapChain, including all of the textures it has produced.
-WGpuSwapChain wgpu_canvas_context_configure_swap_chain(WGpuCanvasContext canvasContext, const WGpuSwapChainDescriptor *swapChainDesc);
+EM_BOOL wgpu_is_presentation_context(WGpuObjectBase object);
+// Configures the swap chain for this context.
+void wgpu_presentation_context_configure(WGpuPresentationContext presentationContext, const WGpuPresentationConfiguration *config);
+void wgpu_presentation_context_unconfigure(WGpuPresentationContext presentationContext);
 
 // Returns an optimal GPUTextureFormat to use for swap chains with this context and the given device.
-// TODO: How can a single "optimal" format work? (optimal for which usage? gamma? sRGB? HDR? other color spaces?)
-WGPU_TEXTURE_FORMAT wgpu_canvas_context_get_swap_chain_preferred_format(WGpuCanvasContext canvasContext, WGpuAdapter adapter);
+WGPU_TEXTURE_FORMAT wgpu_presentation_context_get_preferred_format(WGpuPresentationContext presentationContext, WGpuAdapter adapter);
+
+WGpuTexture wgpu_presentation_context_get_current_texture(WGpuPresentationContext presentationContext);
 
 /*
 enum GPUCanvasCompositingAlphaMode {
@@ -2120,33 +2142,15 @@ typedef int WGPU_CANVAS_COMPOSITING_ALPHA_MODE;
 #define WGPU_CANVAS_COMPOSITING_ALPHA_MODE_PREMULTIPLIED 183
 
 /*
-dictionary GPUSwapChainDescriptor : GPUObjectDescriptorBase {
+dictionary GPUPresentationConfiguration : GPUObjectDescriptorBase {
     required GPUDevice device;
     required GPUTextureFormat format;
     GPUTextureUsageFlags usage = 0x10;  // GPUTextureUsage.RENDER_ATTACHMENT
     GPUCanvasCompositingAlphaMode compositingAlphaMode = "opaque";
+    GPUExtent3D size;
 };
 */
-typedef struct WGpuSwapChainDescriptor
-{
-  WGpuDevice device;
-  WGPU_TEXTURE_FORMAT format;
-  WGPU_TEXTURE_USAGE_FLAGS usage;
-  WGPU_CANVAS_COMPOSITING_ALPHA_MODE compositingAlphaMode;
-} WGpuSwapChainDescriptor;
-extern const WGpuSwapChainDescriptor WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER;
-
-/*
-[Exposed=Window]
-interface GPUSwapChain {
-    GPUTexture getCurrentTexture();
-};
-GPUSwapChain includes GPUObjectBase;
-*/
-typedef int WGpuSwapChain;
-// Returns true if the given handle references a valid GPUSwapChain.
-EM_BOOL wgpu_is_swap_chain(WGpuObjectBase object);
-WGpuTexture wgpu_swap_chain_get_current_texture(WGpuSwapChain swapChain);
+// Specified at the end of this file
 
 /*
 enum GPUDeviceLostReason {
@@ -2321,11 +2325,27 @@ dictionary GPUExtent3DDict {
 };
 typedef (sequence<GPUIntegerCoordinate> or GPUExtent3DDict) GPUExtent3D;
 */
-// Not exposed for performance: values are passed Wasm->JS flattened to avoid marshalling data in HEAP.
-
+typedef struct WGpuExtent3D
+{
+  int width;
+  int height; // = 1;
+  int depthOrArrayLayers; // = 1;
+} WGpuExtent3D;
+extern const WGpuExtent3D WGPU_EXTENT_3D_DEFAULT_INITIALIZER;
 
 ////////////////////////////////////////////////////////
 // Sorted struct definitions for proper C parsing order:
+
+typedef struct WGpuPresentationConfiguration
+{
+  WGpuDevice device;
+  WGPU_TEXTURE_FORMAT format;
+  WGPU_TEXTURE_USAGE_FLAGS usage;
+  WGPU_CANVAS_COMPOSITING_ALPHA_MODE compositingAlphaMode;
+  WGpuExtent3D size;
+} WGpuPresentationConfiguration;
+extern const WGpuPresentationConfiguration WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
+
 typedef struct WGpuRenderPassDescriptor
 {
   int numColorAttachments;
@@ -2360,6 +2380,19 @@ typedef struct WGpuImageCopyTexture
   WGPU_TEXTURE_ASPECT aspect;
 } WGpuImageCopyTexture;
 extern const WGpuImageCopyTexture WGPU_IMAGE_COPY_TEXTURE_DEFAULT_INITIALIZER;
+
+typedef struct WGpuImageCopyTextureTagged
+{
+  // WGpuImageCopyTexture part:
+  WGpuTexture texture;
+  uint32_t mipLevel;
+  WGpuOrigin3D origin;
+  WGPU_TEXTURE_ASPECT aspect;
+
+  WGPU_PREDEFINED_COLOR_SPACE colorSpace; // = "srgb";
+  EM_BOOL premultipliedAlpha; // = false;
+} WGpuImageCopyTextureTagged;
+extern const WGpuImageCopyTextureTagged WGPU_IMAGE_COPY_TEXTURE_TAGGED_DEFAULT_INITIALIZER;
 
 typedef struct WGpuDepthStencilState
 {

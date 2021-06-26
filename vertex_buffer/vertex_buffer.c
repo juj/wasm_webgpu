@@ -13,7 +13,7 @@ uint64_t numVertices = 0;
 uint8_t *bufferData = 0;
 
 WGpuAdapter adapter;
-WGpuSwapChain swapChain;
+WGpuPresentationContext presentationContext;
 WGpuDevice device;
 WGpuQueue defaultQueue;
 WGpuRenderPipeline renderPipeline;
@@ -100,7 +100,7 @@ void Render()
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
 
   WGpuRenderPassColorAttachment colorAttachment = {};
-  colorAttachment.view = wgpu_texture_create_view(wgpu_swap_chain_get_current_texture(swapChain), 0);
+  colorAttachment.view = wgpu_texture_create_view(wgpu_presentation_context_get_current_texture(presentationContext), 0);
   colorAttachment.loadColor.a = 1.0;
 
   WGpuRenderPassDescriptor passDesc = {};
@@ -158,33 +158,36 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   device = result;
   defaultQueue = wgpu_device_get_queue(device);
 
-  WGpuCanvasContext canvasContext = wgpu_canvas_get_canvas_context("canvas");
+  presentationContext = wgpu_canvas_get_canvas_context("canvas");
 
-  WGpuSwapChainDescriptor swapChainDesc = WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER;
-  swapChainDesc.device = device;
-  swapChainDesc.format = wgpu_canvas_context_get_swap_chain_preferred_format(canvasContext, adapter);
-
-  swapChain = wgpu_canvas_context_configure_swap_chain(canvasContext, &swapChainDesc);
+  WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
+  config.device = device;
+  config.format = wgpu_presentation_context_get_preferred_format(presentationContext, adapter);
+  wgpu_presentation_context_configure(presentationContext, &config);
 
   const char *vertexShader =
-    "[[location(0)]] var<in> pos : vec2<f32>;"
-    "[[location(1)]] var<in> col : f32;"
+    "struct In {"
+    "  [[location(0)]] pos : vec2<f32>;"
+    "  [[location(1)]] color : f32;"
+    "};"
 
-    "[[builtin(position)]] var<out> Position : vec4<f32>;"
-    "[[location(0)]] var<out> outColor : f32;"
+    "struct Out {"
+    "  [[builtin(position)]] pos : vec4<f32>;"
+    "  [[location(0)]] color : f32;"
+    "};"
 
     "[[stage(vertex)]]"
-    "fn main() -> void {"
-      "Position = vec4<f32>(pos, 0.0, 1.0);"
-      "outColor = col;"
+    "fn main(in: In) -> Out {"
+      "var out: Out;"
+      "out.pos = vec4<f32>(in.pos, 0.0, 1.0);"
+      "out.color = in.color;"
+      "return out;"
     "}";
 
   const char *fragmentShader =
-    "[[location(0)]] var<in> inColor : f32;"
-    "[[location(0)]] var<out> outColor : vec4<f32>;"
     "[[stage(fragment)]]"
-    "fn main() -> void {"
-      "outColor = vec4<f32>(inColor, inColor, abs(inColor), 1.0);"
+    "fn main([[location(0)]] inColor : f32) -> [[location(0)]] vec4<f32> {"
+      "return vec4<f32>(inColor, inColor, abs(inColor), 1.0);"
     "}";
 
   WGpuShaderModuleDescriptor shaderModuleDesc = {};
@@ -216,7 +219,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   renderPipelineDesc.fragment.entryPoint = "main";
 
   WGpuColorTargetState colorTarget = WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER;
-  colorTarget.format = swapChainDesc.format;
+  colorTarget.format = config.format;
   colorTarget.blend.color.operation = WGPU_BLEND_OPERATION_ADD;
   colorTarget.blend.color.dstFactor = WGPU_BLEND_FACTOR_ONE;
   renderPipelineDesc.fragment.numTargets = 1;

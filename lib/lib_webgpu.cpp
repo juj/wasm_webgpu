@@ -10,6 +10,9 @@ const char *wgpu_enum_to_string(int enumValue)
   return (enumValue >= 0 && enumValue < sizeof(wgpuStrings)/sizeof(wgpuStrings[0])) ? wgpuStrings[enumValue] : "(invalid WebGPU enum)";
 }
 
+const WGpuRequestAdapterOptions WGPU_REQUEST_ADAPTER_OPTIONS_DEFAULT_INITIALIZER = {
+};
+
 const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER = {
 };
 
@@ -78,9 +81,10 @@ const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAUL
   .viewDimension = WGPU_TEXTURE_VIEW_DIMENSION_2D
 };
 
-const WGpuSwapChainDescriptor WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER = {
+const WGpuPresentationConfiguration WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER = {
   .usage = WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT,
-  .compositingAlphaMode = WGPU_CANVAS_COMPOSITING_ALPHA_MODE_OPAQUE
+  .compositingAlphaMode = WGPU_CANVAS_COMPOSITING_ALPHA_MODE_OPAQUE,
+  .size = WGPU_EXTENT_3D_DEFAULT_INITIALIZER
 };
 
 const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {
@@ -128,6 +132,11 @@ const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITI
   },
 };
 
+extern const WGpuExtent3D WGPU_EXTENT_3D_DEFAULT_INITIALIZER = {
+  .height = 1,
+  .depthOrArrayLayers = 1
+};
+
 extern const WGpuImageCopyExternalImage WGPU_IMAGE_COPY_EXTERNAL_IMAGE_DEFAULT_INITIALIZER = {
   .origin = (WGpuOrigin2D) {
     .x = 0,
@@ -143,6 +152,18 @@ extern const WGpuImageCopyTexture WGPU_IMAGE_COPY_TEXTURE_DEFAULT_INITIALIZER = 
     .z = 0
   },
   .aspect = WGPU_TEXTURE_ASPECT_ALL
+};
+
+extern const WGpuImageCopyTextureTagged WGPU_IMAGE_COPY_TEXTURE_TAGGED_DEFAULT_INITIALIZER = {
+  .mipLevel = 0,
+  .origin = (WGpuOrigin3D) {
+    .x = 0,
+    .y = 0,
+    .z = 0
+  },
+  .aspect = WGPU_TEXTURE_ASPECT_ALL,
+  .colorSpace = WGPU_PREDEFINED_COLOR_SPACE_SRGB,
+  .premultipliedAlpha = EM_FALSE
 };
 
 } // ~extern "C"

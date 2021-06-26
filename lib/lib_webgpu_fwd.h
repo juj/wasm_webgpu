@@ -13,7 +13,7 @@ typedef double_int53_t WGpuBufferMappedRangeStartOffset;
 
 typedef int WGpuObjectBase;
 typedef struct WGpuObjectDescriptorBase WGpuObjectDescriptorBase;
-typedef struct WGpuAdapterLimits WGpuAdapterLimits;
+typedef struct WGpuSupportedLimits WGpuSupportedLimits;
 typedef int WGPU_FEATURES_BITFIELD;
 typedef int WGPU_PREDEFINED_COLOR_SPACE;
 typedef struct WGpuRequestAdapterOptions WGpuRequestAdapterOptions;
@@ -96,6 +96,7 @@ typedef struct WGpuCommandEncoderDescriptor WGpuCommandEncoderDescriptor;
 typedef struct WGpuImageDataLayout WGpuImageDataLayout;
 typedef struct WGpuImageCopyBuffer WGpuImageCopyBuffer;
 typedef struct WGpuImageCopyTexture WGpuImageCopyTexture;
+typedef struct WGpuImageCopyTextureTagged WGpuImageCopyTextureTagged;
 typedef struct WGpuImageCopyExternalImage WGpuImageCopyExternalImage;
 typedef int WGpuProgrammablePassEncoder;
 typedef int WGpuComputePassEncoder;
@@ -118,8 +119,7 @@ typedef int WGPU_QUERY_TYPE;
 typedef int WGPU_PIPELINE_STATISTIC_NAME;
 typedef int WGpuCanvasContext;
 typedef int WGPU_CANVAS_COMPOSITING_ALPHA_MODE;
-typedef struct WGpuSwapChainDescriptor WGpuSwapChainDescriptor;
-typedef int WGpuSwapChain;
+typedef struct WGpuPresentationConfiguration WGpuPresentationConfiguration;
 typedef int WGPU_DEVICE_LOST_REASON;
 typedef int WGpuDeviceLostInfo;
 typedef int WGPU_ERROR_FILTER;
@@ -127,6 +127,7 @@ typedef int WGpuError;
 typedef struct WGpuColor WGpuColor;
 typedef struct WGpuOrigin2D WGpuOrigin2D;
 typedef struct WGpuOrigin3D WGpuOrigin3D;
+typedef struct WGpuExtent3D WGpuExtent3D;
 
 // Callbacks in the order of appearance in the WebIDL:
 

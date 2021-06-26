@@ -4,8 +4,7 @@
 #include "lib_webgpu.h"
 
 WGpuAdapter adapter;
-WGpuCanvasContext canvasContext;
-WGpuSwapChain swapChain;
+WGpuPresentationContext presentationContext;
 WGpuDevice device;
 WGpuQueue defaultQueue;
 WGpuRenderPipeline renderPipeline;
@@ -16,12 +15,12 @@ EM_BOOL raf(double time, void *userData)
   assert(wgpu_is_command_encoder(encoder));
 
   WGpuRenderPassColorAttachment colorAttachment = {};
-  WGpuTexture swapChainTexture = wgpu_swap_chain_get_current_texture(swapChain);
+  WGpuTexture swapChainTexture = wgpu_presentation_context_get_current_texture(presentationContext);
   assert(wgpu_is_texture(swapChainTexture));
 
   // Calling .getCurrentTexture() several times within a single rAF() callback
   // should return the same binding to the swap chain texture.
-  WGpuTexture swapChainTexture2 = wgpu_swap_chain_get_current_texture(swapChain);
+  WGpuTexture swapChainTexture2 = wgpu_presentation_context_get_current_texture(presentationContext);
   assert(swapChainTexture == swapChainTexture2);
 
   colorAttachment.view = wgpu_texture_create_view(swapChainTexture, 0);
@@ -66,38 +65,34 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   // TODO: read device.features and device.limits;
   // TODO: register to device.lost (undocumented?)
 
-  canvasContext = wgpu_canvas_get_canvas_context("canvas");
-  assert(canvasContext);
-  assert(wgpu_is_canvas_context(canvasContext));
+  presentationContext = wgpu_canvas_get_canvas_context("canvas");
+  assert(presentationContext);
+  assert(wgpu_is_canvas_context(presentationContext));
 
-  WGpuSwapChainDescriptor swapChainDesc = WGPU_SWAP_CHAIN_DESCRIPTOR_DEFAULT_INITIALIZER;
-  swapChainDesc.device = device;
-  swapChainDesc.format = wgpu_canvas_context_get_swap_chain_preferred_format(canvasContext, adapter);
-  emscripten_mini_stdio_printf("Preferred swap chain format: %s\n", wgpu_enum_to_string(swapChainDesc.format));
+  WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
+  config.device = device;
+  config.format = wgpu_presentation_context_get_preferred_format(presentationContext, adapter);
+  emscripten_mini_stdio_printf("Preferred swap chain format: %s\n", wgpu_enum_to_string(config.format));
 
-  swapChain = wgpu_canvas_context_configure_swap_chain(canvasContext, &swapChainDesc);
-  assert(wgpu_is_swap_chain(swapChain));
+  wgpu_presentation_context_configure(presentationContext, &config);
 
   const char *vertexShader =
-    "const pos : array<vec2<f32>, 3> = array<vec2<f32>, 3>("
+    "let pos : array<vec2<f32>, 3> = array<vec2<f32>, 3>("
       "vec2<f32>(0.0, 0.5),"
       "vec2<f32>(-0.5, -0.5),"
       "vec2<f32>(0.5, -0.5)"
     ");"
 
-    "[[builtin(position)]] var<out> Position : vec4<f32>;"
-    "[[builtin(vertex_index)]] var<in> VertexIndex : i32;"
-
     "[[stage(vertex)]]"
-    "fn main() -> void {"
-      "Position = vec4<f32>(pos[VertexIndex], 0.0, 1.0);"
+    "fn main([[builtin(vertex_index)]] VertexIndex : i32) -> [[builtin(position)]] vec4<f32> {"
+      "return vec4<f32>(pos[VertexIndex], 0.0, 1.0);"
     "}";
 
   const char *fragmentShader =
-    "[[location(0)]] var<out> outColor : vec4<f32>;"
+    ";"
     "[[stage(fragment)]]"
-    "fn main() -> void {"
-      "outColor = vec4<f32>(1.0, 0.0, 0.0, 1.0);"
+    "fn main() -> [[location(0)]] vec4<f32> {"
+      "return vec4<f32>(1.0, 0.0, 0.0, 1.0);"
     "}";
 
   WGpuShaderModuleDescriptor shaderModuleDesc = {};
@@ -116,7 +111,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   renderPipelineDesc.fragment.entryPoint = "main";
 
   WGpuColorTargetState colorTarget = WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER;
-  colorTarget.format = swapChainDesc.format;
+  colorTarget.format = config.format;
   renderPipelineDesc.fragment.numTargets = 1;
   renderPipelineDesc.fragment.targets = &colorTarget;
 
@@ -135,7 +130,7 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 
 #ifndef NDEBUG
   char name[256];
-  WGpuAdapterLimits limits;
+  WGpuSupportedLimits limits;
   WGPU_FEATURES_BITFIELD features = wgpu_adapter_get_features(adapter);
   wgpu_adapter_get_name(adapter, name, sizeof(name));
   wgpu_adapter_get_limits(adapter, &limits);
