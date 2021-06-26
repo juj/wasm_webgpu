@@ -1514,6 +1514,7 @@ typedef struct WGpuVertexBufferLayout
   const WGpuVertexAttribute *attributes;
   uint64_t arrayStride;
   WGPU_INPUT_STEP_MODE stepMode;
+  uint32_t _unused64BitPadding;
 } WGpuVertexBufferLayout;
 
 /*
