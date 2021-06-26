@@ -2342,7 +2342,7 @@ typedef struct WGpuPresentationConfiguration
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_USAGE_FLAGS usage;
   WGPU_CANVAS_COMPOSITING_ALPHA_MODE compositingAlphaMode;
-  WGpuExtent3D size;
+  WGpuExtent3D size; // If size.width == 0 (as default initialized via WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER), then full screen size is used.
 } WGpuPresentationConfiguration;
 extern const WGpuPresentationConfiguration WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
 
