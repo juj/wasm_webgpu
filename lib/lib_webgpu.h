@@ -2209,13 +2209,7 @@ interface GPUValidationError {
 };
 
 typedef (GPUOutOfMemoryError or GPUValidationError) GPUError;
-*/
-typedef int WGpuError;
-// Returns true if the given handle references a valid GPUError.
-EM_BOOL wgpu_is_error(WGpuObjectBase object);
-int wgpu_error_get_message(WGpuError error, char *outMessage, uint32_t outMessageSize); // TODO implement
 
-/*
 partial interface GPUDevice {
     undefined pushErrorScope(GPUErrorFilter filter);
     Promise<GPUError?> popErrorScope();
@@ -2223,8 +2217,8 @@ partial interface GPUDevice {
 */
 void wgpu_device_push_error_scope(WGpuDevice device, WGPU_ERROR_FILTER filter);
 
-typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGpuError deviceLostInfo, void *userData); // TODO implement
-void wgpu_device_pop_error_scope_async(WGpuDevice device, WGpuDeviceErrorCallback callback, void *userData); // TODO implement
+typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessage, void *userData);
+void wgpu_device_pop_error_scope_async(WGpuDevice device, WGpuDeviceErrorCallback callback, void *userData);
 
 /*
 [

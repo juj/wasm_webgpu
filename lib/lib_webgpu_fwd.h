@@ -123,7 +123,6 @@ typedef struct WGpuPresentationConfiguration WGpuPresentationConfiguration;
 typedef int WGPU_DEVICE_LOST_REASON;
 typedef int WGpuDeviceLostInfo;
 typedef int WGPU_ERROR_FILTER;
-typedef int WGpuError;
 typedef struct WGpuColor WGpuColor;
 typedef struct WGpuOrigin2D WGpuOrigin2D;
 typedef struct WGpuOrigin3D WGpuOrigin3D;
@@ -135,7 +134,7 @@ typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData);
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
 typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGpuDeviceLostInfo deviceLostInfo, void *userData);
-typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGpuError deviceLostInfo, void *userData); // TODO implement
+typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessage, void *userData);
 
 #ifdef __cplusplus
 } // ~extern "C"
