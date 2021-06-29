@@ -45,9 +45,11 @@ if (EMSCRIPTEN)
 	append_linker_flags("-s ENVIRONMENT=web -s MIN_FIREFOX_VERSION=87 -s MIN_SAFARI_VERSION=140000 -s MIN_EDGE_VERSION=90 -s MIN_CHROME_VERSION=90")
 	append_linker_flags("--shell-file \"${CMAKE_SOURCE_DIR}/shell.html\"")
 	append_linker_flags("-s TOTAL_STACK=16KB -s INITIAL_MEMORY=128KB")
-#	append_linker_flags("-s ALLOW_MEMORY_GROWTH=1")
+	append_linker_flags("-s ALLOW_MEMORY_GROWTH=1")
 	append_linker_flags("-s USE_SDL=0 -s FILESYSTEM=0 -s AUTO_JS_LIBRARIES=0 -s DISABLE_EXCEPTION_THROWING=1")
 	append_linker_flags("-lmath.js -lhtml5.js -lint53.js")
+
+	append_linker_flags("-g2 -s SINGLE_FILE=1 -s WASM=0 -s INITIAL_MEMORY=16MB -s MALLOC=emmalloc --memory-init-file 0")
 
 	append_linker_flags_opts("--closure 1 --closure-args \"--externs ${CMAKE_CURRENT_LIST_DIR}/lib/webgpu_closure_externs.js\"")
 
@@ -70,3 +72,6 @@ target_link_libraries(hello_triangle_verbose webgpu)
 
 add_executable(vertex_buffer vertex_buffer/vertex_buffer.c)
 target_link_libraries(vertex_buffer webgpu)
+
+add_executable(gpu_oom gpu_oom/gpu_oom.c)
+target_link_libraries(gpu_oom webgpu)

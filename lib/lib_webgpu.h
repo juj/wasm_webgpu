@@ -361,7 +361,10 @@ typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData);
 #define WGPU_MAP_MAX_LENGTH -1
 void wgpu_buffer_map_async(WGpuBuffer buffer, WGpuBufferMapCallback callback, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset, double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAP_MAX_LENGTH)); // TODO implement
 
+#define WGPU_BUFFER_GET_MAPPED_RANGE_FAILED ((WGpuBufferMappedRangeStartOffset)-1)
+
 // Calls buffer.getMappedRange(). Returns `startOffset`, which is used as an ID token to wgpu_buffer_read/write_mapped_range().
+// If .getMappedRange() fails, the value WGPU_BUFFER_GET_MAPPED_RANGE_FAILED (-1) will be returned.
 WGpuBufferMappedRangeStartOffset wgpu_buffer_get_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAP_MAX_LENGTH));
 void wgpu_buffer_read_mapped_range(WGpuBuffer buffer, WGpuBufferMappedRangeStartOffset startOffset, double_int53_t subOffset, void *dst, double_int53_t size);
 void wgpu_buffer_write_mapped_range(WGpuBuffer buffer, WGpuBufferMappedRangeStartOffset startOffset, double_int53_t subOffset, const void *src, double_int53_t size);
