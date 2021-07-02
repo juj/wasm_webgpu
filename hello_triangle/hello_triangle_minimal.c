@@ -45,25 +45,21 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   wgpu_presentation_context_configure(presentationContext, &config);
 
   const char *vertexShader =
-    "const pos : array<vec2<f32>, 3> = array<vec2<f32>, 3>("
-      "vec2<f32>(0.0, 0.5),"
-      "vec2<f32>(-0.5, -0.5),"
-      "vec2<f32>(0.5, -0.5)"
-    ");"
+    "[[stage(vertex)]]\n"
+    "fn main([[builtin(vertex_index)]] vertexIndex : u32) -> [[builtin(position)]] vec4<f32> {\n"
+      "var pos = array<vec2<f32>, 3>(\n"
+        "vec2<f32>(0.0, 0.5),\n"
+        "vec2<f32>(-0.5, -0.5),\n"
+        "vec2<f32>(0.5, -0.5)\n"
+      ");\n"
 
-    "[[builtin(position)]] var<out> Position : vec4<f32>;"
-    "[[builtin(vertex_index)]] var<in> VertexIndex : i32;"
-
-    "[[stage(vertex)]]"
-    "fn main() -> void {"
-      "Position = vec4<f32>(pos[VertexIndex], 0.0, 1.0);"
+      "return vec4<f32>(pos[vertexIndex], 0.0, 1.0);\n"
     "}";
 
   const char *fragmentShader =
-    "[[location(0)]] var<out> outColor : vec4<f32>;"
-    "[[stage(fragment)]]"
-    "fn main() -> void {"
-      "outColor = vec4<f32>(1.0, 0.0, 0.0, 1.0);"
+    "[[stage(fragment)]]\n"
+    "fn main() -> [[location(0)]] vec4<f32> {\n"
+      "return vec4<f32>(1.0, 0.5, 0.3, 1.0);\n"
     "}";
 
   WGpuShaderModuleDescriptor shaderModuleDesc = {};
