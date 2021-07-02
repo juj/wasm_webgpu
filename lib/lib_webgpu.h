@@ -1009,7 +1009,13 @@ typedef struct WGpuBindGroupEntry
 {
   uint32_t binding;
   WGpuObjectBase resource;
+  // If 'resource' points to a WGpuBuffer, bufferBindOffset and bufferBindSize specify
+  // the offset and length of the buffer to bind. If 'resource' does not point to a WGpuBuffer,
+  // offset and size are ignored.
+  uint64_t bufferBindOffset;
+  uint64_t bufferBindSize; // If set to 0 (default), the whole buffer is bound.
 } WGpuBindGroupEntry;
+extern const WGpuBindGroupEntry WGPU_BIND_GROUP_ENTRY_DEFAULT_INITIALIZER;
 
 /*
 dictionary GPUBufferBinding {
@@ -1018,13 +1024,7 @@ dictionary GPUBufferBinding {
     GPUSize64 size;
 };
 */
-typedef struct WGpuBufferBinding
-{
-  WGpuBuffer buffer;
-  uint64_t offset;
-  uint64_t size;
-} WGpuBufferBinding;
-extern const WGpuBufferBinding WGPU_BUFFER_BINDING_DEFAULT_INITIALIZER;
+// Not exposed. Integrated as part of WGpuBindGroupEntry.
 
 /*
 [Exposed=Window, Serializable]

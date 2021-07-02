@@ -58,7 +58,6 @@ typedef struct WGpuExternalTextureBindingLayout WGpuExternalTextureBindingLayout
 typedef int WGpuBindGroup;
 typedef struct WGpuBindGroupDescriptor WGpuBindGroupDescriptor;
 typedef struct WGpuBindGroupEntry WGpuBindGroupEntry;
-typedef struct WGpuBufferBinding WGpuBufferBinding;
 typedef int WGpuPipelineLayout;
 typedef struct WGpuPipelineLayoutDescriptor WGpuPipelineLayoutDescriptor;
 typedef int WGpuShaderModule;
