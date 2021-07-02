@@ -89,23 +89,23 @@ interface GPUSupportedLimits {
 */
 typedef struct WGpuSupportedLimits
 {
-  uint32_t maxTextureDimension1D;
-  uint32_t maxTextureDimension2D;
-  uint32_t maxTextureDimension3D;
-  uint32_t maxTextureArrayLayers;
-  uint32_t maxBindGroups;
-  uint32_t maxDynamicUniformBuffersPerPipelineLayout;
-  uint32_t maxDynamicStorageBuffersPerPipelineLayout;
-  uint32_t maxSampledTexturesPerShaderStage;
-  uint32_t maxSamplersPerShaderStage;
-  uint32_t maxStorageBuffersPerShaderStage;
-  uint32_t maxStorageTexturesPerShaderStage;
-  uint32_t maxUniformBuffersPerShaderStage;
-  uint32_t maxUniformBufferBindingSize;
-  uint32_t maxStorageBufferBindingSize;
-  uint32_t maxVertexBuffers;
-  uint32_t maxVertexAttributes;
-  uint32_t maxVertexBufferArrayStride;
+  uint32_t maxTextureDimension1D; // required >= 8192
+  uint32_t maxTextureDimension2D; // required >= 8192
+  uint32_t maxTextureDimension3D; // required >= 2048
+  uint32_t maxTextureArrayLayers; // required >= 2048
+  uint32_t maxBindGroups; // required >= 4
+  uint32_t maxDynamicUniformBuffersPerPipelineLayout; // required >= 8
+  uint32_t maxDynamicStorageBuffersPerPipelineLayout; // required >= 4
+  uint32_t maxSampledTexturesPerShaderStage; // required >= 16
+  uint32_t maxSamplersPerShaderStage; // required >= 16
+  uint32_t maxStorageBuffersPerShaderStage; // required >= 8
+  uint32_t maxStorageTexturesPerShaderStage; // required >= 8
+  uint32_t maxUniformBuffersPerShaderStage; // required >= 12
+  uint32_t maxUniformBufferBindingSize; // required >= 16384
+  uint32_t maxStorageBufferBindingSize; // required >= 128*1024*1024 (128MB)
+  uint32_t maxVertexBuffers; // required >= 8
+  uint32_t maxVertexAttributes; // required >= 16
+  uint32_t maxVertexBufferArrayStride; // required >= 2048
 } WGpuSupportedLimits;
 
 /*
@@ -225,23 +225,7 @@ dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
 typedef struct WGpuDeviceDescriptor
 {
   WGPU_FEATURES_BITFIELD requiredFeatures;
-  uint32_t maxTextureDimension1D;
-  uint32_t maxTextureDimension2D;
-  uint32_t maxTextureDimension3D;
-  uint32_t maxTextureArrayLayers;
-  uint32_t maxBindGroups;
-  uint32_t maxDynamicUniformBuffersPerPipelineLayout;
-  uint32_t maxDynamicStorageBuffersPerPipelineLayout;
-  uint32_t maxSampledTexturesPerShaderStage;
-  uint32_t maxSamplersPerShaderStage;
-  uint32_t maxStorageBuffersPerShaderStage;
-  uint32_t maxStorageTexturesPerShaderStage;
-  uint32_t maxUniformBuffersPerShaderStage;
-  uint32_t maxUniformBufferBindingSize;
-  uint32_t maxStorageBufferBindingSize;
-  uint32_t maxVertexBuffers;
-  uint32_t maxVertexAttributes;
-  uint32_t maxVertexBufferArrayStride;
+  WGpuSupportedLimits requiredLimits;
 } WGpuDeviceDescriptor;
 extern const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
