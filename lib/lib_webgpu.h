@@ -341,6 +341,7 @@ typedef int WGpuBuffer;
 // Returns true if the given handle references a valid GPUBuffer.
 EM_BOOL wgpu_is_buffer(WGpuObjectBase object);
 
+// TODO: Add error status to map callback for when mapAsync() promise rejects.
 typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset, double_int53_t size);
 #define WGPU_MAP_MAX_LENGTH -1
 void wgpu_buffer_map_async(WGpuBuffer buffer, WGpuBufferMapCallback callback, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAP_MAX_LENGTH));
