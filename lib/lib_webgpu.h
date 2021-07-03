@@ -322,7 +322,7 @@ void wgpu_device_create_compute_pipeline_async(WGpuDevice device, const WGpuComp
 void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc, WGpuCreatePipelineCallback callback, void *userData);
 
 WGpuCommandEncoder wgpu_device_create_command_encoder(WGpuDevice device, const WGpuCommandEncoderDescriptor *commandEncoderDesc);
-WGpuRenderBundleEncoder wgpu_device_create_render_bundle_encoder(WGpuDevice device, const WGpuRenderBundleEncoderDescriptor *renderBundleEncoderDesc); // TODO implement
+WGpuRenderBundleEncoder wgpu_device_create_render_bundle_encoder(WGpuDevice device, const WGpuRenderBundleEncoderDescriptor *renderBundleEncoderDesc);
 
 WGpuQuerySet wgpu_device_create_query_set(WGpuDevice device, const WGpuQuerySetDescriptor *querySetDesc);
 
@@ -1985,8 +1985,10 @@ dictionary GPURenderBundleEncoderDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuRenderBundleEncoderDescriptor
 {
-  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size. Remove this once implemented
-  // TODO implement
+  int numColorFormats;
+  const WGPU_TEXTURE_FORMAT *colorFormats;
+  WGPU_TEXTURE_FORMAT depthStencilFormat;
+  uint32_t sampleCount;
 } WGpuRenderBundleEncoderDescriptor;
 
 /*
