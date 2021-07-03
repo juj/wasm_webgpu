@@ -33,6 +33,11 @@ void oom(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessag
     emscripten_mini_stdio_printf("WebGPU device no oom error reported.\n");
 }
 
+void uncapturedError(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessage, void *userData)
+{
+  emscripten_mini_stdio_fprintf(EM_STDERR, "Uncaptured WebGPU error: type: %d, message: %s\n", errorType, errorMessage);
+}
+
 void alloc_gpu_buffer()
 {
   WGpuBufferDescriptor bufferDesc = {};
@@ -68,6 +73,7 @@ EM_BOOL raf(double time, void *userData)
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 {
   device = result;
+  wgpu_device_set_uncapturederror_callback(device, uncapturedError, 0);
   wgpu_device_set_lost_callback(device, deviceLost, 0);
   presentationContext = wgpu_canvas_get_canvas_context("canvas");
   WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;

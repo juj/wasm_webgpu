@@ -10,6 +10,11 @@ WGpuDevice device;
 WGpuQueue defaultQueue;
 WGpuRenderPipeline renderPipeline;
 
+void uncapturedError(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessage, void *userData)
+{
+  emscripten_mini_stdio_fprintf(EM_STDERR, "Uncaptured WebGPU error: type: %d, message: %s\n", errorType, errorMessage);
+}
+
 EM_BOOL raf(double time, void *userData)
 {
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
@@ -60,6 +65,8 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   assert(wgpu_is_device(result));
   device = result;
 
+  wgpu_device_set_uncapturederror_callback(device, uncapturedError, 0);
+
   char deviceLabel[256];
   memset(deviceLabel, 0xEE, sizeof(deviceLabel));
   wgpu_object_get_label(device, deviceLabel, sizeof(deviceLabel));
@@ -75,7 +82,6 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   assert(wgpu_is_queue(defaultQueue));
 
   // TODO: read device.features and device.limits;
-  // TODO: register to device.lost (undocumented?)
 
   presentationContext = wgpu_canvas_get_canvas_context("canvas");
   assert(presentationContext);

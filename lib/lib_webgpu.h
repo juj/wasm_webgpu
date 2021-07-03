@@ -119,7 +119,7 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_DEPTH24UNORM_STENCIL8     0x02
 #define WGPU_FEATURE_DEPTH32FLOAT_STENCIL8     0x04
 #define WGPU_FEATURE_PIPELINE_STATISTICS_QUERY 0x08
-#define WGPU_FEATURE_TEXTURE_COMPRESSION_BC    0x10 // TODO Why no other compression formats in this bitfield? TODO: Propose direct texture format supported queries
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_BC    0x10
 #define WGPU_FEATURE_TIMESTAMP_QUERY           0x20
 
 /*
@@ -2220,7 +2220,7 @@ partial interface GPUDevice {
 */
 
 // registers a device uncapturederror event callback. Call with 0 pointer to unregister. Only one callback handler is supported, new call overwrites previous
-void wgpu_device_set_uncapturederror_callback(WGpuDevice device, WGpuDeviceErrorCallback callback, void *userData); // TODO implement
+void wgpu_device_set_uncapturederror_callback(WGpuDevice device, WGpuDeviceErrorCallback callback, void *userData);
 
 /*
 typedef [EnforceRange] unsigned long GPUBufferDynamicOffset;
