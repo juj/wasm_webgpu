@@ -2154,20 +2154,13 @@ interface GPUDeviceLostInfo {
     readonly attribute (GPUDeviceLostReason or undefined) reason;
     readonly attribute DOMString message;
 };
-*/
-typedef int WGpuDeviceLostInfo;
-// Returns true if the given handle references a valid GPUDeviceLostInfo.
-EM_BOOL wgpu_is_device_lost_info(WGpuObjectBase object);
-WGPU_DEVICE_LOST_REASON wgpu_device_lost_info_get_reason(WGpuDeviceLostInfo deviceLostInfo); // TODO implement
-int wgpu_device_lost_info_get_message(char *dstMessage, uint32_t dstMessageSize); // TODO implement
 
-/*
 partial interface GPUDevice {
     readonly attribute Promise<GPUDeviceLostInfo> lost;
 };
 */
-typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGpuDeviceLostInfo deviceLostInfo, void *userData);
-void wgpu_device_set_lost_callback(WGpuDevice device, WGpuDeviceLostCallback callback, void *userData); // TODO implement
+typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message, void *userData);
+void wgpu_device_set_lost_callback(WGpuDevice device, WGpuDeviceLostCallback callback, void *userData);
 
 /*
 enum GPUErrorFilter {

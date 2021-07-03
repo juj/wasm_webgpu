@@ -20,6 +20,11 @@ uint32_t initialData[1024*1024];
 
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 
+void deviceLost(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message, void *userData)
+{
+  emscripten_mini_stdio_fprintf(EM_STDERR, "WebGPU device lost! reason: %d, message: \"%s\"\n", deviceLostReason, message);  
+}
+
 void oom(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessage, void *userData)
 {
   if (errorType == WGPU_ERROR_FILTER_OUT_OF_MEMORY)
@@ -63,6 +68,7 @@ EM_BOOL raf(double time, void *userData)
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 {
   device = result;
+  wgpu_device_set_lost_callback(device, deviceLost, 0);
   presentationContext = wgpu_canvas_get_canvas_context("canvas");
   WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
