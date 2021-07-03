@@ -130,7 +130,7 @@ typedef struct WGpuExtent3D WGpuExtent3D;
 // Callbacks in the order of appearance in the WebIDL:
 
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
-typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData);
+typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset, double_int53_t size);
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
 typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message, void *userData);
 typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessage, void *userData);
