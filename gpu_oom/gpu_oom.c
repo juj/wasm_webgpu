@@ -75,7 +75,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   device = result;
   wgpu_device_set_uncapturederror_callback(device, uncapturedError, 0);
   wgpu_device_set_lost_callback(device, deviceLost, 0);
-  presentationContext = wgpu_canvas_get_canvas_context("canvas");
+  presentationContext = wgpu_canvas_get_gpupresent_context("canvas");
   WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
   config.format = wgpu_presentation_context_get_preferred_format(presentationContext, adapter);

@@ -90,7 +90,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 
   // TODO: read device.features and device.limits;
 
-  presentationContext = wgpu_canvas_get_canvas_context("canvas");
+  presentationContext = wgpu_canvas_get_gpupresent_context("canvas");
   assert(presentationContext);
   assert(wgpu_is_presentation_context(presentationContext));
 

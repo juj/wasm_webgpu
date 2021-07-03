@@ -46,7 +46,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   device = result;
   defaultQueue = wgpu_device_get_queue(device);
 
-  presentationContext = wgpu_canvas_get_canvas_context("canvas");
+  presentationContext = wgpu_canvas_get_gpupresent_context("canvas");
 
   WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;

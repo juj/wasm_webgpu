@@ -37,7 +37,7 @@ uint32_t wgpu_get_num_live_objects(void);
 void wgpu_object_destroy(WGpuObjectBase wgpuObject);
 
 // Acquires a canvas context from a canvas by calling canvas.getCanvasContext().
-WGpuCanvasContext wgpu_canvas_get_canvas_context(const char *canvasSelector);
+WGpuPresentationContext wgpu_canvas_get_gpupresent_context(const char *canvasSelector);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // The ordering and structure of this remainder of this file follows the official WebGPU WebIDL definitions at https://www.w3.org/TR/webgpu/#idl-index

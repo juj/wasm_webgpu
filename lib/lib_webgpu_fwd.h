@@ -117,7 +117,7 @@ typedef int WGpuQuerySet;
 typedef struct WGpuQuerySetDescriptor WGpuQuerySetDescriptor;
 typedef int WGPU_QUERY_TYPE;
 typedef int WGPU_PIPELINE_STATISTIC_NAME;
-typedef int WGpuCanvasContext;
+typedef int WGpuPresentationContext;
 typedef int WGPU_CANVAS_COMPOSITING_ALPHA_MODE;
 typedef struct WGpuPresentationConfiguration WGpuPresentationConfiguration;
 typedef int WGPU_DEVICE_LOST_REASON;
