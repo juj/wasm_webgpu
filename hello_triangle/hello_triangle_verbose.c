@@ -15,6 +15,11 @@ void uncapturedError(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char 
   emscripten_mini_stdio_fprintf(EM_STDERR, "Uncaptured WebGPU error: type: %d, message: %s\n", errorType, errorMessage);
 }
 
+void onSubmittedWorkDone(WGpuQueue queue, void *userData)
+{
+  emscripten_mini_stdio_printf("Submitted work done callback fired! (queue=%u, userData=%u)\n", queue, userData);
+}
+
 EM_BOOL raf(double time, void *userData)
 {
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
@@ -47,6 +52,8 @@ EM_BOOL raf(double time, void *userData)
   assert(wgpu_is_command_buffer(commandBuffer));
 
   wgpu_queue_submit_one_and_destroy(defaultQueue, commandBuffer);
+
+  wgpu_queue_set_on_submitted_work_done_callback(defaultQueue, onSubmittedWorkDone, 0);
 
   static int numLiveObjects = 0;
   int numLiveNow = wgpu_get_num_live_objects();

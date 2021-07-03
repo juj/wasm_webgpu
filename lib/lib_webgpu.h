@@ -2033,7 +2033,7 @@ void wgpu_queue_submit_multiple(WGpuQueue queue, int numCommandBuffers, const WG
 void wgpu_queue_submit_multiple_and_destroy(WGpuQueue queue, int numCommandBuffers, const WGpuCommandBuffer *commandBuffers);
 
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
-void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmittedWorkDoneCallback, void *userData); // TODO implement
+void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmittedWorkDoneCallback callback, void *userData);
 
 void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, void *data, double_int53_t size); // TODO other buffer sources?
 void wgpu_queue_write_texture(WGpuQueue queue, const WGpuImageCopyTexture *destination, void *data, uint32_t bytesPerBlockRow, uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1)); // TODO other buffer sources?
