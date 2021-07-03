@@ -317,9 +317,9 @@ WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const
 
 WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc);
 
-typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, void *userData);
+typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineBase pipeline, void *userData);
 void wgpu_device_create_compute_pipeline_async(WGpuDevice device, const WGpuComputePipelineDescriptor *computePipelineDesc, WGpuCreatePipelineCallback callback, void *userData); // TODO implement
-void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc, WGpuCreatePipelineCallback callback, void *userData); // TODO implement
+void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc, WGpuCreatePipelineCallback callback, void *userData);
 
 WGpuCommandEncoder wgpu_device_create_command_encoder(WGpuDevice device, const WGpuCommandEncoderDescriptor *commandEncoderDesc);
 WGpuRenderBundleEncoder wgpu_device_create_render_bundle_encoder(WGpuDevice device, const WGpuRenderBundleEncoderDescriptor *renderBundleEncoderDesc); // TODO implement
@@ -1136,6 +1136,7 @@ GPURenderPipeline includes GPUObjectBase;
 GPURenderPipeline includes GPUPipelineBase;
 */
 typedef int WGpuRenderPipeline;
+typedef int WGpuPipelineBase;
 // Returns true if the given handle references a valid GPURenderPipeline.
 EM_BOOL wgpu_is_render_pipeline(WGpuObjectBase object);
 

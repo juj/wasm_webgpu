@@ -66,6 +66,7 @@ typedef int WGPU_COMPILATION_MESSAGE_TYPE;
 typedef int WGpuComputePipeline;
 typedef struct WGpuComputePipelineDescriptor WGpuComputePipelineDescriptor;
 typedef int WGpuRenderPipeline;
+typedef int WGpuPipelineBase;
 typedef struct WGpuRenderPipelineDescriptor WGpuRenderPipelineDescriptor;
 typedef int WGPU_PRIMITIVE_TOPOLOGY;
 typedef struct WGpuPrimitiveState WGpuPrimitiveState;
