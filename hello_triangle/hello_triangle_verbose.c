@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdio.h>
+#include <memory.h>
 #include <miniprintf.h>
 #include "lib_webgpu.h"
 
@@ -58,6 +59,17 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   assert(userData == (void*)43);
   assert(wgpu_is_device(result));
   device = result;
+
+  char deviceLabel[256];
+  memset(deviceLabel, 0xEE, sizeof(deviceLabel));
+  wgpu_object_get_label(device, deviceLabel, sizeof(deviceLabel));
+  assert(strlen(deviceLabel) == 0); // Initial label should be empty.
+
+  wgpu_object_set_label(device, "My WebGPU device");
+  wgpu_object_get_label(device, deviceLabel, sizeof(deviceLabel));
+  printf("Got device, set label: \"%s\"\n", deviceLabel);
+  assert(!strcmp(deviceLabel, "My WebGPU device"));
+
   assert(wgpu_device_get_adapter(device) == adapter);
   defaultQueue = wgpu_device_get_queue(device);
   assert(wgpu_is_queue(defaultQueue));
