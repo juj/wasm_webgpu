@@ -96,5 +96,6 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 int main()
 {
   WGpuRequestAdapterOptions options = {};
+  options.powerPreference = WGPU_POWER_PREFERENCE_LOW_POWER;
   navigator_gpu_request_adapter_async(&options, ObtainedWebGpuAdapter, 0);
 }
