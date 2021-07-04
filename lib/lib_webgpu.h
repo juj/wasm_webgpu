@@ -1909,7 +1909,7 @@ enum GPULoadOp {
 };
 */
 typedef int WGPU_LOAD_OP;
-#define WGPU_LOAD_OP_INVALID 0
+#define WGPU_LOAD_OP_CONSTANT_VALUE 0
 #define WGPU_LOAD_OP_LOAD 171
 
 /*
