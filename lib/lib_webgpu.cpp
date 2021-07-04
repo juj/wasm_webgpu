@@ -70,10 +70,6 @@ const WGpuCommandEncoderDescriptor WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITI
   .measureExecutionTime = EM_FALSE
 };
 
-const WGpuImageDataLayout WGPU_IMAGE_DATA_LAYOUT_DEFAULT_INITIALIZER = {
-  .offset = 0
-};
-
 const WGpuImageCopyBuffer WGPU_IMAGE_COPY_BUFFER_DEFAULT_INITIALIZER = {};
 
 const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER = {

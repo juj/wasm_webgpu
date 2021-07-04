@@ -1641,14 +1641,8 @@ dictionary GPUImageDataLayout {
     GPUSize32 bytesPerRow;
     GPUSize32 rowsPerImage;
 };
+// unused: fused to WGpuImageCopyBuffer
 */
-typedef struct WGpuImageDataLayout
-{
-  uint64_t offset;
-  uint32_t bytesPerRow;
-  uint32_t rowsPerImage;
-} WGpuImageDataLayout;
-extern const WGpuImageDataLayout WGPU_IMAGE_DATA_LAYOUT_DEFAULT_INITIALIZER;
 
 /*
 dictionary GPUImageCopyBuffer : GPUImageDataLayout {

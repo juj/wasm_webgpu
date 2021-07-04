@@ -93,7 +93,6 @@ typedef int WGpuCommandBuffer;
 typedef struct WGpuCommandBufferDescriptor WGpuCommandBufferDescriptor;
 typedef int WGpuCommandEncoder;
 typedef struct WGpuCommandEncoderDescriptor WGpuCommandEncoderDescriptor;
-typedef struct WGpuImageDataLayout WGpuImageDataLayout;
 typedef struct WGpuImageCopyBuffer WGpuImageCopyBuffer;
 typedef struct WGpuImageCopyTexture WGpuImageCopyTexture;
 typedef struct WGpuImageCopyTextureTagged WGpuImageCopyTextureTagged;
