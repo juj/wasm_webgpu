@@ -42,7 +42,9 @@ const WGpuSamplerDescriptor WGPU_SAMPLER_DESCRIPTOR_DEFAULT_INITIALIZER = {
   .minFilter = WGPU_FILTER_MODE_NEAREST,
   .mipmapFilter = WGPU_FILTER_MODE_NEAREST,
   .lodMinClamp = 0,
-  .lodMaxClamp = 65536 // TODO change this after spec is fixed
+  .lodMaxClamp = 65535, // TODO change this after spec is fixed
+  .maxAnisotropy = 1
+
 };
 
 const WGpuBindGroupLayoutEntry WGPU_BUFFER_BINDING_LAYOUT_ENTRY_DEFAULT_INITIALIZER = {

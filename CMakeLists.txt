@@ -75,3 +75,6 @@ target_link_libraries(vertex_buffer webgpu)
 
 add_executable(gpu_oom gpu_oom/gpu_oom.c)
 target_link_libraries(gpu_oom webgpu)
+
+add_executable(texture texture/texture.c)
+target_link_libraries(texture webgpu)

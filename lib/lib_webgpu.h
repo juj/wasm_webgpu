@@ -36,6 +36,9 @@ uint32_t wgpu_get_num_live_objects(void);
 // do excess "if (wgpuObject) wgpu_object_destroy(wgpuObject);")
 void wgpu_object_destroy(WGpuObjectBase wgpuObject);
 
+// Deinitializes all initialized WebGPU objects.
+void wgpu_destroy_all_objects(void);
+
 // Acquires a canvas context from a canvas by calling canvas.getCanvasContext().
 WGpuPresentationContext wgpu_canvas_get_gpupresent_context(const char *canvasSelector);
 
@@ -733,16 +736,16 @@ dictionary GPUSamplerDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuSamplerDescriptor
 {
-  WGPU_ADDRESS_MODE addressModeU;
-  WGPU_ADDRESS_MODE addressModeV;
-  WGPU_ADDRESS_MODE addressModeW;
-  WGPU_FILTER_MODE magFilter;
-  WGPU_FILTER_MODE minFilter;
-  WGPU_FILTER_MODE mipmapFilter;
-  float lodMinClamp;
-  float lodMaxClamp;
-  WGPU_COMPARE_FUNCTION compare;
-  uint32_t maxAnisotropy; // N.b. this is 32-bit wide in the bindings implementation for simplicity, unlike in the IDL which specifies a unsigned short.
+  WGPU_ADDRESS_MODE addressModeU; // default = WGPU_ADDRESS_MODE_CLAMP_TO_EDGE
+  WGPU_ADDRESS_MODE addressModeV; // default = WGPU_ADDRESS_MODE_CLAMP_TO_EDGE
+  WGPU_ADDRESS_MODE addressModeW; // default = WGPU_ADDRESS_MODE_CLAMP_TO_EDGE
+  WGPU_FILTER_MODE magFilter;     // default = WGPU_FILTER_MODE_NEAREST
+  WGPU_FILTER_MODE minFilter;     // default = WGPU_FILTER_MODE_NEAREST
+  WGPU_FILTER_MODE mipmapFilter;  // default = WGPU_FILTER_MODE_NEAREST
+  float lodMinClamp;              // default = 0
+  float lodMaxClamp;              // default = ?
+  WGPU_COMPARE_FUNCTION compare;  // default = WGPU_COMPARE_FUNCTION_INVALID (not used)
+  uint32_t maxAnisotropy;         // default = 1. N.b. this is 32-bit wide in the bindings implementation for simplicity, unlike in the IDL which specifies a unsigned short.
 } WGpuSamplerDescriptor;
 extern const WGpuSamplerDescriptor WGPU_SAMPLER_DESCRIPTOR_DEFAULT_INITIALIZER;
 
@@ -1097,7 +1100,9 @@ interface mixin GPUPipelineBase {
     GPUBindGroupLayout getBindGroupLayout(unsigned long index);
 };
 */
-// TODO: implement
+WGpuBindGroupLayout wgpu_pipeline_get_bind_group_layout(WGpuObjectBase pipelineBase, uint32_t index);
+#define wgpu_render_pipeline_get_bind_group_layout wgpu_pipeline_get_bind_group_layout
+#define wgpu_compute_pipeline_get_bind_group_layout wgpu_pipeline_get_bind_group_layout
 
 /*
 dictionary GPUProgrammableStage {
@@ -2339,7 +2344,7 @@ typedef struct WGpuRenderPassColorAttachment
 
 typedef struct WGpuImageCopyExternalImage
 {
-  WGpuObjectBase source; // TODO add wgpu_acquire_dom_element_using_css_selector(const char *cssSelector); and wgpu_release_dom_element_using_css_selector(WGpuObjectBase object);
+  WGpuObjectBase source; // must point to a WGpuImageBitmap (could also point to a HTMLCanvasElement or OffscreenCanvas, but those are currently unimplemented)
   WGpuOrigin2D origin;
 } WGpuImageCopyExternalImage;
 extern const WGpuImageCopyExternalImage WGPU_IMAGE_COPY_EXTERNAL_IMAGE_DEFAULT_INITIALIZER;
@@ -2430,6 +2435,17 @@ typedef struct WGpuBindGroupLayoutEntry
   } layout;
 } WGpuBindGroupLayoutEntry;
 extern const WGpuBindGroupLayoutEntry WGPU_BUFFER_BINDING_LAYOUT_ENTRY_DEFAULT_INITIALIZER;
+
+////////////////////////////////////////////////////////////////
+// Extensions to the WebGPU specification:
+
+typedef int WGpuImageBitmap;
+
+// Called when the ImageBitmap finishes loading. If loading fails, this callback will be called with width==height==0.
+typedef void (*WGpuLoadImageBitmapCallback)(WGpuImageBitmap bitmap, int width, int height, void *userData);
+
+WGpuImageBitmap wgpu_load_image_bitmap_from_url_async(const char *url, EM_BOOL flipY, WGpuLoadImageBitmapCallback callback, void *userData);
+
 
 #ifdef __cplusplus
 } // ~extern "C"
