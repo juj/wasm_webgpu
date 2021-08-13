@@ -38,6 +38,8 @@ EM_BOOL raf(double time, void *userData)
   wgpu_render_pass_encoder_end_pass(wgpu_command_encoder_begin_render_pass(encoder, &passDesc));
   wgpu_queue_submit_one_and_destroy(defaultQueue, wgpu_command_encoder_finish(encoder));
 
+  assert(wgpu_get_num_live_objects() < 100); // Check against programming errors from Wasm<->JS WebGPU object leaks
+
   return EM_TRUE;
 }
 

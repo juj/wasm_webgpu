@@ -62,6 +62,7 @@ EM_BOOL raf(double time, void *userData)
     emscripten_mini_stdio_printf("Num live WebGPU objects: %u\n", numLiveNow);
     numLiveObjects = numLiveNow;
   }
+  assert(wgpu_get_num_live_objects() < 100); // Check against programming errors from Wasm<->JS WebGPU object leaks
 
   return EM_FALSE;//EM_TRUE; // This is static content, but keep rendering to debug leaking WebGPU objects above
 }

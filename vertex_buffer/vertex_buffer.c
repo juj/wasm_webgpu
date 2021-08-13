@@ -116,6 +116,8 @@ void Render()
   WGpuCommandBuffer commandBuffer = wgpu_command_encoder_finish(encoder);
 
   wgpu_queue_submit_one_and_destroy(defaultQueue, commandBuffer);
+
+  assert(wgpu_get_num_live_objects() < 100); // Check against programming errors from Wasm<->JS WebGPU object leaks
 }
 
 void CreateGeometryAndRender()
