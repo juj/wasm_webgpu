@@ -5,7 +5,7 @@
 #include "lib_webgpu.h"
 
 WGpuAdapter adapter;
-WGpuPresentationContext presentationContext;
+WGpuCanvasContext canvasContext;
 WGpuDevice device;
 WGpuQueue defaultQueue;
 WGpuRenderPipeline renderPipeline;
@@ -26,12 +26,12 @@ EM_BOOL raf(double time, void *userData)
   assert(wgpu_is_command_encoder(encoder));
 
   WGpuRenderPassColorAttachment colorAttachment = {};
-  WGpuTexture swapChainTexture = wgpu_presentation_context_get_current_texture(presentationContext);
+  WGpuTexture swapChainTexture = wgpu_canvas_context_get_current_texture(canvasContext);
   assert(wgpu_is_texture(swapChainTexture));
 
   // Calling .getCurrentTexture() several times within a single rAF() callback
   // should return the same binding to the swap chain texture.
-  WGpuTexture swapChainTexture2 = wgpu_presentation_context_get_current_texture(presentationContext);
+  WGpuTexture swapChainTexture2 = wgpu_canvas_context_get_current_texture(canvasContext);
   assert(swapChainTexture == swapChainTexture2);
 
   colorAttachment.view = wgpu_texture_create_view(swapChainTexture, 0);
@@ -63,7 +63,7 @@ EM_BOOL raf(double time, void *userData)
     numLiveObjects = numLiveNow;
   }
 
-  return EM_TRUE; // This is static content, but keep rendering to debug leaking WebGPU objects above
+  return EM_FALSE;//EM_TRUE; // This is static content, but keep rendering to debug leaking WebGPU objects above
 }
 
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
@@ -90,16 +90,16 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 
   // TODO: read device.features and device.limits;
 
-  presentationContext = wgpu_canvas_get_gpupresent_context("canvas");
-  assert(presentationContext);
-  assert(wgpu_is_presentation_context(presentationContext));
+  canvasContext = wgpu_canvas_get_webgpu_context("canvas");
+  assert(canvasContext);
+  assert(wgpu_is_canvas_context(canvasContext));
 
-  WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
+  WGpuCanvasConfiguration config = WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
-  config.format = wgpu_presentation_context_get_preferred_format(presentationContext, adapter);
+  config.format = wgpu_canvas_context_get_preferred_format(canvasContext, adapter);
   emscripten_mini_stdio_printf("Preferred swap chain format: %s\n", wgpu_enum_to_string(config.format));
 
-  wgpu_presentation_context_configure(presentationContext, &config);
+  wgpu_canvas_context_configure(canvasContext, &config);
 
   const char *vertexShader =
     "[[stage(vertex)]]\n"

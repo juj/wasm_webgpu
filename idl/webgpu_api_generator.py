@@ -10,7 +10,6 @@ def load_and_fixup_idl(filename):
   src = open(filename, 'r').read()
   src = src.replace('readonly attribute FrozenArray<GPUCompilationMessage> messages;', '')
   src = re.sub(r'\[..*?\]', '', src)
-  src = src.replace('float lodMaxClamp = 0xffffffff;', '')
   src = src.replace('''[
     Exposed=(Window, DedicatedWorker)
 ]''', '')

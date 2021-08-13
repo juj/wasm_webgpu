@@ -9,7 +9,7 @@
 #include "lib_demo.h"
 
 WGpuAdapter adapter;
-WGpuPresentationContext presentationContext;
+WGpuCanvasContext canvasContext;
 WGpuDevice device;
 uint64_t gpuAllocatedBytes = 0;
 uint64_t largestSuccessfulAllocation = 0;
@@ -75,11 +75,11 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   device = result;
   wgpu_device_set_uncapturederror_callback(device, uncapturedError, 0);
   wgpu_device_set_lost_callback(device, deviceLost, 0);
-  presentationContext = wgpu_canvas_get_gpupresent_context("canvas");
-  WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
+  canvasContext = wgpu_canvas_get_webgpu_context("canvas");
+  WGpuCanvasConfiguration config = WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
-  config.format = wgpu_presentation_context_get_preferred_format(presentationContext, adapter);
-  wgpu_presentation_context_configure(presentationContext, &config);
+  config.format = wgpu_canvas_context_get_preferred_format(canvasContext, adapter);
+  wgpu_canvas_context_configure(canvasContext, &config);
 
   for(int i = 0; i < 1024*1024; ++i)
     initialData[i] = i;

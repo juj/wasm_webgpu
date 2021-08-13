@@ -42,7 +42,7 @@ const WGpuSamplerDescriptor WGPU_SAMPLER_DESCRIPTOR_DEFAULT_INITIALIZER = {
   .minFilter = WGPU_FILTER_MODE_NEAREST,
   .mipmapFilter = WGPU_FILTER_MODE_NEAREST,
   .lodMinClamp = 0,
-  .lodMaxClamp = 65535, // TODO change this after spec is fixed
+  .lodMaxClamp = 32,
   .maxAnisotropy = 1
 
 };
@@ -75,11 +75,13 @@ const WGpuCommandEncoderDescriptor WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITI
 const WGpuImageCopyBuffer WGPU_IMAGE_COPY_BUFFER_DEFAULT_INITIALIZER = {};
 
 const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
+  .access = WGPU_STORAGE_TEXTURE_ACCESS_WRITE_ONLY,
   .viewDimension = WGPU_TEXTURE_VIEW_DIMENSION_2D
 };
 
-const WGpuPresentationConfiguration WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER = {
+const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER = {
   .usage = WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT,
+  .colorSpace = WGPU_PREDEFINED_COLOR_SPACE_SRGB,
   .compositingAlphaMode = WGPU_CANVAS_COMPOSITING_ALPHA_MODE_OPAQUE,
   .size = WGPU_EXTENT_3D_DEFAULT_INITIALIZER
 };

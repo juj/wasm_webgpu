@@ -5,7 +5,7 @@
 #include <miniprintf.h>
 
 WGpuAdapter adapter;
-WGpuPresentationContext presentationContext;
+WGpuCanvasContext canvasContext;
 WGpuDevice device;
 WGpuQueue defaultQueue;
 WGpuRenderPipeline renderPipeline;
@@ -54,7 +54,7 @@ void CreateGeometryAndRender()
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
 
   WGpuRenderPassColorAttachment colorAttachment = {};
-  colorAttachment.view = wgpu_texture_create_view(wgpu_presentation_context_get_current_texture(presentationContext), 0);
+  colorAttachment.view = wgpu_texture_create_view(wgpu_canvas_context_get_current_texture(canvasContext), 0);
   colorAttachment.loadColor.a = 1.0;
 
   WGpuRenderPassDescriptor passDesc = {};
@@ -81,12 +81,12 @@ void DownloadedImage(WGpuImageBitmap bitmap, int width, int height, void *userDa
 
   defaultQueue = wgpu_device_get_queue(device);
 
-  presentationContext = wgpu_canvas_get_gpupresent_context("canvas");
+  canvasContext = wgpu_canvas_get_webgpu_context("canvas");
 
-  WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
+  WGpuCanvasConfiguration config = WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
-  config.format = wgpu_presentation_context_get_preferred_format(presentationContext, adapter);
-  wgpu_presentation_context_configure(presentationContext, &config);
+  config.format = wgpu_canvas_context_get_preferred_format(canvasContext, adapter);
+  wgpu_canvas_context_configure(canvasContext, &config);
 
   const char *vertexShader =
     "struct In {"
@@ -153,7 +153,7 @@ void DownloadedImage(WGpuImageBitmap bitmap, int width, int height, void *userDa
   textureDesc.width = width;
   textureDesc.height = height;
   textureDesc.format = WGPU_TEXTURE_FORMAT_RGBA8UNORM;
-  textureDesc.usage = WGPU_TEXTURE_USAGE_COPY_DST | WGPU_TEXTURE_USAGE_SAMPLED | WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT;
+  textureDesc.usage = WGPU_TEXTURE_USAGE_COPY_DST | WGPU_TEXTURE_USAGE_TEXTURE_BINDING | WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT;
 
   texture = wgpu_device_create_texture(device, &textureDesc);
 

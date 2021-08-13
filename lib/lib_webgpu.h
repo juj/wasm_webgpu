@@ -40,7 +40,7 @@ void wgpu_object_destroy(WGpuObjectBase wgpuObject);
 void wgpu_destroy_all_objects(void);
 
 // Acquires a canvas context from a canvas by calling canvas.getCanvasContext().
-WGpuPresentationContext wgpu_canvas_get_gpupresent_context(const char *canvasSelector);
+WGpuCanvasContext wgpu_canvas_get_webgpu_context(const char *canvasSelector);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // The ordering and structure of this remainder of this file follows the official WebGPU WebIDL definitions at https://www.w3.org/TR/webgpu/#idl-index
@@ -69,6 +69,22 @@ typedef struct WGpuObjectDescriptorBase // TODO: Currently unused. Actually use 
 } WGpuObjectDescriptorBase;
 
 /*
+dictionary GPUExtent3DDict {
+    required GPUIntegerCoordinate width;
+    GPUIntegerCoordinate height = 1;
+    GPUIntegerCoordinate depthOrArrayLayers = 1;
+};
+typedef (sequence<GPUIntegerCoordinate> or GPUExtent3DDict) GPUExtent3D;
+*/
+typedef struct WGpuExtent3D
+{
+  int width;
+  int height; // = 1;
+  int depthOrArrayLayers; // = 1;
+} WGpuExtent3D;
+extern const WGpuExtent3D WGPU_EXTENT_3D_DEFAULT_INITIALIZER;
+
+/*
 [Exposed=Window]
 interface GPUSupportedLimits {
     readonly attribute unsigned long maxTextureDimension1D;
@@ -83,11 +99,18 @@ interface GPUSupportedLimits {
     readonly attribute unsigned long maxStorageBuffersPerShaderStage;
     readonly attribute unsigned long maxStorageTexturesPerShaderStage;
     readonly attribute unsigned long maxUniformBuffersPerShaderStage;
-    readonly attribute unsigned long maxUniformBufferBindingSize;
-    readonly attribute unsigned long maxStorageBufferBindingSize;
+    readonly attribute unsigned long long maxUniformBufferBindingSize;
+    readonly attribute unsigned long long maxStorageBufferBindingSize;
+    readonly attribute unsigned long minUniformBufferOffsetAlignment;
+    readonly attribute unsigned long minStorageBufferOffsetAlignment;
     readonly attribute unsigned long maxVertexBuffers;
     readonly attribute unsigned long maxVertexAttributes;
     readonly attribute unsigned long maxVertexBufferArrayStride;
+    readonly attribute unsigned long maxInterStageShaderComponents;
+    readonly attribute unsigned long maxComputeWorkgroupStorageSize;
+    readonly attribute unsigned long maxComputeInvocationsPerWorkgroup;
+    readonly attribute GPUExtent3D maxComputeWorkgroupDimensions;
+    readonly attribute unsigned long maxComputeWorkgroupsPerDimension;
 };
 */
 typedef struct WGpuSupportedLimits
@@ -104,11 +127,19 @@ typedef struct WGpuSupportedLimits
   uint32_t maxStorageBuffersPerShaderStage; // required >= 8
   uint32_t maxStorageTexturesPerShaderStage; // required >= 8
   uint32_t maxUniformBuffersPerShaderStage; // required >= 12
-  uint32_t maxUniformBufferBindingSize; // required >= 16384
-  uint32_t maxStorageBufferBindingSize; // required >= 128*1024*1024 (128MB)
+  uint32_t minUniformBufferOffsetAlignment;
+  uint32_t minStorageBufferOffsetAlignment;
   uint32_t maxVertexBuffers; // required >= 8
   uint32_t maxVertexAttributes; // required >= 16
   uint32_t maxVertexBufferArrayStride; // required >= 2048
+  uint32_t maxInterStageShaderComponents;
+  uint32_t maxComputeWorkgroupStorageSize;
+  uint32_t maxComputeInvocationsPerWorkgroup;
+  uint32_t maxComputeWorkgroupsPerDimension;
+
+  WGpuExtent3D maxComputeWorkgroupDimensions;
+  uint64_t maxUniformBufferBindingSize; // required >= 16384
+  uint64_t maxStorageBufferBindingSize; // required >= 128*1024*1024 (128MB)
 } WGpuSupportedLimits;
 
 /*
@@ -468,17 +499,17 @@ typedef [EnforceRange] unsigned long GPUTextureUsageFlags;
 interface GPUTextureUsage {
     const GPUFlagsConstant COPY_SRC          = 0x01;
     const GPUFlagsConstant COPY_DST          = 0x02;
-    const GPUFlagsConstant SAMPLED           = 0x04;
-    const GPUFlagsConstant STORAGE           = 0x08;
+    const GPUFlagsConstant TEXTURE_BINDING   = 0x04;
+    const GPUFlagsConstant STORAGE_BINDING   = 0x08;
     const GPUFlagsConstant RENDER_ATTACHMENT = 0x10;
 };
 */
 typedef int WGPU_TEXTURE_USAGE_FLAGS;
-#define WGPU_TEXTURE_USAGE_COPY_SRC 0x01
-#define WGPU_TEXTURE_USAGE_COPY_DST 0x02
-#define WGPU_TEXTURE_USAGE_SAMPLED  0x04
-#define WGPU_TEXTURE_USAGE_STORAGE  0x08
-#define WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT  0x10
+#define WGPU_TEXTURE_USAGE_COPY_SRC            0x01
+#define WGPU_TEXTURE_USAGE_COPY_DST            0x02
+#define WGPU_TEXTURE_USAGE_TEXTURE_BINDING     0x04
+#define WGPU_TEXTURE_USAGE_STORAGE_BINDING     0x08
+#define WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT   0x10
 
 /*
 [Exposed=Window]
@@ -729,7 +760,7 @@ dictionary GPUSamplerDescriptor : GPUObjectDescriptorBase {
     GPUFilterMode minFilter = "nearest";
     GPUFilterMode mipmapFilter = "nearest";
     float lodMinClamp = 0;
-    float lodMaxClamp = 0xffffffff; // TODO: What should this be? Was Number.MAX_VALUE.
+    float lodMaxClamp = 32;
     GPUCompareFunction compare;
     [Clamp] unsigned short maxAnisotropy = 1;
 };
@@ -743,7 +774,7 @@ typedef struct WGpuSamplerDescriptor
   WGPU_FILTER_MODE minFilter;     // default = WGPU_FILTER_MODE_NEAREST
   WGPU_FILTER_MODE mipmapFilter;  // default = WGPU_FILTER_MODE_NEAREST
   float lodMinClamp;              // default = 0
-  float lodMaxClamp;              // default = ?
+  float lodMaxClamp;              // default = 32
   WGPU_COMPARE_FUNCTION compare;  // default = WGPU_COMPARE_FUNCTION_INVALID (not used)
   uint32_t maxAnisotropy;         // default = 1. N.b. this is 32-bit wide in the bindings implementation for simplicity, unlike in the IDL which specifies a unsigned short.
 } WGpuSamplerDescriptor;
@@ -934,18 +965,16 @@ extern const WGpuTextureBindingLayout WGPU_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIA
 
 /*
 enum GPUStorageTextureAccess {
-    "read-only",
     "write-only",
 };
 */
 typedef int WGPU_STORAGE_TEXTURE_ACCESS;
 #define WGPU_STORAGE_TEXTURE_ACCESS_INVALID 0
-#define WGPU_STORAGE_TEXTURE_ACCESS_READ_ONLY 98
 #define WGPU_STORAGE_TEXTURE_ACCESS_WRITE_ONLY 99
 
 /*
 dictionary GPUStorageTextureBindingLayout {
-    required GPUStorageTextureAccess access;
+    GPUStorageTextureAccess access = "write-only";
     required GPUTextureFormat format;
     GPUTextureViewDimension viewDimension = "2d";
 };
@@ -1482,15 +1511,15 @@ typedef int WGPU_VERTEX_FORMAT;
 #define WGPU_VERTEX_FORMAT_SINT32X4 168
 
 /*
-enum GPUInputStepMode {
+enum GPUVertexStepMode {
     "vertex",
     "instance"
 };
 */
-typedef int WGPU_INPUT_STEP_MODE;
-#define WGPU_INPUT_STEP_MODE_INVALID 0
-#define WGPU_INPUT_STEP_MODE_VERTEX 169
-#define WGPU_INPUT_STEP_MODE_INSTANCE 170
+typedef int WGPU_VERTEX_STEP_MODE;
+#define WGPU_VERTEX_STEP_MODE_INVALID 0
+#define WGPU_VERTEX_STEP_MODE_VERTEX 169
+#define WGPU_VERTEX_STEP_MODE_INSTANCE 170
 
 /*
 dictionary GPUVertexState: GPUProgrammableStage {
@@ -1508,7 +1537,7 @@ typedef struct WGpuVertexState
 /*
 dictionary GPUVertexBufferLayout {
     required GPUSize64 arrayStride;
-    GPUInputStepMode stepMode = "vertex";
+    GPUVertexStepMode stepMode = "vertex";
     required sequence<GPUVertexAttribute> attributes;
 };
 */
@@ -1630,8 +1659,6 @@ WGpuCommandBuffer wgpu_command_encoder_finish(WGpuCommandEncoder commandEncoder)
 /*
 dictionary GPUCommandEncoderDescriptor : GPUObjectDescriptorBase {
     boolean measureExecutionTime = false;
-
-    // TODO: reusability flag?
 };
 */
 typedef struct WGpuCommandEncoderDescriptor
@@ -1767,8 +1794,8 @@ typedef struct WGpuComputePassDescriptor
 interface mixin GPURenderEncoderBase {
     undefined setPipeline(GPURenderPipeline pipeline);
 
-    undefined setIndexBuffer(GPUBuffer buffer, GPUIndexFormat indexFormat, optional GPUSize64 offset = 0, optional GPUSize64 size = 0);
-    undefined setVertexBuffer(GPUIndex32 slot, GPUBuffer buffer, optional GPUSize64 offset = 0, optional GPUSize64 size = 0);
+    undefined setIndexBuffer(GPUBuffer buffer, GPUIndexFormat indexFormat, optional GPUSize64 offset = 0, optional GPUSize64 size);
+    undefined setVertexBuffer(GPUIndex32 slot, GPUBuffer buffer, optional GPUSize64 offset = 0, optional GPUSize64 size);
 
     undefined draw(GPUSize32 vertexCount, optional GPUSize32 instanceCount = 1,
               optional GPUSize32 firstVertex = 0, optional GPUSize32 firstInstance = 0);
@@ -1786,8 +1813,8 @@ typedef int WGpuRenderEncoderBase;
 EM_BOOL wgpu_is_render_encoder_base(WGpuObjectBase object);
 
 #define wgpu_render_encoder_base_set_pipeline wgpu_encoder_set_pipeline
-void wgpu_render_encoder_base_set_index_buffer(WGpuRenderEncoderBase passEncoder, WGpuBuffer buffer, WGPU_INDEX_FORMAT indexFormat, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(0));
-void wgpu_render_encoder_base_set_vertex_buffer(WGpuRenderEncoderBase passEncoder, int32_t slot, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(0));
+void wgpu_render_encoder_base_set_index_buffer(WGpuRenderEncoderBase passEncoder, WGpuBuffer buffer, WGPU_INDEX_FORMAT indexFormat, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(-1));
+void wgpu_render_encoder_base_set_vertex_buffer(WGpuRenderEncoderBase passEncoder, int32_t slot, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(-1));
 
 void wgpu_render_encoder_base_draw(WGpuRenderPassEncoder passEncoder, uint32_t vertexCount, uint32_t instanceCount _WGPU_DEFAULT_VALUE(1), uint32_t firstVertex _WGPU_DEFAULT_VALUE(0), uint32_t firstInstance _WGPU_DEFAULT_VALUE(0));
 void wgpu_render_encoder_base_draw_indexed(WGpuRenderPassEncoder passEncoder, uint32_t indexCount, uint32_t instanceCount _WGPU_DEFAULT_VALUE(1), uint32_t firstVertex _WGPU_DEFAULT_VALUE(0), int32_t baseVertex _WGPU_DEFAULT_VALUE(0), uint32_t firstInstance _WGPU_DEFAULT_VALUE(0));
@@ -1929,6 +1956,15 @@ typedef int WGPU_STORE_OP;
 #define WGPU_STORE_OP_DISCARD 173
 
 /*
+dictionary GPURenderPassLayout: GPUObjectDescriptorBase {
+    required sequence<GPUTextureFormat> colorFormats;
+    GPUTextureFormat depthStencilFormat;
+    GPUSize32 sampleCount = 1;
+};
+*/
+// Not currently exposed, fused to GPURenderBundleEncoderDescriptor.
+
+/*
 [Exposed=Window]
 interface GPURenderBundle {
 };
@@ -1976,10 +2012,9 @@ void wgpu_render_bundle_encoder_finish(const WGpuRenderBundleDescriptor *renderB
 #define wgpu_render_bundle_encoder_draw_indexed_indirect wgpu_render_encoder_base_draw_indexed_indirect
 
 /*
-dictionary GPURenderBundleEncoderDescriptor : GPUObjectDescriptorBase {
-    required sequence<GPUTextureFormat> colorFormats;
-    GPUTextureFormat depthStencilFormat;
-    GPUSize32 sampleCount = 1;
+dictionary GPURenderBundleEncoderDescriptor : GPURenderPassLayout {
+    boolean depthReadOnly = false;
+    boolean stencilReadOnly = false;
 };
 */
 typedef struct WGpuRenderBundleEncoderDescriptor
@@ -1988,6 +2023,8 @@ typedef struct WGpuRenderBundleEncoderDescriptor
   const WGPU_TEXTURE_FORMAT *colorFormats;
   WGPU_TEXTURE_FORMAT depthStencilFormat;
   uint32_t sampleCount;
+  EM_BOOL depthReadOnly;
+  EM_BOOL stencilReadOnly;
 } WGpuRenderBundleEncoderDescriptor;
 
 /*
@@ -2099,26 +2136,31 @@ typedef int WGPU_PIPELINE_STATISTIC_NAME;
 #define WGPU_PIPELINE_STATISTIC_NAME_COMPUTE_SHADER_INVOCATIONS 181
 
 /*
-[Exposed=Window]
-interface GPUPresentationContext {
-    undefined configure(GPUPresentationConfiguration configuration);
+[Exposed=(Window, DedicatedWorker)]
+interface GPUCanvasContext {
+    readonly attribute (HTMLCanvasElement or OffscreenCanvas) canvas;
+
+    undefined configure(GPUCanvasConfiguration configuration);
     undefined unconfigure();
 
     GPUTextureFormat getPreferredFormat(GPUAdapter adapter);
     GPUTexture getCurrentTexture();
 };
 */
-typedef int WGpuPresentationContext;
+typedef int WGpuCanvasContext;
 // Returns true if the given handle references a valid GPUCanvasContext.
-EM_BOOL wgpu_is_presentation_context(WGpuObjectBase object);
+EM_BOOL wgpu_is_canvas_context(WGpuObjectBase object);
+
+// TODO: Add char *wgpu_canvas_context_get_canvas_selector_id() for 'canvas' member property, as both CSS ID selector and object ID.
+
 // Configures the swap chain for this context.
-void wgpu_presentation_context_configure(WGpuPresentationContext presentationContext, const WGpuPresentationConfiguration *config);
-void wgpu_presentation_context_unconfigure(WGpuPresentationContext presentationContext);
+void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCanvasConfiguration *config);
+void wgpu_canvas_context_unconfigure(WGpuCanvasContext canvasContext);
 
 // Returns an optimal GPUTextureFormat to use for swap chains with this context and the given device.
-WGPU_TEXTURE_FORMAT wgpu_presentation_context_get_preferred_format(WGpuPresentationContext presentationContext, WGpuAdapter adapter);
+WGPU_TEXTURE_FORMAT wgpu_canvas_context_get_preferred_format(WGpuCanvasContext canvasContext, WGpuAdapter adapter);
 
-WGpuTexture wgpu_presentation_context_get_current_texture(WGpuPresentationContext presentationContext);
+WGpuTexture wgpu_canvas_context_get_current_texture(WGpuCanvasContext canvasContext);
 
 /*
 enum GPUCanvasCompositingAlphaMode {
@@ -2132,10 +2174,11 @@ typedef int WGPU_CANVAS_COMPOSITING_ALPHA_MODE;
 #define WGPU_CANVAS_COMPOSITING_ALPHA_MODE_PREMULTIPLIED 183
 
 /*
-dictionary GPUPresentationConfiguration : GPUObjectDescriptorBase {
+dictionary GPUCanvasConfiguration : GPUObjectDescriptorBase {
     required GPUDevice device;
     required GPUTextureFormat format;
     GPUTextureUsageFlags usage = 0x10;  // GPUTextureUsage.RENDER_ATTACHMENT
+    GPUPredefinedColorSpace colorSpace = "srgb";
     GPUCanvasCompositingAlphaMode compositingAlphaMode = "opaque";
     GPUExtent3D size;
 };
@@ -2294,34 +2337,19 @@ typedef struct WGpuOrigin3D
   int x, y, z;
 } WGpuOrigin3D;
 
-/*
-dictionary GPUExtent3DDict {
-    required GPUIntegerCoordinate width;
-    GPUIntegerCoordinate height = 1;
-    GPUIntegerCoordinate depthOrArrayLayers = 1;
-};
-typedef (sequence<GPUIntegerCoordinate> or GPUExtent3DDict) GPUExtent3D;
-*/
-typedef struct WGpuExtent3D
-{
-  int width;
-  int height; // = 1;
-  int depthOrArrayLayers; // = 1;
-} WGpuExtent3D;
-extern const WGpuExtent3D WGPU_EXTENT_3D_DEFAULT_INITIALIZER;
-
 ////////////////////////////////////////////////////////
 // Sorted struct definitions for proper C parsing order:
 
-typedef struct WGpuPresentationConfiguration
+typedef struct WGpuCanvasConfiguration
 {
   WGpuDevice device;
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_USAGE_FLAGS usage;
+  WGPU_PREDEFINED_COLOR_SPACE colorSpace;
   WGPU_CANVAS_COMPOSITING_ALPHA_MODE compositingAlphaMode;
-  WGpuExtent3D size; // If size.width == 0 (as default initialized via WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER), then full screen size is used.
-} WGpuPresentationConfiguration;
-extern const WGpuPresentationConfiguration WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
+  WGpuExtent3D size; // If size.width == 0 (as default initialized via WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER), then full screen size is used.
+} WGpuCanvasConfiguration;
+extern const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
 
 typedef struct WGpuRenderPassDescriptor
 {

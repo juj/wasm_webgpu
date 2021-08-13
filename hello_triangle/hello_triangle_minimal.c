@@ -3,7 +3,7 @@
 #include "lib_webgpu.h"
 
 WGpuAdapter adapter;
-WGpuPresentationContext presentationContext;
+WGpuCanvasContext canvasContext;
 WGpuDevice device;
 WGpuQueue defaultQueue;
 WGpuRenderPipeline renderPipeline;
@@ -13,7 +13,7 @@ EM_BOOL raf(double time, void *userData)
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
 
   WGpuRenderPassColorAttachment colorAttachment = {};
-  colorAttachment.view = wgpu_texture_create_view(wgpu_presentation_context_get_current_texture(presentationContext), 0);
+  colorAttachment.view = wgpu_texture_create_view(wgpu_canvas_context_get_current_texture(canvasContext), 0);
   colorAttachment.loadColor.a = 1.0;
 
   WGpuRenderPassDescriptor passDesc = {};
@@ -37,12 +37,12 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   device = result;
   defaultQueue = wgpu_device_get_queue(device);
 
-  presentationContext = wgpu_canvas_get_gpupresent_context("canvas");
+  canvasContext = wgpu_canvas_get_webgpu_context("canvas");
 
-  WGpuPresentationConfiguration config = WGPU_PRESENTATION_CONFIGURATION_DEFAULT_INITIALIZER;
+  WGpuCanvasConfiguration config = WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
-  config.format = wgpu_presentation_context_get_preferred_format(presentationContext, adapter);
-  wgpu_presentation_context_configure(presentationContext, &config);
+  config.format = wgpu_canvas_context_get_preferred_format(canvasContext, adapter);
+  wgpu_canvas_context_configure(canvasContext, &config);
 
   const char *vertexShader =
     "[[stage(vertex)]]\n"
