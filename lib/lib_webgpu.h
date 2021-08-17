@@ -347,12 +347,12 @@ WGpuShaderModule wgpu_device_create_shader_module(WGpuDevice device, const WGpuS
 
 // N.b. not currently using signature WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuComputePipelineDescriptor *computePipelineDesc);
 // since WGpuComputePipelineDescriptor is a such a light struct. (if it is expanded in the future, switch to using that signature)
-WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuShaderModule computeModule, const char *entryPoint);
+WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuShaderModule computeModule, const char *entryPoint, WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants);
 
 WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc);
 
 typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineBase pipeline, void *userData);
-void wgpu_device_create_compute_pipeline_async(WGpuDevice device, const WGpuComputePipelineDescriptor *computePipelineDesc, WGpuCreatePipelineCallback callback, void *userData); // TODO implement
+void wgpu_device_create_compute_pipeline_async(WGpuDevice device, const WGpuShaderModule computeModule, const char *entryPoint, const WGpuPipelineConstant *constants, int numConstants, WGpuCreatePipelineCallback callback, void *userData); // TODO implement
 void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc, WGpuCreatePipelineCallback callback, void *userData);
 
 WGpuCommandEncoder wgpu_device_create_command_encoder(WGpuDevice device, const WGpuCommandEncoderDescriptor *commandEncoderDesc);
@@ -1122,7 +1122,7 @@ dictionary GPUPipelineDescriptorBase : GPUObjectDescriptorBase {
     GPUPipelineLayout layout;
 };
 */
-// TODO: implement
+// Not used since it contains only one member. Will be implemented if # of members increases.
 
 /*
 interface mixin GPUPipelineBase {
@@ -1139,12 +1139,17 @@ dictionary GPUProgrammableStage {
     required USVString entryPoint;
     record<USVString, GPUPipelineConstantValue> constants;
 };
+typedef double GPUPipelineConstantValue; // May represent WGSL’s bool, f32, i32, u32.
 */
-// TODO: implement
+
+typedef struct WGpuPipelineConstant
+{
+  const char *name;
+  uint32_t _dummyPadding; // (would be automatically inserted by the compiler, but present here for explicity)
+  double value;
+} WGpuPipelineConstant;
 
 /*
-
-typedef double GPUPipelineConstantValue; // May represent WGSL’s bool, f32, i32, u32.
 
 [Exposed=Window, Serializable]
 interface GPUComputePipeline {
@@ -1271,6 +1276,8 @@ typedef struct WGpuFragmentState
   const char *entryPoint;
   int numTargets;
   const WGpuColorTargetState *targets;
+  int numConstants;
+  const WGpuPipelineConstant *constants;
 } WGpuFragmentState;
 
 /*
@@ -1532,6 +1539,8 @@ typedef struct WGpuVertexState
   const char *entryPoint;
   int numBuffers;
   const WGpuVertexBufferLayout *buffers;
+  int numConstants;
+  const WGpuPipelineConstant *constants;
 } WGpuVertexState;
 
 /*
@@ -1546,7 +1555,7 @@ typedef struct WGpuVertexBufferLayout
   int numAttributes;
   const WGpuVertexAttribute *attributes;
   uint64_t arrayStride;
-  WGPU_INPUT_STEP_MODE stepMode;
+  WGPU_VERTEX_STEP_MODE stepMode;
   uint32_t _unused64BitPadding;
 } WGpuVertexBufferLayout;
 
@@ -2444,6 +2453,7 @@ typedef struct WGpuRenderPipelineDescriptor
   WGpuDepthStencilState depthStencil;
   WGpuMultisampleState multisample;
   WGpuFragmentState fragment;
+  WGpuPipelineLayout layout;
 } WGpuRenderPipelineDescriptor;
 extern const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITIALIZER;
 

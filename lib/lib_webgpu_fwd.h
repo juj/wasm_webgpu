@@ -43,7 +43,8 @@ typedef int WGPU_ADDRESS_MODE;
 typedef int WGPU_FILTER_MODE;
 typedef int WGPU_COMPARE_FUNCTION;
 typedef int WGpuBindGroupLayout;
-typedef struct WGpuBindGroupLayoutDescriptor WGpuBindGroupLayoutDescriptor;
+// Not used:
+//typedef struct WGpuBindGroupLayoutDescriptor WGpuBindGroupLayoutDescriptor;
 typedef int WGPU_SHADER_STAGE_FLAGS;
 typedef struct WGpuBindGroupLayoutEntry WGpuBindGroupLayoutEntry;
 typedef int WGPU_BUFFER_BINDING_TYPE;
@@ -56,15 +57,19 @@ typedef int WGPU_STORAGE_TEXTURE_ACCESS;
 typedef struct WGpuStorageTextureBindingLayout WGpuStorageTextureBindingLayout;
 typedef struct WGpuExternalTextureBindingLayout WGpuExternalTextureBindingLayout;
 typedef int WGpuBindGroup;
-typedef struct WGpuBindGroupDescriptor WGpuBindGroupDescriptor;
+// Not used:
+//typedef struct WGpuBindGroupDescriptor WGpuBindGroupDescriptor;
 typedef struct WGpuBindGroupEntry WGpuBindGroupEntry;
 typedef int WGpuPipelineLayout;
-typedef struct WGpuPipelineLayoutDescriptor WGpuPipelineLayoutDescriptor;
+// Not used:
+//typedef struct WGpuPipelineLayoutDescriptor WGpuPipelineLayoutDescriptor;
 typedef int WGpuShaderModule;
 typedef struct WGpuShaderModuleDescriptor WGpuShaderModuleDescriptor;
 typedef int WGPU_COMPILATION_MESSAGE_TYPE;
+typedef struct WGpuPipelineConstant WGpuPipelineConstant;
 typedef int WGpuComputePipeline;
-typedef struct WGpuComputePipelineDescriptor WGpuComputePipelineDescriptor;
+// Not used:
+//typedef struct WGpuComputePipelineDescriptor WGpuComputePipelineDescriptor;
 typedef int WGpuRenderPipeline;
 typedef int WGpuPipelineBase;
 typedef struct WGpuRenderPipelineDescriptor WGpuRenderPipelineDescriptor;
@@ -85,7 +90,7 @@ typedef struct WGpuStencilFaceState WGpuStencilFaceState;
 typedef int WGPU_STENCIL_OPERATION;
 typedef int WGPU_INDEX_FORMAT;
 typedef int WGPU_VERTEX_FORMAT;
-typedef int WGPU_INPUT_STEP_MODE;
+typedef int WGPU_VERTEX_STEP_MODE;
 typedef struct WGpuVertexState WGpuVertexState;
 typedef struct WGpuVertexBufferLayout WGpuVertexBufferLayout;
 typedef struct WGpuVertexAttribute WGpuVertexAttribute;
