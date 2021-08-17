@@ -41,7 +41,7 @@ void uncapturedError(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char 
 void alloc_gpu_buffer()
 {
   WGpuBufferDescriptor bufferDesc = {};
-  bufferDesc.size = allocSize;
+  bufferDesc.size = (allocSize + 3) & -4; // "size must be aligned to 4 when mappedAtCreation is true"
   bufferDesc.usage = WGPU_BUFFER_USAGE_VERTEX;
   bufferDesc.mappedAtCreation = EM_TRUE;
   wgpu_device_push_error_scope(device, WGPU_ERROR_FILTER_OUT_OF_MEMORY);
@@ -53,6 +53,8 @@ void alloc_gpu_buffer()
   {
     emscripten_mini_stdio_fprintf(EM_STDERR, "wgpu_buffer_get_mapped_range() of size %f failed!\n", (double)allocSize);
     allocSize = allocSize * 3 / 4;
+    if (allocSize < 51200) // When we get to small alloc sizes, start allocating really tiny blocks to see what tiny OOMs could do.
+      allocSize = 4;
     return;
   }
 
