@@ -85,7 +85,7 @@ typedef struct WGpuExtent3D
 extern const WGpuExtent3D WGPU_EXTENT_3D_DEFAULT_INITIALIZER;
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker)]
 interface GPUSupportedLimits {
     readonly attribute unsigned long maxTextureDimension1D;
     readonly attribute unsigned long maxTextureDimension2D;
@@ -109,7 +109,9 @@ interface GPUSupportedLimits {
     readonly attribute unsigned long maxInterStageShaderComponents;
     readonly attribute unsigned long maxComputeWorkgroupStorageSize;
     readonly attribute unsigned long maxComputeInvocationsPerWorkgroup;
-    readonly attribute GPUExtent3D maxComputeWorkgroupDimensions;
+    readonly attribute unsigned long maxComputeWorkgroupSizeX;
+    readonly attribute unsigned long maxComputeWorkgroupSizeY;
+    readonly attribute unsigned long maxComputeWorkgroupSizeZ;
     readonly attribute unsigned long maxComputeWorkgroupsPerDimension;
 };
 */
@@ -135,15 +137,17 @@ typedef struct WGpuSupportedLimits
   uint32_t maxInterStageShaderComponents;
   uint32_t maxComputeWorkgroupStorageSize;
   uint32_t maxComputeInvocationsPerWorkgroup;
-  uint32_t maxComputeWorkgroupsPerDimension;
+  uint32_t maxComputeWorkgroupSizeX;
+  uint32_t maxComputeWorkgroupSizeY;
+  uint32_t maxComputeWorkgroupSizeZ;
+  uint32_t _dummyPadding; // Explicitly mark a padding field to reflect that 'maxUniformBufferBindingSize' needs to be 64-bit aligned
 
-  WGpuExtent3D maxComputeWorkgroupDimensions;
   uint64_t maxUniformBufferBindingSize; // required >= 16384
   uint64_t maxStorageBufferBindingSize; // required >= 128*1024*1024 (128MB)
 } WGpuSupportedLimits;
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker)]
 interface GPUSupportedFeatures {
     readonly setlike<DOMString>;
 };
@@ -167,12 +171,12 @@ typedef int WGPU_PREDEFINED_COLOR_SPACE;
 
 /*
 interface mixin NavigatorGPU {
-    [SameObject] readonly attribute GPU gpu;
+    [SameObject, SecureContext] readonly attribute GPU gpu;
 };
 Navigator includes NavigatorGPU;
 WorkerNavigator includes NavigatorGPU;
 
-[Exposed=(Window, DedicatedWorker)]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPU {
     Promise<GPUAdapter?> requestAdapter(optional GPURequestAdapterOptions options = {});
 };
@@ -185,7 +189,7 @@ WGpuAdapter navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions 
 /*
 dictionary GPURequestAdapterOptions {
     GPUPowerPreference powerPreference;
-    boolean forceSoftware = false;
+    boolean forceFallbackAdapter = false;
 };
 */
 typedef struct WGpuRequestAdapterOptions
@@ -198,7 +202,7 @@ typedef struct WGpuRequestAdapterOptions
   //       agent may select different adapters given the same power preference. Typically, given the same hardware configuration and
   //       state and powerPreference, the user agent is likely to select the same adapter.
   WGPU_POWER_PREFERENCE powerPreference;
-  EM_BOOL forceSoftware;
+  EM_BOOL forceFallbackAdapter;
 } WGpuRequestAdapterOptions;
 extern const WGpuRequestAdapterOptions WGPU_REQUEST_ADAPTER_OPTIONS_DEFAULT_INITIALIZER;
 
@@ -214,12 +218,12 @@ typedef int WGPU_POWER_PREFERENCE;
 #define WGPU_POWER_PREFERENCE_HIGH_PERFORMANCE 3
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUAdapter {
     readonly attribute DOMString name;
     [SameObject] readonly attribute GPUSupportedFeatures features;
     [SameObject] readonly attribute WGpuSupportedLimits limits;
-    readonly attribute boolean isSoftware;
+    readonly attribute boolean isFallbackAdapter;
 
     Promise<GPUDevice> requestDevice(optional GPUDeviceDescriptor descriptor = {});
 };
@@ -244,7 +248,7 @@ EM_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapter, WGPU_FEATUR
 void wgpu_adapter_or_device_get_limits(WGpuAdapter adapter, WGpuSupportedLimits *limits);
 #define wgpu_adapter_get_limits wgpu_adapter_or_device_get_limits
 
-EM_BOOL wgpu_adapter_is_software(WGpuAdapter adapter);
+EM_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter);
 
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 
@@ -253,7 +257,7 @@ void wgpu_adapter_request_device_async(WGpuAdapter adapter, const WGpuDeviceDesc
 /*
 dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
     sequence<GPUFeatureName> requiredFeatures = [];
-    record<DOMString, GPUSize32> requiredLimits = {};
+    record<DOMString, GPUSize64> requiredLimits = {};
 };
 */
 typedef struct WGpuDeviceDescriptor
@@ -283,7 +287,7 @@ typedef int WGPU_FEATURE_NAME;
 #define WGPU_FEATURE_NAME_TIMESTAMP_QUERY 9
 
 /*
-[Exposed=(Window, DedicatedWorker), Serializable]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUDevice : EventTarget {
     [SameObject] readonly attribute GPUSupportedFeatures features;
     [SameObject] readonly attribute GPUSupportedLimits limits;
@@ -361,7 +365,7 @@ WGpuRenderBundleEncoder wgpu_device_create_render_bundle_encoder(WGpuDevice devi
 WGpuQuerySet wgpu_device_create_query_set(WGpuDevice device, const WGpuQuerySetDescriptor *querySetDesc);
 
 /*
-[Exposed=Window, Serializable]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUBuffer {
     Promise<undefined> mapAsync(GPUMapModeFlags mode, optional GPUSize64 offset = 0, optional GPUSize64 size);
     ArrayBuffer getMappedRange(optional GPUSize64 offset = 0, optional GPUSize64 size);
@@ -405,8 +409,8 @@ typedef struct WGpuBufferDescriptor
 
 /*
 typedef [EnforceRange] unsigned long GPUBufferUsageFlags;
-[Exposed=Window]
-interface GPUBufferUsage {
+[Exposed=(Window, DedicatedWorker)]
+namespace GPUBufferUsage {
     const GPUFlagsConstant MAP_READ      = 0x0001;
     const GPUFlagsConstant MAP_WRITE     = 0x0002;
     const GPUFlagsConstant COPY_SRC      = 0x0004;
@@ -433,8 +437,8 @@ typedef int WGPU_BUFFER_USAGE_FLAGS;
 
 /*
 typedef [EnforceRange] unsigned long GPUMapModeFlags;
-[Exposed=Window]
-interface GPUMapMode {
+[Exposed=(Window, DedicatedWorker)]
+namespace GPUMapMode {
     const GPUFlagsConstant READ  = 0x0001;
     const GPUFlagsConstant WRITE = 0x0002;
 };
@@ -444,7 +448,7 @@ typedef int WGPU_MAP_MODE_FLAGS;
 #define WGPU_MAP_MODE_WRITE  0x2
 
 /*
-[Exposed=Window, Serializable]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUTexture {
     GPUTextureView createView(optional GPUTextureViewDescriptor descriptor = {});
 
@@ -495,8 +499,8 @@ typedef int WGPU_TEXTURE_DIMENSION;
 
 /*
 typedef [EnforceRange] unsigned long GPUTextureUsageFlags;
-[Exposed=Window]
-interface GPUTextureUsage {
+[Exposed=(Window, DedicatedWorker)]
+namespace GPUTextureUsage {
     const GPUFlagsConstant COPY_SRC          = 0x01;
     const GPUFlagsConstant COPY_DST          = 0x02;
     const GPUFlagsConstant TEXTURE_BINDING   = 0x04;
@@ -512,7 +516,7 @@ typedef int WGPU_TEXTURE_USAGE_FLAGS;
 #define WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT   0x10
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUTextureView {
 };
 GPUTextureView includes GPUObjectBase;
@@ -718,7 +722,7 @@ typedef int WGPU_TEXTURE_FORMAT;
 #define WGPU_TEXTURE_FORMAT_DEPTH32FLOAT_STENCIL8 6
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUExternalTexture {
 };
 GPUExternalTexture includes GPUObjectBase;
@@ -742,7 +746,7 @@ typedef struct WGpuExternalTextureDescriptor
 extern const WGpuExternalTextureDescriptor WGPU_EXTERNAL_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUSampler {
 };
 GPUSampler includes GPUObjectBase;
@@ -828,7 +832,7 @@ typedef int WGPU_COMPARE_FUNCTION;
 #define WGPU_COMPARE_FUNCTION_ALWAYS 86
 
 /*
-[Exposed=Window, Serializable]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUBindGroupLayout {
 };
 GPUBindGroupLayout includes GPUObjectBase;
@@ -846,8 +850,8 @@ dictionary GPUBindGroupLayoutDescriptor : GPUObjectDescriptorBase {
 
 /*
 typedef [EnforceRange] unsigned long GPUShaderStageFlags;
-[Exposed=Window]
-interface GPUShaderStage {
+[Exposed=(Window, DedicatedWorker)]
+namespace GPUShaderStage {
     const GPUFlagsConstant VERTEX   = 0x1;
     const GPUFlagsConstant FRAGMENT = 0x2;
     const GPUFlagsConstant COMPUTE  = 0x4;
@@ -997,7 +1001,7 @@ typedef struct WGpuExternalTextureBindingLayout
 } WGpuExternalTextureBindingLayout;
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUBindGroup {
 };
 GPUBindGroup includes GPUObjectBase;
@@ -1044,7 +1048,7 @@ dictionary GPUBufferBinding {
 // Not exposed. Integrated as part of WGpuBindGroupEntry.
 
 /*
-[Exposed=Window, Serializable]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUPipelineLayout {
 };
 GPUPipelineLayout includes GPUObjectBase;
@@ -1061,7 +1065,7 @@ dictionary GPUPipelineLayoutDescriptor : GPUObjectDescriptorBase {
 // Currently unused.
 
 /*
-[Exposed=Window, Serializable]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUShaderModule {
     Promise<GPUCompilationInfo> compilationInfo();
 };
@@ -1097,7 +1101,7 @@ typedef int WGPU_COMPILATION_MESSAGE_TYPE;
 #define WGPU_COMPILATION_MESSAGE_TYPE_INFO 102
 
 /*
-[Exposed=Window, Serializable]
+[Exposed=(Window, DedicatedWorker), Serializable, SecureContext]
 interface GPUCompilationMessage {
     readonly attribute DOMString message;
     readonly attribute GPUCompilationMessageType type;
@@ -1110,7 +1114,7 @@ interface GPUCompilationMessage {
 // TODO: implement
 
 /*
-[Exposed=Window, Serializable]
+[Exposed=(Window, DedicatedWorker), Serializable, SecureContext]
 interface GPUCompilationInfo {
     readonly attribute FrozenArray<GPUCompilationMessage> messages;
 };
@@ -1151,7 +1155,7 @@ typedef struct WGpuPipelineConstant
 
 /*
 
-[Exposed=Window, Serializable]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUComputePipeline {
 };
 GPUComputePipeline includes GPUObjectBase;
@@ -1169,7 +1173,7 @@ dictionary GPUComputePipelineDescriptor : GPUPipelineDescriptorBase {
 // Currently unused.
 
 /*
-[Exposed=Window, Serializable]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPURenderPipeline {
 };
 GPURenderPipeline includes GPUObjectBase;
@@ -1300,8 +1304,8 @@ dictionary GPUBlendState {
 
 /*
 typedef [EnforceRange] unsigned long GPUColorWriteFlags;
-[Exposed=Window]
-interface GPUColorWrite {
+[Exposed=(Window, DedicatedWorker)]
+namespace GPUColorWrite {
     const GPUFlagsConstant RED   = 0x1;
     const GPUFlagsConstant GREEN = 0x2;
     const GPUFlagsConstant BLUE  = 0x4;
@@ -1318,16 +1322,16 @@ typedef int WGPU_COLOR_WRITE_FLAGS;
 
 /*
 dictionary GPUBlendComponent {
+    GPUBlendOperation operation = "add";
     GPUBlendFactor srcFactor = "one";
     GPUBlendFactor dstFactor = "zero";
-    GPUBlendOperation operation = "add";
 };
 */
 typedef struct WGpuBlendComponent
 {
+  WGPU_BLEND_OPERATION operation;
   WGPU_BLEND_FACTOR srcFactor;
   WGPU_BLEND_FACTOR dstFactor;
-  WGPU_BLEND_OPERATION operation;
 } WGpuBlendComponent;
 
 /*
@@ -1575,7 +1579,7 @@ typedef struct WGpuVertexAttribute
 } WGpuVertexAttribute;
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUCommandBuffer {
     readonly attribute Promise<double> executionTime;
 };
@@ -1596,7 +1600,7 @@ typedef struct WGpuCommandBufferDescriptor
 } WGpuCommandBufferDescriptor;
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUCommandEncoder {
     GPURenderPassEncoder beginRenderPass(GPURenderPassDescriptor descriptor);
     GPUComputePassEncoder beginComputePass(optional GPUComputePassDescriptor descriptor = {});
@@ -1750,7 +1754,7 @@ void wgpu_programmable_pass_encoder_set_bind_group(WGpuProgrammablePassEncoder e
 #define wgpu_programmable_pass_encoder_insert_debug_marker wgpu_encoder_insert_debug_marker
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUComputePassEncoder {
     undefined setPipeline(GPUComputePipeline pipeline);
     undefined dispatch(GPUSize32 x, optional GPUSize32 y = 1, optional GPUSize32 z = 1);
@@ -1832,7 +1836,7 @@ void wgpu_render_encoder_base_draw_indirect(WGpuRenderPassEncoder passEncoder, W
 void wgpu_render_encoder_base_draw_indexed_indirect(WGpuRenderPassEncoder passEncoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPURenderPassEncoder {
     undefined setViewport(float x, float y,
                      float width, float height,
@@ -1974,7 +1978,7 @@ dictionary GPURenderPassLayout: GPUObjectDescriptorBase {
 // Not currently exposed, fused to GPURenderBundleEncoderDescriptor.
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPURenderBundle {
 };
 GPURenderBundle includes GPUObjectBase;
@@ -1994,7 +1998,7 @@ typedef struct WGpuRenderBundleDescriptor
 } WGpuRenderBundleDescriptor;
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPURenderBundleEncoder {
     GPURenderBundle finish(optional GPURenderBundleDescriptor descriptor = {});
 };
@@ -2037,7 +2041,7 @@ typedef struct WGpuRenderBundleEncoderDescriptor
 } WGpuRenderBundleEncoderDescriptor;
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUQueue {
     undefined submit(sequence<GPUCommandBuffer> commandBuffers);
 
@@ -2089,7 +2093,7 @@ void wgpu_queue_write_texture(WGpuQueue queue, const WGpuImageCopyTexture *desti
 void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuImageCopyExternalImage *source, const WGpuImageCopyTextureTagged *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUQuerySet {
     undefined destroy();
 };
@@ -2145,7 +2149,7 @@ typedef int WGPU_PIPELINE_STATISTIC_NAME;
 #define WGPU_PIPELINE_STATISTIC_NAME_COMPUTE_SHADER_INVOCATIONS 181
 
 /*
-[Exposed=(Window, DedicatedWorker)]
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUCanvasContext {
     readonly attribute (HTMLCanvasElement or OffscreenCanvas) canvas;
 
@@ -2204,7 +2208,7 @@ typedef int WGPU_DEVICE_LOST_REASON;
 #define WGPU_DEVICE_LOST_REASON_DESTROYED 184
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker)]
 interface GPUDeviceLostInfo {
     readonly attribute (GPUDeviceLostReason or undefined) reason;
     readonly attribute DOMString message;
@@ -2229,12 +2233,12 @@ typedef int WGPU_ERROR_FILTER;
 #define WGPU_ERROR_FILTER_VALIDATION 186
 
 /*
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker)]
 interface GPUOutOfMemoryError {
     constructor();
 };
 
-[Exposed=Window]
+[Exposed=(Window, DedicatedWorker)]
 interface GPUValidationError {
     constructor(DOMString message);
     readonly attribute DOMString message;

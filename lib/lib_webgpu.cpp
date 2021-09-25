@@ -89,14 +89,14 @@ const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER = {
 const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {
   .blend = (WGpuBlendState) {
     .color = (WGpuBlendComponent) {
+      .operation = WGPU_BLEND_OPERATION_ADD,
       .srcFactor = WGPU_BLEND_FACTOR_ONE,
-      .dstFactor = WGPU_BLEND_FACTOR_ZERO,
-      .operation = WGPU_BLEND_OPERATION_ADD
+      .dstFactor = WGPU_BLEND_FACTOR_ZERO
     },
     .alpha = (WGpuBlendComponent) {
+      .operation = WGPU_BLEND_OPERATION_ADD,
       .srcFactor = WGPU_BLEND_FACTOR_ONE,
-      .dstFactor = WGPU_BLEND_FACTOR_ZERO,
-      .operation = WGPU_BLEND_OPERATION_ADD
+      .dstFactor = WGPU_BLEND_FACTOR_ZERO
     },
   },
   .writeMask = WGPU_COLOR_WRITE_ALL
