@@ -326,8 +326,6 @@ EM_BOOL wgpu_is_device(WGpuObjectBase object);
 #define wgpu_device_supports_feature wgpu_adapter_or_device_supports_feature
 #define wgpu_device_get_limits wgpu_adapter_or_device_get_limits
 
-WGpuAdapter wgpu_device_get_adapter(WGpuDevice device);
-
 WGpuQueue wgpu_device_get_queue(WGpuDevice device);
 
 WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescriptor *bufferDesc);

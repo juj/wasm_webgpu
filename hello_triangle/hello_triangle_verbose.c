@@ -84,7 +84,6 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   printf("Got device, set label: \"%s\"\n", deviceLabel);
   assert(!strcmp(deviceLabel, "My WebGPU device"));
 
-  assert(wgpu_device_get_adapter(device) == adapter);
   defaultQueue = wgpu_device_get_queue(device);
   assert(wgpu_is_queue(defaultQueue));
 
