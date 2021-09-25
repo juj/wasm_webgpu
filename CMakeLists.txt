@@ -33,10 +33,10 @@ endmacro()
 if (EMSCRIPTEN)
 	set(CMAKE_EXECUTABLE_SUFFIX ".html")
 
-	append_compiler_flags_debug("-g4")
+	append_compiler_flags_debug("-g3")
 
-	append_linker_flags_debug("-g4")
-	append_linker_flags_debug("-s ASSERTIONS=1")
+	append_linker_flags_debug("-g3")
+	append_linker_flags_debug("-s ASSERTIONS=1 -jsDWEBGPU_DEBUG=1")
 
 	append_linker_flags("--js-library ${CMAKE_CURRENT_LIST_DIR}/lib/lib_webgpu.js")
 	append_linker_flags("--js-library ${CMAKE_CURRENT_LIST_DIR}/lib/lib_demo.js")
