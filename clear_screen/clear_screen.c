@@ -21,7 +21,7 @@ EM_BOOL raf(double time, void *userData)
 {
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
 
-  WGpuRenderPassColorAttachment colorAttachment = {};
+  WGpuRenderPassColorAttachment colorAttachment = WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;
   colorAttachment.view = wgpu_texture_create_view(wgpu_canvas_context_get_current_texture(canvasContext), 0);
 
   double hue = time * 0.00005;
@@ -29,7 +29,6 @@ EM_BOOL raf(double time, void *userData)
   colorAttachment.loadColor.g = hue2color(hue);
   colorAttachment.loadColor.b = hue2color(hue - 1.0 / 3.0);
   colorAttachment.loadColor.a = 1.0;
-  colorAttachment.storeOp = WGPU_STORE_OP_STORE;
 
   WGpuRenderPassDescriptor passDesc = {};
   passDesc.numColorAttachments = 1;

@@ -136,6 +136,17 @@ extern const WGpuExtent3D WGPU_EXTENT_3D_DEFAULT_INITIALIZER = {
   .depthOrArrayLayers = 1
 };
 
+extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER = {
+  .storeOp = WGPU_STORE_OP_STORE,
+  .loadOp = WGPU_LOAD_OP_CONSTANT_VALUE,
+  .loadColor = (WGpuColor) {
+    .r = 0.0,
+    .g = 0.0,
+    .b = 0.0,
+    .a = 1.0,
+  }
+};
+
 extern const WGpuImageCopyExternalImage WGPU_IMAGE_COPY_EXTERNAL_IMAGE_DEFAULT_INITIALIZER = {
   .origin = (WGpuOrigin2D) {
     .x = 0,

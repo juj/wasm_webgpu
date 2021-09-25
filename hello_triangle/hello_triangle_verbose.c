@@ -25,7 +25,6 @@ EM_BOOL raf(double time, void *userData)
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
   assert(wgpu_is_command_encoder(encoder));
 
-  WGpuRenderPassColorAttachment colorAttachment = {};
   WGpuTexture swapChainTexture = wgpu_canvas_context_get_current_texture(canvasContext);
   assert(wgpu_is_texture(swapChainTexture));
 
@@ -34,8 +33,8 @@ EM_BOOL raf(double time, void *userData)
   WGpuTexture swapChainTexture2 = wgpu_canvas_context_get_current_texture(canvasContext);
   assert(swapChainTexture == swapChainTexture2);
 
+  WGpuRenderPassColorAttachment colorAttachment = WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;
   colorAttachment.view = wgpu_texture_create_view(swapChainTexture, 0);
-  colorAttachment.loadColor.a = 1.0;
   assert(wgpu_is_texture_view(colorAttachment.view));
 
   WGpuRenderPassDescriptor passDesc = {};

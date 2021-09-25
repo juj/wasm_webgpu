@@ -2377,11 +2377,12 @@ typedef struct WGpuRenderPassColorAttachment
   WGpuTextureView view;
   WGpuTextureView resolveTarget;
 
-  WGPU_STORE_OP storeOp;
+  WGPU_STORE_OP storeOp; // Required, be sure to set to WGPU_STORE_OP_STORE (default) or WGPU_STORE_OP_DISCARD
 
   WGPU_LOAD_OP loadOp; // Either WGPU_LOAD_OP_CONSTANT_VALUE (== default, 0) or WGPU_LOAD_OP_LOAD
-  WGpuColor loadColor;
+  WGpuColor loadColor; // Default = { r = 0.0, g = 0.0, b = 0.0, a = 1.0 }
 } WGpuRenderPassColorAttachment;
+extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;
 
 typedef struct WGpuImageCopyExternalImage
 {
