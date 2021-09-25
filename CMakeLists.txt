@@ -49,7 +49,10 @@ if (EMSCRIPTEN)
 	append_linker_flags("-s USE_SDL=0 -s FILESYSTEM=0 -s AUTO_JS_LIBRARIES=0 -s DISABLE_EXCEPTION_THROWING=1")
 	append_linker_flags("-lmath.js -lhtml5.js -lint53.js")
 
-	append_linker_flags("-g2 -s SINGLE_FILE=1 -s WASM=0 -s INITIAL_MEMORY=16MB -s MALLOC=emmalloc --memory-init-file 0")
+	append_linker_flags("-s INITIAL_MEMORY=16MB -s MALLOC=emmalloc --memory-init-file 0")
+
+	# Manual debugging:
+	#append_linker_flags("-g2 -s SINGLE_FILE=1")
 
 	append_linker_flags_opts("--closure 1 --closure-args \"--externs ${CMAKE_CURRENT_LIST_DIR}/lib/webgpu_closure_externs.js\"")
 
