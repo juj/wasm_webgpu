@@ -5,7 +5,7 @@
 
 WGpuAdapter adapter;
 WGpuDevice device;
-WGpuQueue defaultQueue;
+WGpuQueue queue;
 WGpuCanvasContext canvasContext;
 
 double hue2color(double hue)
@@ -35,7 +35,7 @@ EM_BOOL raf(double time, void *userData)
   passDesc.colorAttachments = &colorAttachment;
 
   wgpu_render_pass_encoder_end_pass(wgpu_command_encoder_begin_render_pass(encoder, &passDesc));
-  wgpu_queue_submit_one_and_destroy(defaultQueue, wgpu_command_encoder_finish(encoder));
+  wgpu_queue_submit_one_and_destroy(queue, wgpu_command_encoder_finish(encoder));
 
   assert(wgpu_get_num_live_objects() < 100); // Check against programming errors from Wasm<->JS WebGPU object leaks
 
@@ -45,7 +45,7 @@ EM_BOOL raf(double time, void *userData)
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 {
   device = result;
-  defaultQueue = wgpu_device_get_queue(device);
+  queue = wgpu_device_get_queue(device);
 
   canvasContext = wgpu_canvas_get_webgpu_context("canvas");
 

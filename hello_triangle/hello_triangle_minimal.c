@@ -5,7 +5,7 @@
 WGpuAdapter adapter;
 WGpuCanvasContext canvasContext;
 WGpuDevice device;
-WGpuQueue defaultQueue;
+WGpuQueue queue;
 WGpuRenderPipeline renderPipeline;
 
 EM_BOOL raf(double time, void *userData)
@@ -26,7 +26,7 @@ EM_BOOL raf(double time, void *userData)
 
   WGpuCommandBuffer commandBuffer = wgpu_command_encoder_finish(encoder);
 
-  wgpu_queue_submit_one_and_destroy(defaultQueue, commandBuffer);
+  wgpu_queue_submit_one_and_destroy(queue, commandBuffer);
 
   return EM_FALSE; // Render just one frame, static content
 }
@@ -34,7 +34,7 @@ EM_BOOL raf(double time, void *userData)
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 {
   device = result;
-  defaultQueue = wgpu_device_get_queue(device);
+  queue = wgpu_device_get_queue(device);
 
   canvasContext = wgpu_canvas_get_webgpu_context("canvas");
 

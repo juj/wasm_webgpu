@@ -7,7 +7,7 @@
 WGpuAdapter adapter;
 WGpuCanvasContext canvasContext;
 WGpuDevice device;
-WGpuQueue defaultQueue;
+WGpuQueue queue;
 WGpuRenderPipeline renderPipeline;
 WGpuBuffer buffer = 0;
 WGpuTexture texture;
@@ -67,7 +67,7 @@ void CreateGeometryAndRender()
   wgpu_render_pass_encoder_draw(pass, 6, 1, 0, 0);
   wgpu_render_pass_encoder_end_pass(pass);
 
-  wgpu_queue_submit_one_and_destroy(defaultQueue, wgpu_command_encoder_finish(encoder));
+  wgpu_queue_submit_one_and_destroy(queue, wgpu_command_encoder_finish(encoder));
 
   assert(wgpu_get_num_live_objects() < 100); // Check against programming errors from Wasm<->JS WebGPU object leaks
 }
@@ -80,7 +80,7 @@ void DownloadedImage(WGpuImageBitmap bitmap, int width, int height, void *userDa
   if (!width)
     return;
 
-  defaultQueue = wgpu_device_get_queue(device);
+  queue = wgpu_device_get_queue(device);
 
   canvasContext = wgpu_canvas_get_webgpu_context("canvas");
 
@@ -164,7 +164,7 @@ void DownloadedImage(WGpuImageBitmap bitmap, int width, int height, void *userDa
   WGpuImageCopyTextureTagged dst = {};
   dst.texture = texture;
 
-  wgpu_queue_copy_external_image_to_texture(defaultQueue, &src, &dst, width, height, 1);
+  wgpu_queue_copy_external_image_to_texture(queue, &src, &dst, width, height, 1);
 
   WGpuSamplerDescriptor samplerDesc = WGPU_SAMPLER_DESCRIPTOR_DEFAULT_INITIALIZER;
   sampler = wgpu_device_create_sampler(device, &samplerDesc);
