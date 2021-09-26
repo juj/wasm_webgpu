@@ -181,8 +181,11 @@ interface GPU {
 */
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // Requests an adapter from the user agent. The user agent chooses whether to return an adapter, and, if so, chooses according to the provided options.
-// If WebGPU is not supported by the browser, returns 0. Otherwise returns an ID for a WebGPU adapter.
-WGpuAdapter navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions *options, WGpuRequestAdapterCallback adapterCallback, void *userData);
+// If WebGPU is not supported by the browser, returns EM_FALSE.
+// Otherwise returns EM_TRUE, and the callback will resolve later with an ID handle to the adapter.
+// The callback will also be resolved in the event of an initialization failure, but the ID handle
+// passed to the callback will then be zero.
+EM_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions *options, WGpuRequestAdapterCallback adapterCallback, void *userData);
 
 /*
 dictionary GPURequestAdapterOptions {
