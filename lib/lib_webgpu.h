@@ -1484,53 +1484,38 @@ enum GPUVertexFormat {
     "sint32x4",
 };
 */
-#define __wgpu_fmt_uint  0x01
-#define __wgpu_fmt_sint  0x02
-#define __wgpu_fmt_unorm 0x03
-#define __wgpu_fmt_snorm 0x04
-#define __wgpu_fmt_float 0x05
-
-#define __wgpu_fmt_8x2  0x10
-#define __wgpu_fmt_8x4  0x20
-#define __wgpu_fmt_16x2 0x30
-#define __wgpu_fmt_16x4 0x40
-#define __wgpu_fmt_32   0x50
-#define __wgpu_fmt_32x2 0x60
-#define __wgpu_fmt_32x3 0x70
-#define __wgpu_fmt_32x4 0x80
-
 typedef int WGPU_VERTEX_FORMAT;
 #define WGPU_VERTEX_FORMAT_INVALID   0
-#define WGPU_VERTEX_FORMAT_UINT8X2   (__wgpu_fmt_uint  | __wgpu_fmt_8x2)
-#define WGPU_VERTEX_FORMAT_UINT8X4   (__wgpu_fmt_uint  | __wgpu_fmt_8x4)
-#define WGPU_VERTEX_FORMAT_SINT8X2   (__wgpu_fmt_sint  | __wgpu_fmt_8x2)
-#define WGPU_VERTEX_FORMAT_SINT8X4   (__wgpu_fmt_sint  | __wgpu_fmt_8x4)
-#define WGPU_VERTEX_FORMAT_UNORM8X2  (__wgpu_fmt_unorm | __wgpu_fmt_8x2)
-#define WGPU_VERTEX_FORMAT_UNORM8X4  (__wgpu_fmt_unorm | __wgpu_fmt_8x4)
-#define WGPU_VERTEX_FORMAT_SNORM8X2  (__wgpu_fmt_snorm | __wgpu_fmt_8x2)
-#define WGPU_VERTEX_FORMAT_SNORM8X4  (__wgpu_fmt_snorm | __wgpu_fmt_8x4)
-#define WGPU_VERTEX_FORMAT_UINT16X2  (__wgpu_fmt_uint  | __wgpu_fmt_16x2)
-#define WGPU_VERTEX_FORMAT_UINT16X4  (__wgpu_fmt_uint  | __wgpu_fmt_16x4)
-#define WGPU_VERTEX_FORMAT_SINT16X2  (__wgpu_fmt_uint  | __wgpu_fmt_16x2)
-#define WGPU_VERTEX_FORMAT_SINT16X4  (__wgpu_fmt_uint  | __wgpu_fmt_16x4)
-#define WGPU_VERTEX_FORMAT_UNORM16X2 (__wgpu_fmt_unorm | __wgpu_fmt_16x2)
-#define WGPU_VERTEX_FORMAT_UNORM16X4 (__wgpu_fmt_unorm | __wgpu_fmt_16x4)
-#define WGPU_VERTEX_FORMAT_SNORM16X2 (__wgpu_fmt_snorm | __wgpu_fmt_16x2)
-#define WGPU_VERTEX_FORMAT_SNORM16X4 (__wgpu_fmt_snorm | __wgpu_fmt_16x4)
-#define WGPU_VERTEX_FORMAT_FLOAT16X2 (__wgpu_fmt_float | __wgpu_fmt_16x2)
-#define WGPU_VERTEX_FORMAT_FLOAT16X4 (__wgpu_fmt_float | __wgpu_fmt_16x4)
-#define WGPU_VERTEX_FORMAT_FLOAT32   (__wgpu_fmt_float | __wgpu_fmt_32)
-#define WGPU_VERTEX_FORMAT_FLOAT32X2 (__wgpu_fmt_float | __wgpu_fmt_32x2)
-#define WGPU_VERTEX_FORMAT_FLOAT32X3 (__wgpu_fmt_float | __wgpu_fmt_32x3)
-#define WGPU_VERTEX_FORMAT_FLOAT32X4 (__wgpu_fmt_float | __wgpu_fmt_32x4)
-#define WGPU_VERTEX_FORMAT_UINT32    (__wgpu_fmt_uint  | __wgpu_fmt_32)
-#define WGPU_VERTEX_FORMAT_UINT32X2  (__wgpu_fmt_uint  | __wgpu_fmt_32x2)
-#define WGPU_VERTEX_FORMAT_UINT32X3  (__wgpu_fmt_uint  | __wgpu_fmt_32x3)
-#define WGPU_VERTEX_FORMAT_UINT32X4  (__wgpu_fmt_uint  | __wgpu_fmt_32x4)
-#define WGPU_VERTEX_FORMAT_SINT32    (__wgpu_fmt_sint  | __wgpu_fmt_32)
-#define WGPU_VERTEX_FORMAT_SINT32X2  (__wgpu_fmt_sint  | __wgpu_fmt_32x2)
-#define WGPU_VERTEX_FORMAT_SINT32X3  (__wgpu_fmt_sint  | __wgpu_fmt_32x3)
-#define WGPU_VERTEX_FORMAT_SINT32X4  (__wgpu_fmt_sint  | __wgpu_fmt_32x4)
+#define WGPU_VERTEX_FORMAT_UINT8X2   58
+#define WGPU_VERTEX_FORMAT_UINT8X4   59
+#define WGPU_VERTEX_FORMAT_SINT8X2   60
+#define WGPU_VERTEX_FORMAT_SINT8X4   61
+#define WGPU_VERTEX_FORMAT_UNORM8X2  62
+#define WGPU_VERTEX_FORMAT_UNORM8X4  63
+#define WGPU_VERTEX_FORMAT_SNORM8X2  64
+#define WGPU_VERTEX_FORMAT_SNORM8X4  65
+#define WGPU_VERTEX_FORMAT_UINT16X2  66
+#define WGPU_VERTEX_FORMAT_UINT16X4  67
+#define WGPU_VERTEX_FORMAT_SINT16X2  68
+#define WGPU_VERTEX_FORMAT_SINT16X4  69
+#define WGPU_VERTEX_FORMAT_UNORM16X2 70
+#define WGPU_VERTEX_FORMAT_UNORM16X4 71
+#define WGPU_VERTEX_FORMAT_SNORM16X2 72
+#define WGPU_VERTEX_FORMAT_SNORM16X4 73
+#define WGPU_VERTEX_FORMAT_FLOAT16X2 74
+#define WGPU_VERTEX_FORMAT_FLOAT16X4 75
+#define WGPU_VERTEX_FORMAT_FLOAT32   76
+#define WGPU_VERTEX_FORMAT_FLOAT32X2 77
+#define WGPU_VERTEX_FORMAT_FLOAT32X3 78
+#define WGPU_VERTEX_FORMAT_FLOAT32X4 79
+#define WGPU_VERTEX_FORMAT_UINT32    80
+#define WGPU_VERTEX_FORMAT_UINT32X2  81
+#define WGPU_VERTEX_FORMAT_UINT32X3  82
+#define WGPU_VERTEX_FORMAT_UINT32X4  83
+#define WGPU_VERTEX_FORMAT_SINT32    84
+#define WGPU_VERTEX_FORMAT_SINT32X2  85
+#define WGPU_VERTEX_FORMAT_SINT32X3  86
+#define WGPU_VERTEX_FORMAT_SINT32X4  87
 
 /*
 enum GPUVertexStepMode {
