@@ -96,7 +96,8 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   WGpuCanvasConfiguration config = WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
   config.format = wgpu_canvas_context_get_preferred_format(canvasContext, adapter);
-  emscripten_mini_stdio_printf("Preferred swap chain format: %s\n", wgpu_enum_to_string(config.format));
+  // TODO
+//  emscripten_mini_stdio_printf("Preferred swap chain format: %s\n", wgpu_enum_to_string(config.format));
 
   wgpu_canvas_context_configure(canvasContext, &config);
 
