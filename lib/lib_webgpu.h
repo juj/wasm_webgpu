@@ -186,6 +186,8 @@ typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // The callback will also be resolved in the event of an initialization failure, but the ID handle
 // passed to the callback will then be zero.
 EM_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions *options, WGpuRequestAdapterCallback adapterCallback, void *userData);
+// Like above, but tiny code size without options.
+void navigator_gpu_request_adapter_async_simple(WGpuRequestAdapterCallback adapterCallback);
 
 /*
 dictionary GPURequestAdapterOptions {
@@ -254,6 +256,8 @@ EM_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter);
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 
 void wgpu_adapter_request_device_async(WGpuAdapter adapter, const WGpuDeviceDescriptor *descriptor, WGpuRequestDeviceCallback deviceCallback, void *userData);
+// Like above, but tiny code size without options.
+void wgpu_adapter_request_device_async_simple(WGpuAdapter adapter, WGpuRequestDeviceCallback deviceCallback);
 
 /*
 dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
@@ -359,6 +363,9 @@ void wgpu_device_create_compute_pipeline_async(WGpuDevice device, const WGpuShad
 void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc, WGpuCreatePipelineCallback callback, void *userData);
 
 WGpuCommandEncoder wgpu_device_create_command_encoder(WGpuDevice device, const WGpuCommandEncoderDescriptor *commandEncoderDesc);
+// Same as above, but without any descriptor args.
+WGpuCommandEncoder wgpu_device_create_command_encoder_simple(WGpuDevice device);
+
 WGpuRenderBundleEncoder wgpu_device_create_render_bundle_encoder(WGpuDevice device, const WGpuRenderBundleEncoderDescriptor *renderBundleEncoderDesc);
 
 WGpuQuerySet wgpu_device_create_query_set(WGpuDevice device, const WGpuQuerySetDescriptor *querySetDesc);
@@ -459,6 +466,8 @@ typedef int WGpuTexture;
 // Returns true if the given handle references a valid GPUTexture.
 EM_BOOL wgpu_is_texture(WGpuObjectBase object);
 WGpuTextureView wgpu_texture_create_view(WGpuTexture texture, const WGpuTextureViewDescriptor *textureViewDesc);
+// Same as above, but does not take any descriptor args.
+WGpuTextureView wgpu_texture_create_view_simple(WGpuTexture texture);
 
 /*
 dictionary GPUTextureDescriptor : GPUObjectDescriptorBase {
@@ -1648,6 +1657,8 @@ typedef int WGpuCommandEncoder;
 EM_BOOL wgpu_is_command_encoder(WGpuObjectBase object);
 
 WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder commandEncoder, const WGpuRenderPassDescriptor *renderPassDesc);
+// Like above, but tiny code size path for the case when there is exactly one color and zero depth-stencil targets and no occlusion query set specified for the render pass.
+WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass_1color_0depth(WGpuCommandEncoder commandEncoder, const WGpuRenderPassDescriptor *renderPassDesc);
 WGpuComputePassEncoder wgpu_command_encoder_begin_compute_pass(WGpuCommandEncoder commandEncoder, const WGpuComputePassDescriptor *computePassDesc _WGPU_DEFAULT_VALUE(0));
 void wgpu_command_encoder_copy_buffer_to_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer source, double_int53_t sourceOffset, WGpuBuffer destination, double_int53_t destinationOffset, double_int53_t size);
 void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyBuffer *source, const WGpuImageCopyTexture *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));

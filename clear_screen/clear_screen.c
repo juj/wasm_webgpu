@@ -19,10 +19,10 @@ double hue2color(double hue)
 
 EM_BOOL raf(double time, void *userData)
 {
-  WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
+  WGpuCommandEncoder encoder = wgpu_device_create_command_encoder_simple(device);
 
   WGpuRenderPassColorAttachment colorAttachment = WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;
-  colorAttachment.view = wgpu_texture_create_view(wgpu_canvas_context_get_current_texture(canvasContext), 0);
+  colorAttachment.view = wgpu_texture_create_view_simple(wgpu_canvas_context_get_current_texture(canvasContext));
 
   double hue = time * 0.00005;
   colorAttachment.loadColor.r = hue2color(hue + 1.0 / 3.0);
@@ -34,7 +34,7 @@ EM_BOOL raf(double time, void *userData)
   passDesc.numColorAttachments = 1;
   passDesc.colorAttachments = &colorAttachment;
 
-  wgpu_render_pass_encoder_end_pass(wgpu_command_encoder_begin_render_pass(encoder, &passDesc));
+  wgpu_render_pass_encoder_end_pass(wgpu_command_encoder_begin_render_pass_1color_0depth(encoder, &passDesc));
   wgpu_queue_submit_one_and_destroy(queue, wgpu_command_encoder_finish(encoder));
 
   assert(wgpu_get_num_live_objects() < 100); // Check against programming errors from Wasm<->JS WebGPU object leaks
@@ -60,13 +60,10 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 {
   adapter = result;
-
-  WGpuDeviceDescriptor deviceDesc = WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER;
-  wgpu_adapter_request_device_async(adapter, &deviceDesc, ObtainedWebGpuDevice, 0);
+  wgpu_adapter_request_device_async_simple(adapter, ObtainedWebGpuDevice);
 }
 
 int main(int argc, char **argv)
 {
-  WGpuRequestAdapterOptions options = {};
-  navigator_gpu_request_adapter_async(&options, ObtainedWebGpuAdapter, 0);
+  navigator_gpu_request_adapter_async_simple(ObtainedWebGpuAdapter);
 }
