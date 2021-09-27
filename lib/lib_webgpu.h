@@ -2497,7 +2497,7 @@ typedef int WGpuImageBitmap;
 // Called when the ImageBitmap finishes loading. If loading fails, this callback will be called with width==height==0.
 typedef void (*WGpuLoadImageBitmapCallback)(WGpuImageBitmap bitmap, int width, int height, void *userData);
 
-WGpuImageBitmap wgpu_load_image_bitmap_from_url_async(const char *url, EM_BOOL flipY, WGpuLoadImageBitmapCallback callback, void *userData);
+void wgpu_load_image_bitmap_from_url_async(const char *url, EM_BOOL flipY, WGpuLoadImageBitmapCallback callback, void *userData);
 
 
 #ifdef __cplusplus
