@@ -166,8 +166,8 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   config.format = wgpu_canvas_context_get_preferred_format(canvasContext, adapter);
   wgpu_canvas_context_configure(canvasContext, &config);
 
-  const char *vertexShader =
-    "struct In {"
+  WGpuShaderModule vs = wgpu_device_create_shader_module(device, &(WGpuShaderModuleDescriptor) {
+    .code = "struct In {"
     "  [[location(0)]] pos : vec2<f32>;"
     "  [[location(1)]] color : f32;"
     "};"
@@ -183,20 +183,15 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
       "out.pos = vec4<f32>(in.pos, 0.0, 1.0);"
       "out.color = in.color;"
       "return out;"
-    "}";
+    "}"
+  });
 
-  const char *fragmentShader =
-    "[[stage(fragment)]]"
+  WGpuShaderModule fs = wgpu_device_create_shader_module(device, &(WGpuShaderModuleDescriptor) {
+    .code = "[[stage(fragment)]]"
     "fn main([[location(0)]] inColor : f32) -> [[location(0)]] vec4<f32> {"
       "return vec4<f32>(inColor, inColor, abs(inColor), 1.0);"
-    "}";
-
-  WGpuShaderModuleDescriptor shaderModuleDesc = {};
-  shaderModuleDesc.code = vertexShader;
-  WGpuShaderModule vs = wgpu_device_create_shader_module(device, &shaderModuleDesc);
-
-  shaderModuleDesc.code = fragmentShader;
-  WGpuShaderModule fs = wgpu_device_create_shader_module(device, &shaderModuleDesc);
+    "}"
+  });
 
   WGpuVertexAttribute vertexAttr[2] = {};
   vertexAttr[0].format = WGPU_VERTEX_FORMAT_FLOAT32X2;

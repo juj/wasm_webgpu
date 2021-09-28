@@ -1083,6 +1083,12 @@ typedef int WGpuShaderModule;
 // Returns true if the given handle references a valid GPUShaderModule.
 EM_BOOL wgpu_is_shader_module(WGpuObjectBase object);
 
+typedef void (*WGpuGetCompilationInfoCallback)(WGpuShaderModule shaderModule, WGpuCompilationInfo *compilationInfo, void *userData);
+
+// Asynchronously obtains information about WebGPU shader module compilation to the given callback.
+// !! Remember to call wgpu_free_compilation_info() in the callback function after being done with the data.
+void wgpu_shader_module_get_compilation_info_async(WGpuShaderModule shaderModule, WGpuGetCompilationInfoCallback callback, void *userData);
+
 /*
 dictionary GPUShaderModuleDescriptor : GPUObjectDescriptorBase {
     required USVString code;
@@ -1103,10 +1109,11 @@ enum GPUCompilationMessageType {
 };
 */
 typedef int WGPU_COMPILATION_MESSAGE_TYPE;
-#define WGPU_COMPILATION_MESSAGE_TYPE_INVALID 0
-#define WGPU_COMPILATION_MESSAGE_TYPE_ERROR 1
-#define WGPU_COMPILATION_MESSAGE_TYPE_WARNING 2
-#define WGPU_COMPILATION_MESSAGE_TYPE_INFO 3
+#define WGPU_COMPILATION_MESSAGE_TYPE_ERROR 0
+#define WGPU_COMPILATION_MESSAGE_TYPE_WARNING 1
+#define WGPU_COMPILATION_MESSAGE_TYPE_INFO 2
+
+const char *wgpu_compilation_message_type_to_string(WGPU_COMPILATION_MESSAGE_TYPE type);
 
 /*
 [Exposed=(Window, DedicatedWorker), Serializable, SecureContext]
@@ -1119,7 +1126,37 @@ interface GPUCompilationMessage {
     readonly attribute unsigned long long length;
 };
 */
-// TODO: implement
+typedef struct WGpuCompilationMessage
+{
+  // A human-readable string containing the message generated during the shader compilation.
+  char *message;
+
+  // The severity level of the message.
+  WGPU_COMPILATION_MESSAGE_TYPE type;
+
+  // The line number in the shader code the message corresponds to. Value is one-based, such
+  // that a lineNum of 1 indicates the first line of the shader code.
+  // If the message corresponds to a substring this points to the line on which the substring
+  // begins. Must be 0 if the message does not correspond to any specific point in the shader code.
+  uint32_t lineNum;
+
+  // The offset, in UTF-16 code units, from the beginning of line lineNum of the shader code
+  // to the point or beginning of the substring that the message corresponds to. Value is
+  // one-based, such that a linePos of 1 indicates the first character of the line.
+  // If message corresponds to a substring this points to the first UTF-16 code unit of the
+  // substring. Must be 0 if the message does not correspond to any specific point in the shader code.
+  uint32_t linePos;
+
+  // The offset from the beginning of the shader code in UTF-16 code units to the point or
+  // beginning of the substring that message corresponds to. Must reference the same position as
+  // lineNum and linePos. Must be 0 if the message does not correspond to any specific point in
+  // the shader code.
+  uint32_t offset;
+
+  // The number of UTF-16 code units in the substring that message corresponds to. If the message
+  // does not correspond with a substring then length must be 0.
+  uint32_t length;
+} WGpuCompilationMessage;
 
 /*
 [Exposed=(Window, DedicatedWorker), Serializable, SecureContext]
@@ -1127,7 +1164,13 @@ interface GPUCompilationInfo {
     readonly attribute FrozenArray<GPUCompilationMessage> messages;
 };
 */
-// TODO: implement
+typedef struct WGpuCompilationInfo
+{
+  int numMessages;
+  WGpuCompilationMessage messages[];
+} WGpuCompilationInfo;
+// Deallocates a WGpuCompilationInfo object produced by a call to wgpu_free_compilation_info()
+#define wgpu_free_compilation_info(info) free((info))
 
 /*
 dictionary GPUPipelineDescriptorBase : GPUObjectDescriptorBase {

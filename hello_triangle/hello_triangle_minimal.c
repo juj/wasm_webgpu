@@ -1,5 +1,3 @@
-#include <assert.h>
-#include <stdio.h>
 #include "lib_webgpu.h"
 
 WGpuAdapter adapter;

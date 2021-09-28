@@ -66,6 +66,8 @@ typedef int WGpuPipelineLayout;
 typedef int WGpuShaderModule;
 typedef struct WGpuShaderModuleDescriptor WGpuShaderModuleDescriptor;
 typedef int WGPU_COMPILATION_MESSAGE_TYPE;
+typedef struct WGpuCompilationMessage WGpuCompilationMessage;
+typedef struct WGpuCompilationInfo WGpuCompilationInfo;
 typedef struct WGpuPipelineConstant WGpuPipelineConstant;
 typedef int WGpuComputePipeline;
 // Not used:
@@ -135,6 +137,7 @@ typedef struct WGpuExtent3D WGpuExtent3D;
 
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset, double_int53_t size);
+typedef void (*WGpuGetCompilationInfoCallback)(WGpuShaderModule shaderModule, WGpuCompilationInfo *compilationInfo, void *userData);
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
 typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message, void *userData);
 typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessage, void *userData);

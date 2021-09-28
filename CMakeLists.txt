@@ -81,3 +81,6 @@ target_link_libraries(gpu_oom webgpu)
 
 add_executable(texture texture/texture.c)
 target_link_libraries(texture webgpu)
+
+add_executable(failing_shader_compilation failing_shader_compilation/failing_shader_compilation.c)
+target_link_libraries(failing_shader_compilation webgpu)
