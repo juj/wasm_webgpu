@@ -2479,7 +2479,7 @@ typedef struct WGpuDepthStencilState
   uint32_t stencilWriteMask;
 
   int32_t depthBias;
-  float depthbiasSlopeScale;
+  float depthBiasSlopeScale;
   float depthBiasClamp;
 
   WGpuStencilFaceState stencilFront;
