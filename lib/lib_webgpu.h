@@ -279,6 +279,8 @@ enum GPUFeatureName {
     "depth32float-stencil8",
     "pipeline-statistics-query",
     "texture-compression-bc",
+    "texture-compression-etc2",
+    "texture-compression-astc",
     "timestamp-query",
 };
 */
@@ -289,7 +291,9 @@ typedef int WGPU_FEATURE_NAME;
 #define WGPU_FEATURE_NAME_DEPTH32FLOAT_STENCIL8 6
 #define WGPU_FEATURE_NAME_PIPELINE_STATISTICS_QUERY 7
 #define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_BC 8
-#define WGPU_FEATURE_NAME_TIMESTAMP_QUERY 9
+#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_ETC2 9
+#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_ASTC 10
+#define WGPU_FEATURE_NAME_TIMESTAMP_QUERY 11
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -662,6 +666,50 @@ enum GPUTextureFormat {
     "bc7-rgba-unorm",
     "bc7-rgba-unorm-srgb",
 
+    // ETC2 compressed formats usable if "texture-compression-etc2" is both
+    // supported by the device/user agent and enabled in requestDevice.
+    "etc2-rgb8unorm",
+    "etc2-rgb8unorm-srgb",
+    "etc2-rgb8a1unorm",
+    "etc2-rgb8a1unorm-srgb",
+    "etc2-rgba8unorm",
+    "etc2-rgba8unorm-srgb",
+    "eac-r11unorm",
+    "eac-r11snorm",
+    "eac-rg11unorm",
+    "eac-rg11snorm",
+
+    // ASTC compressed formats usable if "texture-compression-astc" is both
+    // supported by the device/user agent and enabled in requestDevice.
+    "astc-4x4-unorm",
+    "astc-4x4-unorm-srgb",
+    "astc-5x4-unorm",
+    "astc-5x4-unorm-srgb",
+    "astc-5x5-unorm",
+    "astc-5x5-unorm-srgb",
+    "astc-6x5-unorm",
+    "astc-6x5-unorm-srgb",
+    "astc-6x6-unorm",
+    "astc-6x6-unorm-srgb",
+    "astc-8x5-unorm",
+    "astc-8x5-unorm-srgb",
+    "astc-8x6-unorm",
+    "astc-8x6-unorm-srgb",
+    "astc-8x8-unorm",
+    "astc-8x8-unorm-srgb",
+    "astc-10x5-unorm",
+    "astc-10x5-unorm-srgb",
+    "astc-10x6-unorm",
+    "astc-10x6-unorm-srgb",
+    "astc-10x8-unorm",
+    "astc-10x8-unorm-srgb",
+    "astc-10x10-unorm",
+    "astc-10x10-unorm-srgb",
+    "astc-12x10-unorm",
+    "astc-12x10-unorm-srgb",
+    "astc-12x12-unorm",
+    "astc-12x12-unorm-srgb",
+
     // "depth24unorm-stencil8" feature
     "depth24unorm-stencil8",
 
@@ -726,8 +774,46 @@ typedef int WGPU_TEXTURE_FORMAT;
 #define WGPU_TEXTURE_FORMAT_BC6H_RGB_FLOAT 53
 #define WGPU_TEXTURE_FORMAT_BC7_RGBA_UNORM 54
 #define WGPU_TEXTURE_FORMAT_BC7_RGBA_UNORM_SRGB 55
-#define WGPU_TEXTURE_FORMAT_DEPTH24UNORM_STENCIL8 56
-#define WGPU_TEXTURE_FORMAT_DEPTH32FLOAT_STENCIL8 57
+#define WGPU_TEXTURE_FORMAT_ETC2_RGB8UNORM 56
+#define WGPU_TEXTURE_FORMAT_ETC2_RGB8UNORM_SRGB 57
+#define WGPU_TEXTURE_FORMAT_ETC2_RGB8A1UNORM 58
+#define WGPU_TEXTURE_FORMAT_ETC2_RGB8A1UNORM_SRGB 59
+#define WGPU_TEXTURE_FORMAT_ETC2_RGBA8UNORM 60
+#define WGPU_TEXTURE_FORMAT_ETC2_RGBA8UNORM_SRGB 61
+#define WGPU_TEXTURE_FORMAT_EAC_R11UNORM 62
+#define WGPU_TEXTURE_FORMAT_EAC_R11SNORM 63
+#define WGPU_TEXTURE_FORMAT_EAC_RG11UNORM 64
+#define WGPU_TEXTURE_FORMAT_EAC_RG11SNORM 65
+#define WGPU_TEXTURE_FORMAT_ASTC_4X4_UNORM 66
+#define WGPU_TEXTURE_FORMAT_ASTC_4X4_UNORM_SRGB 67
+#define WGPU_TEXTURE_FORMAT_ASTC_5X4_UNORM 68
+#define WGPU_TEXTURE_FORMAT_ASTC_5X4_UNORM_SRGB 69
+#define WGPU_TEXTURE_FORMAT_ASTC_5X5_UNORM 70
+#define WGPU_TEXTURE_FORMAT_ASTC_5X5_UNORM_SRGB 71
+#define WGPU_TEXTURE_FORMAT_ASTC_6X5_UNORM 72
+#define WGPU_TEXTURE_FORMAT_ASTC_6X5_UNORM_SRGB 73
+#define WGPU_TEXTURE_FORMAT_ASTC_6X6_UNORM 74
+#define WGPU_TEXTURE_FORMAT_ASTC_6X6_UNORM_SRGB 75
+#define WGPU_TEXTURE_FORMAT_ASTC_8X5_UNORM 76
+#define WGPU_TEXTURE_FORMAT_ASTC_8X5_UNORM_SRGB 77
+#define WGPU_TEXTURE_FORMAT_ASTC_8X6_UNORM 78
+#define WGPU_TEXTURE_FORMAT_ASTC_8X6_UNORM_SRGB 79
+#define WGPU_TEXTURE_FORMAT_ASTC_8X8_UNORM 80
+#define WGPU_TEXTURE_FORMAT_ASTC_8X8_UNORM_SRGB 81
+#define WGPU_TEXTURE_FORMAT_ASTC_10X5_UNORM 82
+#define WGPU_TEXTURE_FORMAT_ASTC_10X5_UNORM_SRGB 83
+#define WGPU_TEXTURE_FORMAT_ASTC_10X6_UNORM 84
+#define WGPU_TEXTURE_FORMAT_ASTC_10X6_UNORM_SRGB 85
+#define WGPU_TEXTURE_FORMAT_ASTC_10X8_UNORM 86
+#define WGPU_TEXTURE_FORMAT_ASTC_10X8_UNORM_SRGB 87
+#define WGPU_TEXTURE_FORMAT_ASTC_10X10_UNORM 88
+#define WGPU_TEXTURE_FORMAT_ASTC_10X10_UNORM_SRGB 89
+#define WGPU_TEXTURE_FORMAT_ASTC_12X10_UNORM 90
+#define WGPU_TEXTURE_FORMAT_ASTC_12X10_UNORM_SRGB 91
+#define WGPU_TEXTURE_FORMAT_ASTC_12X12_UNORM 92
+#define WGPU_TEXTURE_FORMAT_ASTC_12X12_UNORM_SRGB 93
+#define WGPU_TEXTURE_FORMAT_DEPTH24UNORM_STENCIL8 94
+#define WGPU_TEXTURE_FORMAT_DEPTH32FLOAT_STENCIL8 95
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -1541,36 +1627,36 @@ enum GPUVertexFormat {
 */
 typedef int WGPU_VERTEX_FORMAT;
 #define WGPU_VERTEX_FORMAT_INVALID   0
-#define WGPU_VERTEX_FORMAT_UINT8X2   58
-#define WGPU_VERTEX_FORMAT_UINT8X4   59
-#define WGPU_VERTEX_FORMAT_SINT8X2   60
-#define WGPU_VERTEX_FORMAT_SINT8X4   61
-#define WGPU_VERTEX_FORMAT_UNORM8X2  62
-#define WGPU_VERTEX_FORMAT_UNORM8X4  63
-#define WGPU_VERTEX_FORMAT_SNORM8X2  64
-#define WGPU_VERTEX_FORMAT_SNORM8X4  65
-#define WGPU_VERTEX_FORMAT_UINT16X2  66
-#define WGPU_VERTEX_FORMAT_UINT16X4  67
-#define WGPU_VERTEX_FORMAT_SINT16X2  68
-#define WGPU_VERTEX_FORMAT_SINT16X4  69
-#define WGPU_VERTEX_FORMAT_UNORM16X2 70
-#define WGPU_VERTEX_FORMAT_UNORM16X4 71
-#define WGPU_VERTEX_FORMAT_SNORM16X2 72
-#define WGPU_VERTEX_FORMAT_SNORM16X4 73
-#define WGPU_VERTEX_FORMAT_FLOAT16X2 74
-#define WGPU_VERTEX_FORMAT_FLOAT16X4 75
-#define WGPU_VERTEX_FORMAT_FLOAT32   76
-#define WGPU_VERTEX_FORMAT_FLOAT32X2 77
-#define WGPU_VERTEX_FORMAT_FLOAT32X3 78
-#define WGPU_VERTEX_FORMAT_FLOAT32X4 79
-#define WGPU_VERTEX_FORMAT_UINT32    80
-#define WGPU_VERTEX_FORMAT_UINT32X2  81
-#define WGPU_VERTEX_FORMAT_UINT32X3  82
-#define WGPU_VERTEX_FORMAT_UINT32X4  83
-#define WGPU_VERTEX_FORMAT_SINT32    84
-#define WGPU_VERTEX_FORMAT_SINT32X2  85
-#define WGPU_VERTEX_FORMAT_SINT32X3  86
-#define WGPU_VERTEX_FORMAT_SINT32X4  87
+#define WGPU_VERTEX_FORMAT_UINT8X2   96
+#define WGPU_VERTEX_FORMAT_UINT8X4   97
+#define WGPU_VERTEX_FORMAT_SINT8X2   98
+#define WGPU_VERTEX_FORMAT_SINT8X4   99
+#define WGPU_VERTEX_FORMAT_UNORM8X2  100
+#define WGPU_VERTEX_FORMAT_UNORM8X4  101
+#define WGPU_VERTEX_FORMAT_SNORM8X2  102
+#define WGPU_VERTEX_FORMAT_SNORM8X4  103
+#define WGPU_VERTEX_FORMAT_UINT16X2  104
+#define WGPU_VERTEX_FORMAT_UINT16X4  105
+#define WGPU_VERTEX_FORMAT_SINT16X2  106
+#define WGPU_VERTEX_FORMAT_SINT16X4  107
+#define WGPU_VERTEX_FORMAT_UNORM16X2 108
+#define WGPU_VERTEX_FORMAT_UNORM16X4 109
+#define WGPU_VERTEX_FORMAT_SNORM16X2 110
+#define WGPU_VERTEX_FORMAT_SNORM16X4 111
+#define WGPU_VERTEX_FORMAT_FLOAT16X2 112
+#define WGPU_VERTEX_FORMAT_FLOAT16X4 113
+#define WGPU_VERTEX_FORMAT_FLOAT32   114
+#define WGPU_VERTEX_FORMAT_FLOAT32X2 115
+#define WGPU_VERTEX_FORMAT_FLOAT32X3 116
+#define WGPU_VERTEX_FORMAT_FLOAT32X4 117
+#define WGPU_VERTEX_FORMAT_UINT32    118
+#define WGPU_VERTEX_FORMAT_UINT32X2  119
+#define WGPU_VERTEX_FORMAT_UINT32X3  120
+#define WGPU_VERTEX_FORMAT_UINT32X4  121
+#define WGPU_VERTEX_FORMAT_SINT32    122
+#define WGPU_VERTEX_FORMAT_SINT32X2  123
+#define WGPU_VERTEX_FORMAT_SINT32X3  124
+#define WGPU_VERTEX_FORMAT_SINT32X4  125
 
 /*
 enum GPUVertexStepMode {
@@ -1678,6 +1764,11 @@ interface GPUCommandEncoder {
         GPUImageCopyTexture destination,
         GPUExtent3D copySize);
 
+    undefined fillBuffer(
+        GPUBuffer destination,
+        GPUSize64 destinationOffset,
+        GPUSize64 size);
+
     undefined pushDebugGroup(USVString groupLabel);
     undefined popDebugGroup();
     undefined insertDebugMarker(USVString markerLabel);
@@ -1707,6 +1798,10 @@ void wgpu_command_encoder_copy_buffer_to_buffer(WGpuCommandEncoder commandEncode
 void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyBuffer *source, const WGpuImageCopyTexture *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source, const WGpuImageCopyBuffer *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source, const WGpuImageCopyTexture *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+
+// Calls fillBuffer() to zero out a buffer. (in the future if this function is expanded to allow filling with a specific byte or word pattern,
+// a new fill_buffer() variant with an updated signature should be provided)
+void wgpu_command_encoder_zero_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer destination, double_int53_t destinationOffset, double_int53_t size);
 
 void wgpu_encoder_push_debug_group(WGpuCommandEncoder commandEncoder, const char *groupLabel);
 void wgpu_encoder_pop_debug_group(WGpuCommandEncoder commandEncoder);
