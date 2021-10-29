@@ -51,6 +51,8 @@ if (EMSCRIPTEN)
 
 	append_linker_flags("-s INITIAL_MEMORY=16MB -s MALLOC=emmalloc --memory-init-file 0")
 
+	#append_linker_flags("-s MAXIMUM_MEMORY=4GB")
+
 	# Manual debugging:
 	#append_linker_flags("-g2 -s SINGLE_FILE=1")
 
