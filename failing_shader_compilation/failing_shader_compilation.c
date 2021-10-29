@@ -46,9 +46,6 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
 
 int main()
 {
-  // Call malloc() and free() from the C application to bring in C memops.
-  free(malloc(4));
-
   WGpuRequestAdapterOptions options = {};
   options.powerPreference = WGPU_POWER_PREFERENCE_LOW_POWER;
   navigator_gpu_request_adapter_async(&options, ObtainedWebGpuAdapter, 0);
