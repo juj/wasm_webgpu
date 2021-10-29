@@ -2227,11 +2227,11 @@ void wgpu_queue_submit_one(WGpuQueue queue, WGpuCommandBuffer commandBuffer);
 void wgpu_queue_submit_one_and_destroy(WGpuQueue queue, WGpuCommandBuffer commandBuffer);
 
 // Submits multiple command buffers to the given queue for rendering. The command buffers are held alive for later resubmission to another queue.
-void wgpu_queue_submit_multiple(WGpuQueue queue, int numCommandBuffers, const WGpuCommandBuffer *commandBuffers);
+void wgpu_queue_submit_multiple(WGpuQueue queue, const WGpuCommandBuffer *commandBuffers, int numCommandBuffers);
 // Submits multiple command buffers to the given queue for rendering. The command buffers are destroyed after rendering by calling wgpu_object_destroy() on them.
 // (this is a helper function to help remind that wasm side references to WebGPU JS objects need to be destroyed or a reference leak occurs. See
 // function wgpu_get_num_live_objects() to help debug the number of live references)
-void wgpu_queue_submit_multiple_and_destroy(WGpuQueue queue, int numCommandBuffers, const WGpuCommandBuffer *commandBuffers);
+void wgpu_queue_submit_multiple_and_destroy(WGpuQueue queue, const WGpuCommandBuffer *commandBuffers, int numCommandBuffers);
 
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
 void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmittedWorkDoneCallback callback, void *userData);
