@@ -56,7 +56,7 @@ if (EMSCRIPTEN)
 	# Manual debugging:
 	#append_linker_flags("-g2 -s SINGLE_FILE=1")
 
-	append_linker_flags_opts("--closure 1 --closure-args \"--externs ${CMAKE_CURRENT_LIST_DIR}/lib/webgpu_closure_externs.js\"")
+	append_linker_flags_opts("--closure 1")
 
 	append_linker_flags_minsizerel("-Oz")
 endif()
