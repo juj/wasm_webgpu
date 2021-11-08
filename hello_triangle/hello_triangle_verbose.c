@@ -152,7 +152,6 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 
   adapter = result;
 
-#ifndef NDEBUG
   char name[256];
   WGpuSupportedLimits limits;
   WGPU_FEATURES_BITFIELD features = wgpu_adapter_get_features(adapter);
@@ -182,12 +181,19 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
   ADAPTER_LIMIT(maxStorageBuffersPerShaderStage);
   ADAPTER_LIMIT(maxStorageTexturesPerShaderStage);
   ADAPTER_LIMIT(maxUniformBuffersPerShaderStage);
-  ADAPTER_LIMIT(maxUniformBufferBindingSize);
-  ADAPTER_LIMIT(maxStorageBufferBindingSize);
+  ADAPTER_LIMIT(minUniformBufferOffsetAlignment);
+  ADAPTER_LIMIT(minStorageBufferOffsetAlignment);
   ADAPTER_LIMIT(maxVertexBuffers);
   ADAPTER_LIMIT(maxVertexAttributes);
   ADAPTER_LIMIT(maxVertexBufferArrayStride);
-#endif
+  ADAPTER_LIMIT(maxInterStageShaderComponents);
+  ADAPTER_LIMIT(maxComputeWorkgroupStorageSize);
+  ADAPTER_LIMIT(maxComputeInvocationsPerWorkgroup);
+  ADAPTER_LIMIT(maxComputeWorkgroupSizeX);
+  ADAPTER_LIMIT(maxComputeWorkgroupSizeY);
+  ADAPTER_LIMIT(maxComputeWorkgroupSizeZ);
+  ADAPTER_LIMIT(maxUniformBufferBindingSize);
+  ADAPTER_LIMIT(maxStorageBufferBindingSize);
 
   WGpuDeviceDescriptor deviceDesc = {};
   wgpu_adapter_request_device_async(adapter, &deviceDesc, ObtainedWebGpuDevice, (void*)43);
