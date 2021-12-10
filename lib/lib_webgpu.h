@@ -186,8 +186,12 @@ typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // The callback will also be resolved in the event of an initialization failure, but the ID handle
 // passed to the callback will then be zero.
 EM_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions *options, WGpuRequestAdapterCallback adapterCallback, void *userData);
+// Requests a WebGPU adapter synchronously. Requires building with -sASYNCIFY=1 linker flag to work.
+WGpuAdapter navigator_gpu_request_adapter_sync(const WGpuRequestAdapterOptions *options);
+
 // Like above, but tiny code size without options.
 void navigator_gpu_request_adapter_async_simple(WGpuRequestAdapterCallback adapterCallback);
+WGpuAdapter navigator_gpu_request_adapter_sync_simple(void);
 
 /*
 dictionary GPURequestAdapterOptions {
@@ -256,8 +260,12 @@ EM_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter);
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 
 void wgpu_adapter_request_device_async(WGpuAdapter adapter, const WGpuDeviceDescriptor *descriptor, WGpuRequestDeviceCallback deviceCallback, void *userData);
+// Requests a WebGPU device synchronously. Requires building with -sASYNCIFY=1 linker flag to work.
+WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDeviceDescriptor *descriptor);
+
 // Like above, but tiny code size without options.
 void wgpu_adapter_request_device_async_simple(WGpuAdapter adapter, WGpuRequestDeviceCallback deviceCallback);
+WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter);
 
 /*
 dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
@@ -393,6 +401,9 @@ EM_BOOL wgpu_is_buffer(WGpuObjectBase object);
 typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset, double_int53_t size);
 #define WGPU_MAP_MAX_LENGTH -1
 void wgpu_buffer_map_async(WGpuBuffer buffer, WGpuBufferMapCallback callback, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAP_MAX_LENGTH));
+
+// Maps the given WGpuBuffer synchronously. Requires building with -sASYNCIFY=1 linker flag to work.
+void wgpu_buffer_map_sync(WGpuBuffer buffer, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAP_MAX_LENGTH));
 
 #define WGPU_BUFFER_GET_MAPPED_RANGE_FAILED ((WGpuBufferMappedRangeStartOffset)-1)
 
