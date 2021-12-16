@@ -364,14 +364,14 @@ WGpuBindGroup wgpu_device_create_bind_group(WGpuDevice device, WGpuBindGroupLayo
 
 WGpuShaderModule wgpu_device_create_shader_module(WGpuDevice device, const WGpuShaderModuleDescriptor *shaderModuleDesc);
 
+typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineBase pipeline, void *userData);
+
 // N.b. not currently using signature WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuComputePipelineDescriptor *computePipelineDesc);
 // since WGpuComputePipelineDescriptor is a such a light struct. (if it is expanded in the future, switch to using that signature)
 WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuShaderModule computeModule, const char *entryPoint, WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants);
+void wgpu_device_create_compute_pipeline_async(WGpuDevice device, const WGpuShaderModule computeModule, const char *entryPoint, WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants, WGpuCreatePipelineCallback callback, void *userData);
 
 WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc);
-
-typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineBase pipeline, void *userData);
-void wgpu_device_create_compute_pipeline_async(WGpuDevice device, const WGpuShaderModule computeModule, const char *entryPoint, const WGpuPipelineConstant *constants, int numConstants, WGpuCreatePipelineCallback callback, void *userData); // TODO implement
 void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc, WGpuCreatePipelineCallback callback, void *userData);
 
 WGpuCommandEncoder wgpu_device_create_command_encoder(WGpuDevice device, const WGpuCommandEncoderDescriptor *commandEncoderDesc);
