@@ -88,12 +88,12 @@ const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER = {
 const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {
   .blend = (WGpuBlendState) {
     .color = (WGpuBlendComponent) {
-      .operation = WGPU_BLEND_OPERATION_ADD,
-      .srcFactor = WGPU_BLEND_FACTOR_ONE,
-      .dstFactor = WGPU_BLEND_FACTOR_ZERO
+      .operation = WGPU_BLEND_OPERATION_DISABLED, // Color blending is disabled by default. Set to WGPU_BLEND_OPERATION_ADD to enable.
+      .srcFactor = WGPU_BLEND_FACTOR_SRC,
+      .dstFactor = WGPU_BLEND_FACTOR_ONE_MINUS_SRC
     },
     .alpha = (WGpuBlendComponent) {
-      .operation = WGPU_BLEND_OPERATION_ADD,
+      .operation = WGPU_BLEND_OPERATION_ADD, // If blending is enabled, default to copying src alpha. (no blend in alpha value)
       .srcFactor = WGPU_BLEND_FACTOR_ONE,
       .dstFactor = WGPU_BLEND_FACTOR_ZERO
     },

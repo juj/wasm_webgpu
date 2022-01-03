@@ -1526,6 +1526,7 @@ enum GPUBlendOperation {
 */
 typedef int WGPU_BLEND_OPERATION;
 #define WGPU_BLEND_OPERATION_INVALID 0
+#define WGPU_BLEND_OPERATION_DISABLED 0 // Alias to 'WGPU_BLEND_OPERATION_INVALID'. Used to denote alpha blending being disabled in a more readable way.
 #define WGPU_BLEND_OPERATION_ADD 1
 #define WGPU_BLEND_OPERATION_SUBTRACT 2
 #define WGPU_BLEND_OPERATION_REVERSE_SUBTRACT 3
@@ -2605,7 +2606,11 @@ typedef struct WGpuColorTargetState
 {
   WGPU_TEXTURE_FORMAT format;
 
+  // The member field blend.operation is default initialized to WGPU_BLEND_OPERATION_DISABLED (integer value 0)
+  // to disable alpha blending on this color target. Set blend.operation to e.g. WGPU_BLEND_OPERATION_ADD to enable
+  // alpha blending.
   WGpuBlendState blend;
+
   WGPU_COLOR_WRITE_FLAGS writeMask;
 } WGpuColorTargetState;
 extern const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER;
