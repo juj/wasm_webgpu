@@ -282,26 +282,27 @@ extern const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 /*
 enum GPUFeatureName {
-    "depth-clamping",
+    "depth-clip-control",
     "depth24unorm-stencil8",
     "depth32float-stencil8",
-    "pipeline-statistics-query",
     "texture-compression-bc",
     "texture-compression-etc2",
     "texture-compression-astc",
     "timestamp-query",
+    "indirect-first-instance"
 };
 */
 typedef int WGPU_FEATURE_NAME;
 #define WGPU_FEATURE_NAME_INVALID 0
-#define WGPU_FEATURE_NAME_DEPTH_CLAMPING 4
-#define WGPU_FEATURE_NAME_DEPTH24UNORM_STENCIL8 5
-#define WGPU_FEATURE_NAME_DEPTH32FLOAT_STENCIL8 6
-#define WGPU_FEATURE_NAME_PIPELINE_STATISTICS_QUERY 7
-#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_BC 8
-#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_ETC2 9
-#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_ASTC 10
-#define WGPU_FEATURE_NAME_TIMESTAMP_QUERY 11
+#define WGPU_FEATURE_NAME_DEPTH_CLIP_CONTROL 1
+#define WGPU_FEATURE_NAME_DEPTH24UNORM_STENCIL8 2
+#define WGPU_FEATURE_NAME_DEPTH32FLOAT_STENCIL8 3
+#define WGPU_FEATURE_NAME_PIPELINE_STATISTICS_QUERY 4
+#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_BC 5
+#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_ETC2 6
+#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_ASTC 7
+#define WGPU_FEATURE_NAME_TIMESTAMP_QUERY 8
+#define WGPU_FEATURE_NAME_INDIRECT_FIRST_INSTANCE 9
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -1187,15 +1188,29 @@ typedef void (*WGpuGetCompilationInfoCallback)(WGpuShaderModule shaderModule, WG
 void wgpu_shader_module_get_compilation_info_async(WGpuShaderModule shaderModule, WGpuGetCompilationInfoCallback callback, void *userData);
 
 /*
+dictionary GPUShaderModuleCompilationHint {
+    required GPUPipelineLayout layout;
+};
+*/
+typedef struct WGpuShaderModuleCompilationHint
+{
+  const char *entryPointName;
+  WGpuPipelineLayout layout;
+} WGpuShaderModuleCompilationHint;
+
+/*
 dictionary GPUShaderModuleDescriptor : GPUObjectDescriptorBase {
     required USVString code;
     object sourceMap;
+    record<USVString, GPUShaderModuleCompilationHint> hints;
 };
 */
 typedef struct WGpuShaderModuleDescriptor
 {
   const char *code;
-  // TODO: add sourceMap
+  // TODO: add sourceMap support
+  int numHints;
+  const WGpuShaderModuleCompilationHint *hints;
 } WGpuShaderModuleDescriptor;
 
 /*
@@ -1367,8 +1382,8 @@ dictionary GPUPrimitiveState {
     GPUFrontFace frontFace = "ccw";
     GPUCullMode cullMode = "none";
 
-    // Enable depth clamping (requires "depth-clamping" feature)
-    boolean clampDepth = false;
+    // Requires "depth-clip-control" feature.
+    boolean unclippedDepth = false;
 };
 */
 typedef struct WGpuPrimitiveState
@@ -1377,6 +1392,8 @@ typedef struct WGpuPrimitiveState
   WGPU_INDEX_FORMAT stripIndexFormat; // Defaults to undefined, must be explicitly specified if WGPU_PRIMITIVE_TOPOLOGY_LINE_STRIP ('line-strip') or WGPU_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP ('triangle-strip') is used.
   WGPU_FRONT_FACE frontFace; // Defaults to WGPU_FRONT_FACE_CCW ('ccw')
   WGPU_CULL_MODE cullMode; // Defaults to WGPU_CULL_MODE_NONE ('none')
+
+  EM_BOOL unclippedDepth; // defaults to EM_FALSE.
 } WGpuPrimitiveState;
 
 /*
@@ -1730,7 +1747,6 @@ typedef struct WGpuVertexAttribute
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUCommandBuffer {
-    readonly attribute Promise<double> executionTime;
 };
 GPUCommandBuffer includes GPUObjectBase;
 */
@@ -1776,14 +1792,10 @@ interface GPUCommandEncoder {
         GPUImageCopyTexture destination,
         GPUExtent3D copySize);
 
-    undefined fillBuffer(
-        GPUBuffer destination,
-        GPUSize64 destinationOffset,
-        GPUSize64 size);
-
-    undefined pushDebugGroup(USVString groupLabel);
-    undefined popDebugGroup();
-    undefined insertDebugMarker(USVString markerLabel);
+    undefined clearBuffer(
+        GPUBuffer buffer,
+        optional GPUSize64 offset = 0,
+        optional GPUSize64 size);
 
     undefined writeTimestamp(GPUQuerySet querySet, GPUSize32 queryIndex);
 
@@ -1811,9 +1823,7 @@ void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncod
 void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source, const WGpuImageCopyBuffer *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source, const WGpuImageCopyTexture *destination, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 
-// Calls fillBuffer() to zero out a buffer. (in the future if this function is expanded to allow filling with a specific byte or word pattern,
-// a new fill_buffer() variant with an updated signature should be provided)
-void wgpu_command_encoder_zero_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer destination, double_int53_t destinationOffset, double_int53_t size);
+void wgpu_command_encoder_clear_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(__builtin_inf()));
 
 void wgpu_encoder_push_debug_group(WGpuCommandEncoder commandEncoder, const char *groupLabel);
 void wgpu_encoder_pop_debug_group(WGpuCommandEncoder commandEncoder);
@@ -1822,21 +1832,17 @@ void wgpu_encoder_insert_debug_marker(WGpuCommandEncoder commandEncoder, const c
 #define wgpu_command_encoder_pop_debug_group wgpu_encoder_pop_debug_group
 #define wgpu_command_encoder_insert_debug_marker wgpu_encoder_insert_debug_marker
 
-void wgpu_encoder_write_timestamp(WGpuObjectBase encoder, WGpuQuerySet querySet, uint32_t queryIndex);
-#define wgpu_command_encoder_write_timestamp wgpu_encoder_write_timestamp
-
 void wgpu_command_encoder_resolve_query_set(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t firstQuery, uint32_t queryCount, WGpuBuffer destination, double_int53_t destinationOffset);
 
 WGpuCommandBuffer wgpu_command_encoder_finish(WGpuCommandEncoder commandEncoder);
 
 /*
 dictionary GPUCommandEncoderDescriptor : GPUObjectDescriptorBase {
-    boolean measureExecutionTime = false;
 };
 */
 typedef struct WGpuCommandEncoderDescriptor
 {
-  EM_BOOL measureExecutionTime;
+  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size.
 } WGpuCommandEncoderDescriptor;
 extern const WGpuCommandEncoderDescriptor WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITIALIZER;
 
@@ -1885,6 +1891,7 @@ dictionary GPUImageCopyTextureTagged : GPUImageCopyTexture {
 dictionary GPUImageCopyExternalImage {
     required (ImageBitmap or HTMLCanvasElement or OffscreenCanvas) source;
     GPUOrigin2D origin = {};
+    boolean flipY = false;
 };
 */
 // Defined at the end of this file
@@ -1920,11 +1927,6 @@ interface GPUComputePassEncoder {
     undefined dispatch(GPUSize32 x, optional GPUSize32 y = 1, optional GPUSize32 z = 1);
     undefined dispatchIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
 
-    undefined beginPipelineStatisticsQuery(GPUQuerySet querySet, GPUSize32 queryIndex);
-    undefined endPipelineStatisticsQuery();
-
-    undefined writeTimestamp(GPUQuerySet querySet, GPUSize32 queryIndex);
-
     undefined endPass();
 };
 GPUComputePassEncoder includes GPUObjectBase;
@@ -1939,13 +1941,6 @@ void wgpu_encoder_set_pipeline(WGpuRenderEncoderBase passEncoder, WGpuRenderPipe
 void wgpu_compute_pass_encoder_dispatch(WGpuComputePassEncoder encoder, uint32_t x, uint32_t y _WGPU_DEFAULT_VALUE(1), uint32_t z _WGPU_DEFAULT_VALUE(1));
 void wgpu_compute_pass_encoder_dispatch_indirect(WGpuComputePassEncoder encoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
 
-void wgpu_encoder_begin_pipeline_statistics_query(WGpuComputePassEncoder encoder, WGpuQuerySet querySet, uint32_t queryIndex);
-void wgpu_encoder_end_pipeline_statistics_query(WGpuComputePassEncoder encoder);
-#define wgpu_compute_pass_encoder_begin_pipeline_statistics_query wgpu_encoder_begin_pipeline_statistics_query
-#define wgpu_compute_pass_encoder_end_pipeline_statistics_query wgpu_encoder_end_pipeline_statistics_query
-
-#define wgpu_compute_pass_encoder_write_timestamp wgpu_encoder_write_timestamp
-
 void wgpu_encoder_end_pass(WGpuRenderPassEncoder encoder);
 #define wgpu_compute_pass_encoder_end_pass wgpu_encoder_end_pass
 
@@ -1955,11 +1950,29 @@ void wgpu_encoder_end_pass(WGpuRenderPassEncoder encoder);
 #define wgpu_compute_pass_encoder_insert_debug_marker wgpu_encoder_insert_debug_marker
 
 /*
+ enum GPUComputePassTimestampLocation {
+    "beginning",
+    "end",
+};
+// TODO: Add support for this
+
+dictionary GPUComputePassTimestampWrite {
+    required GPUQuerySet querySet;
+    required GPUSize32 queryIndex;
+    required GPUComputePassTimestampLocation location;
+};
+// TODO: Add support for this
+
+typedef sequence<GPUComputePassTimestampWrite> GPUComputePassTimestampWrites;
+// TODO: Add support for this
+
 dictionary GPUComputePassDescriptor : GPUObjectDescriptorBase {
+  GPUComputePassTimestampWrites timestampWrites = [];
 };
 */
 typedef struct WGpuComputePassDescriptor
 {
+  // TODO: Add support for timestampWrites member and remove _dummyPadding below.
   uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size.
 } WGpuComputePassDescriptor;
 
@@ -2011,11 +2024,6 @@ interface GPURenderPassEncoder {
     undefined beginOcclusionQuery(GPUSize32 queryIndex);
     undefined endOcclusionQuery();
 
-    undefined beginPipelineStatisticsQuery(GPUQuerySet querySet, GPUSize32 queryIndex);
-    undefined endPipelineStatisticsQuery();
-
-    undefined writeTimestamp(GPUQuerySet querySet, GPUSize32 queryIndex);
-
     undefined executeBundles(sequence<GPURenderBundle> bundles);
     undefined endPass();
 };
@@ -2037,11 +2045,6 @@ void wgpu_render_pass_encoder_set_stencil_reference(WGpuRenderPassEncoder encode
 void wgpu_render_pass_encoder_begin_occlusion_query(WGpuRenderPassEncoder encoder, int32_t queryIndex);
 void wgpu_render_pass_encoder_end_occlusion_query(WGpuRenderPassEncoder encoder);
 
-#define wgpu_render_pass_encoder_begin_pipeline_statistics_query wgpu_encoder_begin_pipeline_statistics_query
-#define wgpu_render_pass_encoder_end_pipeline_statistics_query wgpu_encoder_end_pipeline_statistics_query
-
-#define wgpu_render_pass_encoder_write_timestamp wgpu_encoder_write_timestamp
-
 void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, WGpuRenderBundle *bundles, int numBundles);
 
 #define wgpu_render_pass_encoder_end_pass wgpu_encoder_end_pass
@@ -2060,6 +2063,22 @@ void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, WGp
 #define wgpu_render_pass_encoder_draw_indexed_indirect wgpu_render_encoder_base_draw_indexed_indirect
 
 /*
+enum GPURenderPassTimestampLocation {
+    "beginning",
+    "end",
+};
+// TODO: Add support for this
+
+dictionary GPURenderPassTimestampWrite {
+    required GPUQuerySet querySet;
+    required GPUSize32 queryIndex;
+    required GPURenderPassTimestampLocation location;
+};
+// TODO: Add support for this
+
+typedef sequence<GPURenderPassTimestampWrite> GPURenderPassTimestampWrites;
+// TODO: Add support for this
+
 dictionary GPURenderPassDescriptor : GPUObjectDescriptorBase {
     required sequence<GPURenderPassColorAttachment> colorAttachments;
     GPURenderPassDepthStencilAttachment depthStencilAttachment;
@@ -2267,46 +2286,31 @@ EM_BOOL wgpu_is_query_set(WGpuObjectBase object);
 dictionary GPUQuerySetDescriptor : GPUObjectDescriptorBase {
     required GPUQueryType type;
     required GPUSize32 count;
-    sequence<GPUPipelineStatisticName> pipelineStatistics = [];
 };
 */
 typedef struct WGpuQuerySetDescriptor
 {
   WGPU_QUERY_TYPE type;
   uint32_t count;
-  int numPipelineStatistics;
-  WGPU_PIPELINE_STATISTIC_NAME *pipelineStatistics;
 } WGpuQuerySetDescriptor;
 
 /*
 enum GPUQueryType {
     "occlusion",
-    "pipeline-statistics",
-    "timestamp"
 };
 */
 typedef int WGPU_QUERY_TYPE;
 #define WGPU_QUERY_TYPE_INVALID 0
 #define WGPU_QUERY_TYPE_OCCLUSION 1
-#define WGPU_QUERY_TYPE_PIPELINE_STATISTICS 2
-#define WGPU_QUERY_TYPE_TIMESTAMP 3
 
 /*
 enum GPUPipelineStatisticName {
-    "vertex-shader-invocations",
-    "clipper-invocations",
-    "clipper-primitives-out",
-    "fragment-shader-invocations",
-    "compute-shader-invocations"
+    "timestamp"
 };
 */
 typedef int WGPU_PIPELINE_STATISTIC_NAME;
 #define WGPU_PIPELINE_STATISTIC_NAME_INVALID 0
-#define WGPU_PIPELINE_STATISTIC_NAME_VERTEX_SHADER_INVOCATIONS 1
-#define WGPU_PIPELINE_STATISTIC_NAME_CLIPPER_INVOCATIONS 2
-#define WGPU_PIPELINE_STATISTIC_NAME_CLIPPER_PRIMITIVES_OUT 3
-#define WGPU_PIPELINE_STATISTIC_NAME_FRAGMENT_SHADER_INVOCATIONS 4
-#define WGPU_PIPELINE_STATISTIC_NAME_COMPUTE_SHADER_INVOCATIONS 5
+#define WGPU_PIPELINE_STATISTIC_NAME_TIMESTAMP 1
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -2530,6 +2534,10 @@ typedef struct WGpuRenderPassDescriptor
   const WGpuRenderPassColorAttachment *colorAttachments;
   WGpuRenderPassDepthStencilAttachment depthStencilAttachment;
   WGpuQuerySet occlusionQuerySet;
+
+  // TODO: Add support for this
+  //GPURenderPassTimestampWrites timestampWrites = [];
+
 } WGpuRenderPassDescriptor;
 
 typedef struct WGpuRenderPassColorAttachment
@@ -2548,6 +2556,7 @@ typedef struct WGpuImageCopyExternalImage
 {
   WGpuObjectBase source; // must point to a WGpuImageBitmap (could also point to a HTMLCanvasElement or OffscreenCanvas, but those are currently unimplemented)
   WGpuOrigin2D origin;
+  EM_BOOL flipY; // defaults to EM_FALSE.
 } WGpuImageCopyExternalImage;
 extern const WGpuImageCopyExternalImage WGPU_IMAGE_COPY_EXTERNAL_IMAGE_DEFAULT_INITIALIZER;
 
