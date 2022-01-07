@@ -161,12 +161,14 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
   emscripten_mini_stdio_printf("Adapter name: %s\n", name);
 
 #define TEST_FEATURE(x) emscripten_mini_stdio_printf("Adapter supports feature " #x ": %s\n", (features & (x) ? "yes" : "no"))
-  TEST_FEATURE(WGPU_FEATURE_DEPTH_CLAMPING);
+  TEST_FEATURE(WGPU_FEATURE_DEPTH_CLIP_CONTROL);
   TEST_FEATURE(WGPU_FEATURE_DEPTH24UNORM_STENCIL8);
   TEST_FEATURE(WGPU_FEATURE_DEPTH32FLOAT_STENCIL8);
-  TEST_FEATURE(WGPU_FEATURE_PIPELINE_STATISTICS_QUERY);
   TEST_FEATURE(WGPU_FEATURE_TEXTURE_COMPRESSION_BC);
+  TEST_FEATURE(WGPU_FEATURE_TEXTURE_COMPRESSION_ETC2);
+  TEST_FEATURE(WGPU_FEATURE_TEXTURE_COMPRESSION_ASTC);
   TEST_FEATURE(WGPU_FEATURE_TIMESTAMP_QUERY);
+  TEST_FEATURE(WGPU_FEATURE_INDIRECT_FIRST_INSTANCE);
 
 #define ADAPTER_LIMIT(x) emscripten_mini_stdio_printf("Adapter limit " #x ": %u\n", limits. x);
   ADAPTER_LIMIT(maxTextureDimension1D);
