@@ -22,9 +22,9 @@ void compilationInfoCallback(WGpuShaderModule shaderModule, WGpuCompilationInfo 
 void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
 {
   WGpuShaderModule vertexShader = wgpu_device_create_shader_module(device, &(WGpuShaderModuleDescriptor) {
-    .code = 
-      "[[stage(vertex)]]\n"
-      "fn main([[builtin(vertex_index)]] vertexIndex : u32) -> [[builtin(position)]] vec4<f32> {\n"
+    .code =
+      "@stage(vertex)\n"
+      "fn main(@builtin(vertex_index) vertexIndex : u32) -> @builtin(position) vec4<f32> {\n"
         "var pos = array<vec2f32>, 3>(\n"
           "vec2<f32>(0.0, 0.5),\n"
           "vec2<f32>(-0.5, -0.5),\n"
