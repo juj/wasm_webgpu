@@ -1929,7 +1929,7 @@ interface GPUComputePassEncoder {
     undefined dispatch(GPUSize32 workgroupCountX, optional GPUSize32 workgroupCountY = 1, optional GPUSize32 workgroupCountZ = 1);
     undefined dispatchIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
 
-    undefined endPass();
+    undefined end();
 };
 GPUComputePassEncoder includes GPUObjectBase;
 GPUComputePassEncoder includes GPUProgrammablePassEncoder;
@@ -1943,8 +1943,8 @@ void wgpu_encoder_set_pipeline(WGpuRenderEncoderBase passEncoder, WGpuRenderPipe
 void wgpu_compute_pass_encoder_dispatch(WGpuComputePassEncoder encoder, uint32_t workgroupCountX, uint32_t workgroupCountY _WGPU_DEFAULT_VALUE(1), uint32_t workgroupCountZ _WGPU_DEFAULT_VALUE(1));
 void wgpu_compute_pass_encoder_dispatch_indirect(WGpuComputePassEncoder encoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
 
-void wgpu_encoder_end_pass(WGpuRenderPassEncoder encoder);
-#define wgpu_compute_pass_encoder_end_pass wgpu_encoder_end_pass
+void wgpu_encoder_end(WGpuRenderPassEncoder encoder);
+#define wgpu_compute_pass_encoder_end wgpu_encoder_end
 
 #define wgpu_compute_pass_encoder_set_bind_group wgpu_programmable_pass_encoder_set_bind_group
 #define wgpu_compute_pass_encoder_push_debug_group wgpu_encoder_push_debug_group
@@ -2027,7 +2027,7 @@ interface GPURenderPassEncoder {
     undefined endOcclusionQuery();
 
     undefined executeBundles(sequence<GPURenderBundle> bundles);
-    undefined endPass();
+    undefined end();
 };
 GPURenderPassEncoder includes GPUObjectBase;
 GPURenderPassEncoder includes GPUProgrammablePassEncoder;
@@ -2049,7 +2049,7 @@ void wgpu_render_pass_encoder_end_occlusion_query(WGpuRenderPassEncoder encoder)
 
 void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, WGpuRenderBundle *bundles, int numBundles);
 
-#define wgpu_render_pass_encoder_end_pass wgpu_encoder_end_pass
+#define wgpu_render_pass_encoder_end wgpu_encoder_end
 
 #define wgpu_render_pass_encoder_set_bind_group wgpu_programmable_pass_encoder_set_bind_group
 #define wgpu_render_pass_encoder_push_debug_group wgpu_programmable_pass_encoder_push_debug_group
