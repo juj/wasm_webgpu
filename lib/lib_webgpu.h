@@ -1926,7 +1926,7 @@ void wgpu_programmable_pass_encoder_set_bind_group(WGpuProgrammablePassEncoder e
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUComputePassEncoder {
     undefined setPipeline(GPUComputePipeline pipeline);
-    undefined dispatch(GPUSize32 x, optional GPUSize32 y = 1, optional GPUSize32 z = 1);
+    undefined dispatch(GPUSize32 workgroupCountX, optional GPUSize32 workgroupCountY = 1, optional GPUSize32 workgroupCountZ = 1);
     undefined dispatchIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
 
     undefined endPass();
@@ -1940,7 +1940,7 @@ EM_BOOL wgpu_is_compute_pass_encoder(WGpuObjectBase object);
 
 void wgpu_encoder_set_pipeline(WGpuRenderEncoderBase passEncoder, WGpuRenderPipeline renderPipeline);
 #define wgpu_compute_pass_encoder_set_pipeline wgpu_encoder_set_pipeline
-void wgpu_compute_pass_encoder_dispatch(WGpuComputePassEncoder encoder, uint32_t x, uint32_t y _WGPU_DEFAULT_VALUE(1), uint32_t z _WGPU_DEFAULT_VALUE(1));
+void wgpu_compute_pass_encoder_dispatch(WGpuComputePassEncoder encoder, uint32_t workgroupCountX, uint32_t workgroupCountY _WGPU_DEFAULT_VALUE(1), uint32_t workgroupCountZ _WGPU_DEFAULT_VALUE(1));
 void wgpu_compute_pass_encoder_dispatch_indirect(WGpuComputePassEncoder encoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
 
 void wgpu_encoder_end_pass(WGpuRenderPassEncoder encoder);
