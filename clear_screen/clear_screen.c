@@ -25,10 +25,11 @@ EM_BOOL raf(double time, void *userData)
   colorAttachment.view = wgpu_texture_create_view_simple(wgpu_canvas_context_get_current_texture(canvasContext));
 
   double hue = time * 0.00005;
-  colorAttachment.loadColor.r = hue2color(hue + 1.0 / 3.0);
-  colorAttachment.loadColor.g = hue2color(hue);
-  colorAttachment.loadColor.b = hue2color(hue - 1.0 / 3.0);
-  colorAttachment.loadColor.a = 1.0;
+  colorAttachment.clearValue.r = hue2color(hue + 1.0 / 3.0);
+  colorAttachment.clearValue.g = hue2color(hue);
+  colorAttachment.clearValue.b = hue2color(hue - 1.0 / 3.0);
+  colorAttachment.clearValue.a = 1.0;
+  colorAttachment.loadOp = WGPU_LOAD_OP_CLEAR;
 
   WGpuRenderPassDescriptor passDesc = {};
   passDesc.numColorAttachments = 1;

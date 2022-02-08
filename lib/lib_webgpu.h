@@ -2152,9 +2152,8 @@ enum GPUStoreOp {
 };
 */
 typedef int WGPU_STORE_OP;
-#define WGPU_STORE_OP_INVALID 0
-#define WGPU_STORE_OP_STORE 1
-#define WGPU_STORE_OP_DISCARD 2
+#define WGPU_STORE_OP_STORE 0
+#define WGPU_STORE_OP_DISCARD 1
 
 /*
 dictionary GPURenderPassLayout: GPUObjectDescriptorBase {
