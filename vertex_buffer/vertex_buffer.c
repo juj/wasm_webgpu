@@ -110,7 +110,7 @@ void Render()
   wgpu_render_pass_encoder_set_pipeline(pass, renderPipeline);
   wgpu_render_pass_encoder_set_vertex_buffer(pass, 0, buffer, 0, numVertices*sizeof(vertex));
   wgpu_render_pass_encoder_draw(pass, numVertices, 1, 0, 0);
-  wgpu_render_pass_encoder_end_pass(pass);
+  wgpu_render_pass_encoder_end(pass);
 
   WGpuCommandBuffer commandBuffer = wgpu_command_encoder_finish(encoder);
 

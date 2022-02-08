@@ -45,7 +45,7 @@ EM_BOOL raf(double time, void *userData)
   assert(wgpu_is_render_pass_encoder(pass));
   wgpu_render_pass_encoder_set_pipeline(pass, renderPipeline);
   wgpu_render_pass_encoder_draw(pass, 3, 1, 0, 0);
-  wgpu_render_pass_encoder_end_pass(pass);
+  wgpu_render_pass_encoder_end(pass);
 
   WGpuCommandBuffer commandBuffer = wgpu_command_encoder_finish(encoder);
   assert(wgpu_is_command_buffer(commandBuffer));

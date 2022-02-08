@@ -33,7 +33,7 @@ EM_BOOL raf(double time, void *userData)
   passDesc.numColorAttachments = 1;
   passDesc.colorAttachments = &colorAttachment;
 
-  wgpu_render_pass_encoder_end_pass(wgpu_command_encoder_begin_render_pass_1color_0depth(encoder, &passDesc));
+  wgpu_render_pass_encoder_end(wgpu_command_encoder_begin_render_pass_1color_0depth(encoder, &passDesc));
   wgpu_queue_submit_one_and_destroy(queue, wgpu_command_encoder_finish(encoder));
 
   return EM_TRUE;

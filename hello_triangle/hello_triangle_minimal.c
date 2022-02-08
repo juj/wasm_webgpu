@@ -20,7 +20,7 @@ EM_BOOL raf(double time, void *userData)
   WGpuRenderPassEncoder pass = wgpu_command_encoder_begin_render_pass(encoder, &passDesc);
   wgpu_render_pass_encoder_set_pipeline(pass, renderPipeline);
   wgpu_render_pass_encoder_draw(pass, 3, 1, 0, 0);
-  wgpu_render_pass_encoder_end_pass(pass);
+  wgpu_render_pass_encoder_end(pass);
 
   WGpuCommandBuffer commandBuffer = wgpu_command_encoder_finish(encoder);
 
