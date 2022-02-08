@@ -2108,12 +2108,14 @@ dictionary GPURenderPassColorAttachment {
 dictionary GPURenderPassDepthStencilAttachment {
     required GPUTextureView view;
 
-    required (GPULoadOp or float) depthLoadValue;
-    required GPUStoreOp depthStoreOp;
+    float depthClearValue = 0;
+    GPULoadOp depthLoadOp;
+    GPUStoreOp depthStoreOp;
     boolean depthReadOnly = false;
 
-    required (GPULoadOp or GPUStencilValue) stencilLoadValue;
-    required GPUStoreOp stencilStoreOp;
+    GPUStencilValue stencilClearValue = 0;
+    GPULoadOp stencilLoadOp;
+    GPUStoreOp stencilStoreOp;
     boolean stencilReadOnly = false;
 };
 */
@@ -2121,14 +2123,14 @@ typedef struct WGpuRenderPassDepthStencilAttachment
 {
   WGpuTextureView view;
 
-  WGPU_LOAD_OP depthLoadOp; // Either WGPU_LOAD_OP_CONSTANT_VALUE (== default, 0) or WGPU_LOAD_OP_LOAD
-  float depthLoadValue;
+  WGPU_LOAD_OP depthLoadOp; // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR
+  float depthClearValue;
 
   WGPU_STORE_OP depthStoreOp;
   EM_BOOL depthReadOnly;
 
-  WGPU_LOAD_OP stencilLoadOp;  // Either WGPU_LOAD_OP_CONSTANT_VALUE (== default, 0) or WGPU_LOAD_OP_LOAD
-  uint32_t stencilLoadValue;
+  WGPU_LOAD_OP stencilLoadOp;  // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR
+  uint32_t stencilClearValue;
   WGPU_STORE_OP stencilStoreOp;
   EM_BOOL stencilReadOnly;
 } WGpuRenderPassDepthStencilAttachment;
