@@ -1,5 +1,5 @@
 interface mixin GPUObjectBase {
-    attribute USVString? label;
+    attribute (USVString or undefined) label;
 };
 
 dictionary GPUObjectDescriptorBase {

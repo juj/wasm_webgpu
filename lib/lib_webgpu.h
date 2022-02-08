@@ -46,7 +46,7 @@ WGpuCanvasContext wgpu_canvas_get_webgpu_context(const char *canvasSelector);
 
 /*
 interface mixin GPUObjectBase {
-    attribute USVString? label;
+    attribute (USVString or undefined) label;
 };
 */
 typedef int WGpuObjectBase;
