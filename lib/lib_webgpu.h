@@ -2134,12 +2134,13 @@ typedef struct WGpuRenderPassDepthStencilAttachment
 
 /*
 enum GPULoadOp {
-    "load"
+    "load",
+    "clear",
 };
 */
 typedef int WGPU_LOAD_OP;
-#define WGPU_LOAD_OP_CONSTANT_VALUE 0
-#define WGPU_LOAD_OP_LOAD 1
+#define WGPU_LOAD_OP_LOAD 0
+#define WGPU_LOAD_OP_CLEAR 1
 
 /*
 enum GPUStoreOp {
