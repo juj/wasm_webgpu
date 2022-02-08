@@ -495,6 +495,7 @@ dictionary GPUTextureDescriptor : GPUObjectDescriptorBase {
     GPUTextureDimension dimension = "2d";
     required GPUTextureFormat format;
     required GPUTextureUsageFlags usage;
+    sequence<GPUTextureFormat> viewFormats = [];
 };
 */
 typedef struct WGpuTextureDescriptor
@@ -507,6 +508,8 @@ typedef struct WGpuTextureDescriptor
   WGPU_TEXTURE_DIMENSION dimension; // default = WGPU_TEXTURE_DIMENSION_2D
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_USAGE_FLAGS usage;
+  int numViewFormats;
+  WGPU_TEXTURE_FORMAT *viewFormats;
 } WGpuTextureDescriptor;
 extern const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
@@ -2357,6 +2360,7 @@ dictionary GPUCanvasConfiguration : GPUObjectDescriptorBase {
     required GPUDevice device;
     required GPUTextureFormat format;
     GPUTextureUsageFlags usage = 0x10;  // GPUTextureUsage.RENDER_ATTACHMENT
+    sequence<GPUTextureFormat> viewFormats = [];
     GPUPredefinedColorSpace colorSpace = "srgb";
     GPUCanvasCompositingAlphaMode compositingAlphaMode = "opaque";
     GPUExtent3D size;
@@ -2524,6 +2528,8 @@ typedef struct WGpuCanvasConfiguration
   WGpuDevice device;
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_USAGE_FLAGS usage;
+  int numViewFormats;
+  WGPU_TEXTURE_FORMAT *viewFormats;
   WGPU_PREDEFINED_COLOR_SPACE colorSpace;
   WGPU_CANVAS_COMPOSITING_ALPHA_MODE compositingAlphaMode;
   WGpuExtent3D size; // If size.width == 0 (as default initialized via WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER), then full screen size is used.
