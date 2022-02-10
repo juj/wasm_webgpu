@@ -59,6 +59,18 @@ Currently both 2GB and 4GB build modes are supported. Wasm64 is also planned to 
 
 ## Samples
 
+To build the samples, first install Emscripten via [Emsdk](https://github.com/emscripten-core/emsdk), then enter Emsdk command line environment (`emsdk_env`), and type
+
+```bash
+cd path/to/wasm_webgpu
+mkdir build
+cd build
+emcmake cmake .. -DCMAKE_BUILD_TYPE=Debug # Or MinSizeRel, RelWithDebInfo or Release
+make -j
+```
+
+On Windows, the last `make` command is not available, so either install Mingw32-make via emsdk and run `mingw32-make -j`, or install Ninja via emsdk, then pass `-G Ninja` to the emcmake command line, and then run `ninja` instead of `make`.
+
 ### clear_screen
 
 ![clear_screen](./screenshots/clear_screen.png)
