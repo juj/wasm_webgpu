@@ -17,13 +17,13 @@ The other files in the `lib/` directory are only used by the demo samples in thi
 
 This bindings library is developed with the following:
 
-#### 1:1 pass-through API mapping
+### 1:1 pass-through API mapping
 
 For the most parts, the JavaScript side WebGPU API is directly mapped 1:1 over to WebAssembly side to enable developers to write WebGPU code in C/C++ by using the official [specification IDL](https://www.w3.org/TR/webgpu/) as reference.
 
 Type names and structs follow a naming convention `WGpu*`, mapped from JS names by transforming `GPUAdapter` -> `WGpuAdapter`. API function names use a prefix `wgpu_*`, and are mapped using the convention `GPUCanvasContext.configure(...)` -> `wgpu_canvas_context_configure(canvasContext, ...)`. Enums and #defines use a prefix `WGPU_`, e.g. `GPUPowerPreference` -> `WGPU_POWER_PREFERENCE`.
 
-#### Best performance, Minimal code size and JS garbage generation
+### Best performance, Minimal code size and JS garbage generation
 
 The primary design goal of the library is to provide absolutely best runtime speed and minimal generated code size overhead, carefully shaving down every individual byte possible. The intent is to enable using this library in extremely code size constrained deployment scenarios.
 
@@ -33,17 +33,17 @@ Secondary design goal is to minimize the amount of JS temporary garbage that is 
 
 If there is a tradeoff between generated garbage, code size, or runtime speed, build flags are provided to favor one over the other. (currently there aren't any, but this is expected to change)
 
-#### Custom API for marshalling buffer data
+### Custom API for marshalling buffer data
 
 Some WebGPU features do not interop well between JS and Wasm if translated 1:1. Buffer mapping is one of these features. To help JS<->Wasm interop, this library provides custom functions `wgpu_buffer_read_mapped_range()` and `wgpu_buffer_write_mapped_range()` that do not exist in the official WebGPU specification.
 
 For an example of how this works in practice, see the sample [vertex_buffer/vertex_buffer.c](https://github.com/juj/wasm_webgpu/blob/master/vertex_buffer/vertex_buffer.c)
 
-#### Extensions for binding with other JS APIs
+### Extensions for binding with other JS APIs
 
 To enable easy uploading of image URLs to WebGPU textures, an extension function `wgpu_load_image_bitmap_from_url_async()` is provided. For an example of this, see the sample [texture/texture.c](https://github.com/juj/wasm_webgpu/blob/master/texture/texture.c)
 
-#### Asyncify support
+### Asyncify support
 
 When building with Emscripten linker flag `-sASYNCIFY=1`, the following extra functions are available:
 
@@ -53,13 +53,13 @@ When building with Emscripten linker flag `-sASYNCIFY=1`, the following extra fu
 
 These functions enable a synchronous variant of the `_async` functions offered in the WebGPU specification. These can be useful for prototyping and test suites etc., though it is not recommended to try to ship a game that uses Asyncify, because it has a very high latency overhead, and breaks ordering and re-entrancy semantics of traditional code execution.
 
-#### 2GB + 4GB + Wasm64 support
+### 2GB + 4GB + Wasm64 support
 
 Currently both 2GB and 4GB build modes are supported. Wasm64 is also planned to be supported as soon as it becomes available in web browsers.
 
 ## Samples
 
-#### clear_screen
+### clear_screen
 
 ![clear_screen](./screenshots/clear_screen.png)
 
@@ -67,15 +67,15 @@ For the smallest Clear Screen "hello world" example, see [clear_screen.c/clear_s
 
 There is also an Emscripten ASYNCIFY-enabled variant of the same demo, at [clear_screen.c/clear_screen_sync.c](https://github.com/juj/wasm_webgpu/blob/master/clear_screen/clear_screen.c).
 
-#### failing_shader_compilation
+### failing_shader_compilation
 
 The demo [failing_shader_compilation/failing_shader_compilation.c](https://github.com/juj/wasm_webgpu/blob/master/failing_shader_compilation/failing_shader_compilation.c) tests handling of shader compilation errors.
 
-#### gpu_oom
+### gpu_oom
 
 The demo [gpu_oom/gpu_oom.c](https://github.com/juj/wasm_webgpu/blob/master/gpu_oom/gpu_oom.c) exhausts the GPU VRAM, testing handling of GPU OOM events.
 
-#### hello_triangle
+### hello_triangle
 
 ![hello_triangle](./screenshots/hello_triangle.png)
 
@@ -83,13 +83,13 @@ The demo [hello_triangle/hello_triangle_minimal.c](https://github.com/juj/wasm_w
 
 The variant [hello_triangle/hello_triangle_verbose.c](https://github.com/juj/wasm_webgpu/blob/master/hello_triangle/hello_triangle_verbose.c) offers the same, but with verbose debug logging.
 
-#### texture
+### texture
 
 ![texture](./screenshots/texture.png)
 
 The sample [texture/texture.c](https://github.com/juj/wasm_webgpu/blob/master/texture/texture.c) tests the `wgpu_load_image_bitmap_from_url_async()` API.
 
-#### vertex_buffer
+### vertex_buffer
 
 ![vertex_buffer](./screenshots/vertex_buffer.png)
 
