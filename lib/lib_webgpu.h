@@ -298,7 +298,8 @@ enum GPUFeatureName {
     "texture-compression-etc2",
     "texture-compression-astc",
     "timestamp-query",
-    "indirect-first-instance"
+    "indirect-first-instance",
+    "shader-f16",
 };
 */
 typedef int WGPU_FEATURE_NAME;
@@ -312,6 +313,7 @@ typedef int WGPU_FEATURE_NAME;
 #define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_ASTC 7
 #define WGPU_FEATURE_NAME_TIMESTAMP_QUERY 8
 #define WGPU_FEATURE_NAME_INDIRECT_FIRST_INSTANCE 9
+#define WGPU_FEATURE_NAME_SHADER_F16 10
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -1319,7 +1321,7 @@ dictionary GPUProgrammableStage {
     required USVString entryPoint;
     record<USVString, GPUPipelineConstantValue> constants;
 };
-typedef double GPUPipelineConstantValue; // May represent WGSL’s bool, f32, i32, u32.
+typedef double GPUPipelineConstantValue; // May represent WGSL’s bool, f32, i32, u32, and f16 if enabled.
 */
 
 typedef struct WGpuPipelineConstant
