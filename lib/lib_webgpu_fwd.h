@@ -41,6 +41,7 @@ typedef int WGpuSampler;
 typedef struct WGpuSamplerDescriptor WGpuSamplerDescriptor;
 typedef int WGPU_ADDRESS_MODE;
 typedef int WGPU_FILTER_MODE;
+typedef int WGPU_MIPMAP_FILTER_MODE;
 typedef int WGPU_COMPARE_FUNCTION;
 typedef int WGpuBindGroupLayout;
 // Not used:

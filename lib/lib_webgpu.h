@@ -883,7 +883,7 @@ dictionary GPUSamplerDescriptor : GPUObjectDescriptorBase {
     GPUAddressMode addressModeW = "clamp-to-edge";
     GPUFilterMode magFilter = "nearest";
     GPUFilterMode minFilter = "nearest";
-    GPUFilterMode mipmapFilter = "nearest";
+    GPUMipmapFilterMode mipmapFilter = "nearest";
     float lodMinClamp = 0;
     float lodMaxClamp = 32;
     GPUCompareFunction compare;
@@ -897,7 +897,7 @@ typedef struct WGpuSamplerDescriptor
   WGPU_ADDRESS_MODE addressModeW; // default = WGPU_ADDRESS_MODE_CLAMP_TO_EDGE
   WGPU_FILTER_MODE magFilter;     // default = WGPU_FILTER_MODE_NEAREST
   WGPU_FILTER_MODE minFilter;     // default = WGPU_FILTER_MODE_NEAREST
-  WGPU_FILTER_MODE mipmapFilter;  // default = WGPU_FILTER_MODE_NEAREST
+  WGPU_MIPMAP_FILTER_MODE mipmapFilter; // default = WGPU_MIPMAP_FILTER_MODE_NEAREST
   float lodMinClamp;              // default = 0
   float lodMaxClamp;              // default = 32
   WGPU_COMPARE_FUNCTION compare;  // default = WGPU_COMPARE_FUNCTION_INVALID (not used)
@@ -928,6 +928,17 @@ typedef int WGPU_FILTER_MODE;
 #define WGPU_FILTER_MODE_INVALID 0
 #define WGPU_FILTER_MODE_NEAREST 1
 #define WGPU_FILTER_MODE_LINEAR 2
+
+/*
+enum GPUMipmapFilterMode {
+    "nearest",
+    "linear"
+};
+*/
+typedef int WGPU_MIPMAP_FILTER_MODE;
+#define WGPU_MIPMAP_FILTER_MODE_INVALID 0
+#define WGPU_MIPMAP_FILTER_MODE_NEAREST 1
+#define WGPU_MIPMAP_FILTER_MODE_LINEAR 2
 
 /*
 enum GPUCompareFunction {
