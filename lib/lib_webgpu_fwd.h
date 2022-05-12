@@ -69,6 +69,7 @@ typedef struct WGpuShaderModuleDescriptor WGpuShaderModuleDescriptor;
 typedef int WGPU_COMPILATION_MESSAGE_TYPE;
 typedef struct WGpuCompilationMessage WGpuCompilationMessage;
 typedef struct WGpuCompilationInfo WGpuCompilationInfo;
+typedef int WGPU_AUTO_LAYOUT_MODE;
 typedef struct WGpuPipelineConstant WGpuPipelineConstant;
 typedef int WGpuComputePipeline;
 // Not used:

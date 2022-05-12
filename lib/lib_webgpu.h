@@ -1215,14 +1215,15 @@ void wgpu_shader_module_get_compilation_info_async(WGpuShaderModule shaderModule
 
 /*
 dictionary GPUShaderModuleCompilationHint {
-    required GPUPipelineLayout layout;
+    required (GPUPipelineLayout or GPUAutoLayoutMode) layout;
 };
 */
 typedef struct WGpuShaderModuleCompilationHint
 {
   const char *entryPointName;
-  WGpuPipelineLayout layout;
+  WGpuPipelineLayout layout;  // Assign the special value WGPU_AUTO_LAYOUT_MODE_AUTO (default) to hint an automatically created pipeline object.
 } WGpuShaderModuleCompilationHint;
+extern const WGpuShaderModuleCompilationHint WGPU_SHADER_MODULE_COMPILATION_HINT_DEFAULT_INITIALIZER;
 
 /*
 dictionary GPUShaderModuleDescriptor : GPUObjectDescriptorBase {
@@ -1311,8 +1312,16 @@ typedef struct WGpuCompilationInfo
 #define wgpu_free_compilation_info(info) free((info))
 
 /*
+enum GPUAutoLayoutMode {
+    "auto",
+};
+*/
+typedef int WGPU_AUTO_LAYOUT_MODE;
+#define WGPU_AUTO_LAYOUT_MODE_AUTO 0
+
+/*
 dictionary GPUPipelineDescriptorBase : GPUObjectDescriptorBase {
-    GPUPipelineLayout layout;
+    required (GPUPipelineLayout or GPUAutoLayoutMode) layout;
 };
 */
 // Not used since it contains only one member. Will be implemented if # of members increases.
