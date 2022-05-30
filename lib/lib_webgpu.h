@@ -184,6 +184,7 @@ WorkerNavigator includes NavigatorGPU;
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPU {
     Promise<GPUAdapter?> requestAdapter(optional GPURequestAdapterOptions options = {});
+    GPUTextureFormat getPreferredCanvasFormat();
 };
 */
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
@@ -201,6 +202,8 @@ WGpuAdapter navigator_gpu_request_adapter_sync(const WGpuRequestAdapterOptions *
 // Like above, but tiny code size without options.
 void navigator_gpu_request_adapter_async_simple(WGpuRequestAdapterCallback adapterCallback);
 WGpuAdapter navigator_gpu_request_adapter_sync_simple(void);
+
+WGPU_TEXTURE_FORMAT navigator_gpu_get_preferred_canvas_format(void);
 
 /*
 dictionary GPURequestAdapterOptions {
