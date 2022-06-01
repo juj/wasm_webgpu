@@ -363,7 +363,7 @@ WGpuQueue wgpu_device_get_queue(WGpuDevice device);
 WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescriptor *bufferDesc __attribute__((nonnull)));
 WGpuTexture wgpu_device_create_texture(WGpuDevice device, const WGpuTextureDescriptor *textureDesc __attribute__((nonnull)));
 WGpuSampler wgpu_device_create_sampler(WGpuDevice device, const WGpuSamplerDescriptor *samplerDesc __attribute__((nonnull)));
-WGpuExternalTexture wgpu_device_import_external_texture(WGpuDevice device, const WGpuExternalTextureDescriptor *externalTextureDesc __attribute__((nonnull))); // TODO implement
+WGpuExternalTexture wgpu_device_import_external_texture(WGpuDevice device, const WGpuExternalTextureDescriptor *externalTextureDesc __attribute__((nonnull)));
 
 // N.b. not currently using signature WGpuBindGroupLayout wgpu_device_create_bind_group_layout(WGpuDevice device, const WGpuBindGroupLayoutDescriptor *bindGroupLayoutDesc);
 // since WGpuBindGroupLayoutDescriptor is a single element struct consisting only of a single array. (if it is expanded in the future, switch to using that signature)
@@ -864,7 +864,10 @@ dictionary GPUExternalTextureDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuExternalTextureDescriptor
 {
-  char source[512]; // CSS selector for a source HTMLVideoElement
+  // An object ID pointing to instance of type HTMLVideoElement. To obtain this id, you must call
+  // either wgpuStore() or wgpuStoreAndSetParent() on JavaScript side on a HTMLVideoElement object
+  // to pin/register the video element to a Wasm referenceable object ID.
+  WGpuObjectBase source;
   WGPU_PREDEFINED_COLOR_SPACE colorSpace;
 } WGpuExternalTextureDescriptor;
 extern const WGpuExternalTextureDescriptor WGPU_EXTERNAL_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER;
