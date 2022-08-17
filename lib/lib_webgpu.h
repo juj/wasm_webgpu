@@ -1341,9 +1341,12 @@ dictionary GPUPipelineDescriptorBase : GPUObjectDescriptorBase {
 
 /*
 interface mixin GPUPipelineBase {
-    GPUBindGroupLayout getBindGroupLayout(unsigned long index);
+     [NewObject] GPUBindGroupLayout getBindGroupLayout(unsigned long index);
 };
 */
+// Returns the bind group layout at the given index of the pipeline. Important: this function allocates a
+// new WebGPU object, so in order not to leak WebGPU handles, call wgpu_object_destroy() on the returned value
+// when done with it.
 WGpuBindGroupLayout wgpu_pipeline_get_bind_group_layout(WGpuObjectBase pipelineBase, uint32_t index);
 #define wgpu_render_pipeline_get_bind_group_layout wgpu_pipeline_get_bind_group_layout
 #define wgpu_compute_pipeline_get_bind_group_layout wgpu_pipeline_get_bind_group_layout
