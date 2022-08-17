@@ -872,12 +872,12 @@ dictionary GPUImageCopyExternalImage {
 
 interface mixin GPUProgrammablePassEncoder {
     undefined setBindGroup(GPUIndex32 index, GPUBindGroup bindGroup,
-                      optional sequence<GPUBufferDynamicOffset> dynamicOffsets = []);
+        optional sequence<GPUBufferDynamicOffset> dynamicOffsets = []);
 
     undefined setBindGroup(GPUIndex32 index, GPUBindGroup bindGroup,
-                      Uint32Array dynamicOffsetsData,
-                      GPUSize64 dynamicOffsetsDataStart,
-                      GPUSize32 dynamicOffsetsDataLength);
+        Uint32Array dynamicOffsetsData,
+        GPUSize64 dynamicOffsetsDataStart,
+        GPUSize32 dynamicOffsetsDataLength);
 };
 
 interface mixin GPUDebugCommandsMixin {
@@ -936,8 +936,8 @@ interface mixin GPURenderEncoderBase {
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPURenderPassEncoder {
     undefined setViewport(float x, float y,
-                     float width, float height,
-                     float minDepth, float maxDepth);
+        float width, float height,
+        float minDepth, float maxDepth);
 
     undefined setScissorRect(GPUIntegerCoordinate x, GPUIntegerCoordinate y,
                         GPUIntegerCoordinate width, GPUIntegerCoordinate height);
