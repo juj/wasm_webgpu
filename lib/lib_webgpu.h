@@ -2384,15 +2384,15 @@ WGPU_TEXTURE_FORMAT wgpu_canvas_context_get_preferred_format(WGpuCanvasContext c
 WGpuTexture wgpu_canvas_context_get_current_texture(WGpuCanvasContext canvasContext);
 
 /*
-enum GPUCanvasCompositingAlphaMode {
+enum GPUCanvasAlphaMode {
     "opaque",
     "premultiplied",
 };
 */
-typedef int WGPU_CANVAS_COMPOSITING_ALPHA_MODE;
-#define WGPU_CANVAS_COMPOSITING_ALPHA_MODE_INVALID 0
-#define WGPU_CANVAS_COMPOSITING_ALPHA_MODE_OPAQUE 1
-#define WGPU_CANVAS_COMPOSITING_ALPHA_MODE_PREMULTIPLIED 2
+typedef int WGPU_CANVAS_ALPHA_MODE;
+#define WGPU_CANVAS_ALPHA_MODE_INVALID 0
+#define WGPU_CANVAS_ALPHA_MODE_OPAQUE 1
+#define WGPU_CANVAS_ALPHA_MODE_PREMULTIPLIED 2
 
 /*
 dictionary GPUCanvasConfiguration : GPUObjectDescriptorBase {
@@ -2401,7 +2401,7 @@ dictionary GPUCanvasConfiguration : GPUObjectDescriptorBase {
     GPUTextureUsageFlags usage = 0x10;  // GPUTextureUsage.RENDER_ATTACHMENT
     sequence<GPUTextureFormat> viewFormats = [];
     GPUPredefinedColorSpace colorSpace = "srgb";
-    GPUCanvasCompositingAlphaMode compositingAlphaMode = "opaque";
+    GPUCanvasAlphaMode alphaMode = "opaque";
     GPUExtent3D size;
 };
 */
@@ -2580,7 +2580,7 @@ typedef struct WGpuCanvasConfiguration
   int numViewFormats;
   WGPU_TEXTURE_FORMAT *viewFormats;
   WGPU_PREDEFINED_COLOR_SPACE colorSpace;
-  WGPU_CANVAS_COMPOSITING_ALPHA_MODE compositingAlphaMode;
+  WGPU_CANVAS_ALPHA_MODE alphaMode;
   WGpuExtent3D size; // If size.width == 0 (as default initialized via WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER), then full screen size is used.
 } WGpuCanvasConfiguration;
 extern const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;

@@ -126,7 +126,7 @@ typedef struct WGpuQuerySetDescriptor WGpuQuerySetDescriptor;
 typedef int WGPU_QUERY_TYPE;
 typedef int WGPU_PIPELINE_STATISTIC_NAME;
 typedef int WGpuCanvasContext;
-typedef int WGPU_CANVAS_COMPOSITING_ALPHA_MODE;
+typedef int WGPU_CANVAS_ALPHA_MODE;
 typedef struct WGpuCanvasConfiguration WGpuCanvasConfiguration;
 typedef int WGPU_DEVICE_LOST_REASON;
 typedef int WGPU_ERROR_FILTER;
