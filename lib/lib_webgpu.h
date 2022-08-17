@@ -2382,7 +2382,6 @@ interface GPUCanvasContext {
     undefined configure(GPUCanvasConfiguration configuration);
     undefined unconfigure();
 
-    GPUTextureFormat getPreferredFormat(GPUAdapter adapter);
     GPUTexture getCurrentTexture();
 };
 */
@@ -2395,9 +2394,6 @@ EM_BOOL wgpu_is_canvas_context(WGpuObjectBase object);
 // Configures the swap chain for this context.
 void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCanvasConfiguration *config __attribute__((nonnull)));
 void wgpu_canvas_context_unconfigure(WGpuCanvasContext canvasContext);
-
-// Returns an optimal GPUTextureFormat to use for swap chains with this context and the given device.
-WGPU_TEXTURE_FORMAT wgpu_canvas_context_get_preferred_format(WGpuCanvasContext canvasContext, WGpuAdapter adapter);
 
 WGpuTexture wgpu_canvas_context_get_current_texture(WGpuCanvasContext canvasContext);
 

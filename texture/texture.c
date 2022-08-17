@@ -87,7 +87,7 @@ void DownloadedImage(WGpuImageBitmap bitmap, int width, int height, void *userDa
 
   WGpuCanvasConfiguration config = WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
-  config.format = wgpu_canvas_context_get_preferred_format(canvasContext, adapter);
+  config.format = navigator_gpu_get_preferred_canvas_format();
   wgpu_canvas_context_configure(canvasContext, &config);
 
   const char *vertexShader =

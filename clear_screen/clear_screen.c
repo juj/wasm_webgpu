@@ -52,7 +52,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 
   WGpuCanvasConfiguration config = WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
-  config.format = wgpu_canvas_context_get_preferred_format(canvasContext, adapter);
+  config.format = navigator_gpu_get_preferred_canvas_format();
   wgpu_canvas_context_configure(canvasContext, &config);
 
   emscripten_request_animation_frame_loop(raf, 0);
