@@ -1813,6 +1813,19 @@ typedef struct WGpuCommandBufferDescriptor
 } WGpuCommandBufferDescriptor;
 
 /*
+interface mixin GPUDebugCommandsMixin {
+    undefined pushDebugGroup(USVString groupLabel);
+    undefined popDebugGroup();
+    undefined insertDebugMarker(USVString markerLabel);
+};
+*/
+typedef int WGpuDebugCommandsMixin; // One of GPURenderBundleEncoder, GPURenderPassEncoder, GPUComputePassEncoder or GPUCommandEncoder
+
+void wgpu_encoder_push_debug_group(WGpuDebugCommandsMixin encoder, const char *groupLabel __attribute__((nonnull)));
+void wgpu_encoder_pop_debug_group(WGpuDebugCommandsMixin encoder);
+void wgpu_encoder_insert_debug_marker(WGpuDebugCommandsMixin encoder, const char *markerLabel __attribute__((nonnull)));
+
+/*
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUCommandEncoder {
     GPURenderPassEncoder beginRenderPass(GPURenderPassDescriptor descriptor);
@@ -1857,6 +1870,8 @@ interface GPUCommandEncoder {
     GPUCommandBuffer finish(optional GPUCommandBufferDescriptor descriptor = {});
 };
 GPUCommandEncoder includes GPUObjectBase;
+GPUCommandEncoder includes GPUCommandsMixin;
+GPUCommandEncoder includes GPUDebugCommandsMixin;
 */
 typedef int WGpuCommandEncoder;
 // Returns true if the given handle references a valid GPUCommandEncoder.
@@ -1870,20 +1885,15 @@ void wgpu_command_encoder_copy_buffer_to_buffer(WGpuCommandEncoder commandEncode
 void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyBuffer *source __attribute__((nonnull)), const WGpuImageCopyTexture *destination __attribute__((nonnull)), uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source __attribute__((nonnull)), const WGpuImageCopyBuffer *destination __attribute__((nonnull)), uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source __attribute__((nonnull)), const WGpuImageCopyTexture *destination __attribute__((nonnull)), uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
-
 void wgpu_command_encoder_clear_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(__builtin_inf()));
 void wgpu_command_encoder_write_timestamp(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t queryIndex);
+void wgpu_command_encoder_resolve_query_set(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t firstQuery, uint32_t queryCount, WGpuBuffer destination, double_int53_t destinationOffset);
+WGpuCommandBuffer wgpu_command_encoder_finish(WGpuCommandEncoder commandEncoder);
 
-void wgpu_encoder_push_debug_group(WGpuCommandEncoder commandEncoder, const char *groupLabel __attribute__((nonnull)));
-void wgpu_encoder_pop_debug_group(WGpuCommandEncoder commandEncoder);
-void wgpu_encoder_insert_debug_marker(WGpuCommandEncoder commandEncoder, const char *markerLabel __attribute__((nonnull)));
+// Inherited from GPUDebugCommandsMixin
 #define wgpu_command_encoder_push_debug_group wgpu_encoder_push_debug_group
 #define wgpu_command_encoder_pop_debug_group wgpu_encoder_pop_debug_group
 #define wgpu_command_encoder_insert_debug_marker wgpu_encoder_insert_debug_marker
-
-void wgpu_command_encoder_resolve_query_set(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t firstQuery, uint32_t queryCount, WGpuBuffer destination, double_int53_t destinationOffset);
-
-WGpuCommandBuffer wgpu_command_encoder_finish(WGpuCommandEncoder commandEncoder);
 
 /*
 dictionary GPUCommandEncoderDescriptor : GPUObjectDescriptorBase {
@@ -1946,7 +1956,7 @@ dictionary GPUImageCopyExternalImage {
 // Defined at the end of this file
 
 /*
-interface mixin GPUProgrammablePassEncoder {
+interface mixin GPUBindingCommandsMixin {
     undefined setBindGroup(GPUIndex32 index, GPUBindGroup bindGroup,
                       optional sequence<GPUBufferDynamicOffset> dynamicOffsets = []);
 
@@ -1954,20 +1964,17 @@ interface mixin GPUProgrammablePassEncoder {
                       Uint32Array dynamicOffsetsData,
                       GPUSize64 dynamicOffsetsDataStart,
                       GPUSize32 dynamicOffsetsDataLength);
-
-    undefined pushDebugGroup(USVString groupLabel);
-    undefined popDebugGroup();
-    undefined insertDebugMarker(USVString markerLabel);
 };
 */
-typedef int WGpuProgrammablePassEncoder;
-// Returns true if the given handle references a valid GPUProgrammablePassEncoder.
-EM_BOOL wgpu_is_programmable_pass_encoder(WGpuObjectBase object);
-void wgpu_programmable_pass_encoder_set_bind_group(WGpuProgrammablePassEncoder encoder, uint32_t index, WGpuBindGroup bindGroup, uint32_t *dynamicOffsets _WGPU_DEFAULT_VALUE(0), uint32_t numDynamicOffsets _WGPU_DEFAULT_VALUE(0));
+typedef int WGpuBindingCommandsMixin;
+// Returns true if the given handle references a valid GPUBindingCommandsMixin. (one of: GPUComputePassEncoder, GPURenderPassEncoder, or GPURenderBundleEncoder)
+EM_BOOL wgpu_is_binding_commands_mixin(WGpuObjectBase object);
+void wgpu_encoder_set_bind_group(WGpuBindingCommandsMixin encoder, uint32_t index, WGpuBindGroup bindGroup, uint32_t *dynamicOffsets _WGPU_DEFAULT_VALUE(0), uint32_t numDynamicOffsets _WGPU_DEFAULT_VALUE(0));
 
-#define wgpu_programmable_pass_encoder_push_debug_group wgpu_encoder_push_debug_group
-#define wgpu_programmable_pass_encoder_pop_debug_group wgpu_encoder_pop_debug_group
-#define wgpu_programmable_pass_encoder_insert_debug_marker wgpu_encoder_insert_debug_marker
+// Some of the functions in GPURenderBundleEncoder, GPURenderPassEncoder and GPUComputePassEncoder are identical in implementation,
+// so group them under a common base class.
+void wgpu_encoder_set_pipeline(WGpuBindingCommandsMixin encoder, WGpuObjectBase pipeline);
+void wgpu_encoder_end(WGpuBindingCommandsMixin encoder);
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -1979,24 +1986,26 @@ interface GPUComputePassEncoder {
     undefined end();
 };
 GPUComputePassEncoder includes GPUObjectBase;
-GPUComputePassEncoder includes GPUProgrammablePassEncoder;
+GPUComputePassEncoder includes GPUCommandsMixin;
+GPUComputePassEncoder includes GPUDebugCommandsMixin;
+GPUComputePassEncoder includes GPUBindingCommandsMixin;
 */
 typedef int WGpuComputePassEncoder;
 // Returns true if the given handle references a valid GPUComputePassEncoder.
 EM_BOOL wgpu_is_compute_pass_encoder(WGpuObjectBase object);
 
-void wgpu_encoder_set_pipeline(WGpuRenderEncoderBase passEncoder, WGpuRenderPipeline renderPipeline);
 #define wgpu_compute_pass_encoder_set_pipeline wgpu_encoder_set_pipeline
 void wgpu_compute_pass_encoder_dispatch_workgroups(WGpuComputePassEncoder encoder, uint32_t workgroupCountX, uint32_t workgroupCountY _WGPU_DEFAULT_VALUE(1), uint32_t workgroupCountZ _WGPU_DEFAULT_VALUE(1));
 void wgpu_compute_pass_encoder_dispatch_workgroups_indirect(WGpuComputePassEncoder encoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
-
-void wgpu_encoder_end(WGpuRenderPassEncoder encoder);
 #define wgpu_compute_pass_encoder_end wgpu_encoder_end
 
-#define wgpu_compute_pass_encoder_set_bind_group wgpu_programmable_pass_encoder_set_bind_group
+// Inherited from GPUDebugCommandsMixin:
 #define wgpu_compute_pass_encoder_push_debug_group wgpu_encoder_push_debug_group
 #define wgpu_compute_pass_encoder_pop_debug_group wgpu_encoder_pop_debug_group
 #define wgpu_compute_pass_encoder_insert_debug_marker wgpu_encoder_insert_debug_marker
+
+// Inherited from GPUBindingCommandsMixin:
+#define wgpu_compute_pass_encoder_set_bind_group wgpu_encoder_set_bind_group
 
 /*
  enum GPUComputePassTimestampLocation {
@@ -2026,36 +2035,37 @@ typedef struct WGpuComputePassDescriptor
 } WGpuComputePassDescriptor;
 
 /*
-interface mixin GPURenderEncoderBase {
+interface mixin GPURenderCommandsMixin {
     undefined setPipeline(GPURenderPipeline pipeline);
 
     undefined setIndexBuffer(GPUBuffer buffer, GPUIndexFormat indexFormat, optional GPUSize64 offset = 0, optional GPUSize64 size);
     undefined setVertexBuffer(GPUIndex32 slot, GPUBuffer buffer, optional GPUSize64 offset = 0, optional GPUSize64 size);
 
     undefined draw(GPUSize32 vertexCount, optional GPUSize32 instanceCount = 1,
-              optional GPUSize32 firstVertex = 0, optional GPUSize32 firstInstance = 0);
+        optional GPUSize32 firstVertex = 0, optional GPUSize32 firstInstance = 0);
     undefined drawIndexed(GPUSize32 indexCount, optional GPUSize32 instanceCount = 1,
-                     optional GPUSize32 firstIndex = 0,
-                     optional GPUSignedOffset32 baseVertex = 0,
-                     optional GPUSize32 firstInstance = 0);
+        optional GPUSize32 firstIndex = 0,
+        optional GPUSignedOffset32 baseVertex = 0,
+        optional GPUSize32 firstInstance = 0);
 
     undefined drawIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
     undefined drawIndexedIndirect(GPUBuffer indirectBuffer, GPUSize64 indirectOffset);
 };
 */
-typedef int WGpuRenderEncoderBase;
-// Returns true if the given handle references a valid GPURenderEncoderBase.
-EM_BOOL wgpu_is_render_encoder_base(WGpuObjectBase object);
+// Deliberate API naming divergence: in upstream WebGPU API, there are base "mixin" classes
+typedef int WGpuRenderCommandsMixin;
+// Returns true if the given handle references a valid GPURenderCommandsMixin.
+EM_BOOL wgpu_is_render_commands_mixin(WGpuObjectBase object);
 
-#define wgpu_render_encoder_base_set_pipeline wgpu_encoder_set_pipeline
-void wgpu_render_encoder_base_set_index_buffer(WGpuRenderEncoderBase passEncoder, WGpuBuffer buffer, WGPU_INDEX_FORMAT indexFormat, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(-1));
-void wgpu_render_encoder_base_set_vertex_buffer(WGpuRenderEncoderBase passEncoder, int32_t slot, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(-1));
+#define wgpu_render_commands_mixin_set_pipeline wgpu_encoder_set_pipeline
+void wgpu_render_commands_mixin_set_index_buffer(WGpuRenderCommandsMixin renderCommandsMixin, WGpuBuffer buffer, WGPU_INDEX_FORMAT indexFormat, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(-1));
+void wgpu_render_commands_mixin_set_vertex_buffer(WGpuRenderCommandsMixin renderCommandsMixin, int32_t slot, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(-1));
 
-void wgpu_render_encoder_base_draw(WGpuRenderPassEncoder passEncoder, uint32_t vertexCount, uint32_t instanceCount _WGPU_DEFAULT_VALUE(1), uint32_t firstVertex _WGPU_DEFAULT_VALUE(0), uint32_t firstInstance _WGPU_DEFAULT_VALUE(0));
-void wgpu_render_encoder_base_draw_indexed(WGpuRenderPassEncoder passEncoder, uint32_t indexCount, uint32_t instanceCount _WGPU_DEFAULT_VALUE(1), uint32_t firstVertex _WGPU_DEFAULT_VALUE(0), int32_t baseVertex _WGPU_DEFAULT_VALUE(0), uint32_t firstInstance _WGPU_DEFAULT_VALUE(0));
+void wgpu_render_commands_mixin_draw(WGpuRenderCommandsMixin renderCommandsMixin, uint32_t vertexCount, uint32_t instanceCount _WGPU_DEFAULT_VALUE(1), uint32_t firstVertex _WGPU_DEFAULT_VALUE(0), uint32_t firstInstance _WGPU_DEFAULT_VALUE(0));
+void wgpu_render_commands_mixin_draw_indexed(WGpuRenderCommandsMixin renderCommandsMixin, uint32_t indexCount, uint32_t instanceCount _WGPU_DEFAULT_VALUE(1), uint32_t firstVertex _WGPU_DEFAULT_VALUE(0), int32_t baseVertex _WGPU_DEFAULT_VALUE(0), uint32_t firstInstance _WGPU_DEFAULT_VALUE(0));
 
-void wgpu_render_encoder_base_draw_indirect(WGpuRenderPassEncoder passEncoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
-void wgpu_render_encoder_base_draw_indexed_indirect(WGpuRenderPassEncoder passEncoder, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
+void wgpu_render_commands_mixin_draw_indirect(WGpuRenderCommandsMixin renderCommandsMixin, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
+void wgpu_render_commands_mixin_draw_indexed_indirect(WGpuRenderCommandsMixin renderCommandsMixin, WGpuBuffer indirectBuffer, double_int53_t indirectOffset);
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -2077,39 +2087,40 @@ interface GPURenderPassEncoder {
     undefined end();
 };
 GPURenderPassEncoder includes GPUObjectBase;
-GPURenderPassEncoder includes GPUProgrammablePassEncoder;
-GPURenderPassEncoder includes GPURenderEncoderBase;
+GPURenderPassEncoder includes GPUCommandsMixin;
+GPURenderPassEncoder includes GPUDebugCommandsMixin;
+GPURenderPassEncoder includes GPUBindingCommandsMixin;
+GPURenderPassEncoder includes GPURenderCommandsMixin;
 */
 typedef int WGpuRenderPassEncoder;
 // Returns true if the given handle references a valid GPURenderPassEncoder.
 EM_BOOL wgpu_is_render_pass_encoder(WGpuObjectBase object);
 
 void wgpu_render_pass_encoder_set_viewport(WGpuRenderPassEncoder encoder, float x, float y, float width, float height, float minDepth, float maxDepth);
-
 void wgpu_render_pass_encoder_set_scissor_rect(WGpuRenderPassEncoder encoder, uint32_t x, uint32_t y, uint32_t width, uint32_t height);
-
 void wgpu_render_pass_encoder_set_blend_constant(WGpuRenderPassEncoder encoder, double r, double g, double b, double a);
 void wgpu_render_pass_encoder_set_stencil_reference(WGpuRenderPassEncoder encoder, uint32_t stencilValue);
-
 void wgpu_render_pass_encoder_begin_occlusion_query(WGpuRenderPassEncoder encoder, int32_t queryIndex);
 void wgpu_render_pass_encoder_end_occlusion_query(WGpuRenderPassEncoder encoder);
-
 void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, WGpuRenderBundle *bundles, int numBundles);
-
 #define wgpu_render_pass_encoder_end wgpu_encoder_end
 
-#define wgpu_render_pass_encoder_set_bind_group wgpu_programmable_pass_encoder_set_bind_group
+// Inherited from GPUDebugCommandsMixin:
 #define wgpu_render_pass_encoder_push_debug_group wgpu_programmable_pass_encoder_push_debug_group
 #define wgpu_render_pass_encoder_pop_debug_group wgpu_programmable_pass_encoder_pop_debug_group
 #define wgpu_render_pass_encoder_insert_debug_marker wgpu_programmable_pass_encoder_insert_debug_marker
 
-#define wgpu_render_pass_encoder_set_pipeline wgpu_encoder_set_pipeline
-#define wgpu_render_pass_encoder_set_index_buffer wgpu_render_encoder_base_set_index_buffer
-#define wgpu_render_pass_encoder_set_vertex_buffer wgpu_render_encoder_base_set_vertex_buffer
-#define wgpu_render_pass_encoder_draw wgpu_render_encoder_base_draw
-#define wgpu_render_pass_encoder_draw_indexed wgpu_render_encoder_base_draw_indexed
-#define wgpu_render_pass_encoder_draw_indirect wgpu_render_encoder_base_draw_indirect
-#define wgpu_render_pass_encoder_draw_indexed_indirect wgpu_render_encoder_base_draw_indexed_indirect
+// Inherited from GPUBindingCommandsMixin:
+#define wgpu_render_pass_encoder_set_bind_group wgpu_encoder_set_bind_group
+
+// Inherited from GPURenderCommandsMixin:
+#define wgpu_render_pass_encoder_set_pipeline wgpu_render_commands_mixin_set_pipeline
+#define wgpu_render_pass_encoder_set_index_buffer wgpu_render_commands_mixin_set_index_buffer
+#define wgpu_render_pass_encoder_set_vertex_buffer wgpu_render_commands_mixin_set_vertex_buffer
+#define wgpu_render_pass_encoder_draw wgpu_render_commands_mixin_draw
+#define wgpu_render_pass_encoder_draw_indexed wgpu_render_commands_mixin_draw_indexed
+#define wgpu_render_pass_encoder_draw_indirect wgpu_render_commands_mixin_draw_indirect
+#define wgpu_render_pass_encoder_draw_indexed_indirect wgpu_render_commands_mixin_draw_indexed_indirect
 
 /*
 enum GPURenderPassTimestampLocation {
@@ -2234,26 +2245,29 @@ interface GPURenderBundleEncoder {
     GPURenderBundle finish(optional GPURenderBundleDescriptor descriptor = {});
 };
 GPURenderBundleEncoder includes GPUObjectBase;
-GPURenderBundleEncoder includes GPUProgrammablePassEncoder;
-GPURenderBundleEncoder includes GPURenderEncoderBase;
+GPURenderBundleEncoder includes GPUCommandsMixin;
+GPURenderBundleEncoder includes GPUDebugCommandsMixin;
+GPURenderBundleEncoder includes GPUBindingCommandsMixin;
+GPURenderBundleEncoder includes GPURenderCommandsMixin;
 */
 typedef int WGpuRenderBundleEncoder;
 // Returns true if the given handle references a valid GPURenderBundleEncoder.
 EM_BOOL wgpu_is_render_bundle_encoder(WGpuObjectBase object);
 void wgpu_render_bundle_encoder_finish(const WGpuRenderBundleDescriptor *renderBundleDescriptor __attribute__((nonnull)));
 
-#define wgpu_render_bundle_encoder_set_bind_group wgpu_programmable_pass_encoder_set_bind_group
-#define wgpu_render_bundle_encoder_push_debug_group wgpu_programmable_pass_encoder_push_debug_group
-#define wgpu_render_bundle_encoder_pop_debug_group wgpu_programmable_pass_encoder_pop_debug_group
-#define wgpu_render_bundle_encoder_insert_debug_marker wgpu_programmable_pass_encoder_insert_debug_marker
+#define wgpu_render_bundle_encoder_set_bind_group wgpu_encoder_set_bind_group
+// Inherited from GPUDebugCommandsMixin:
+#define wgpu_render_bundle_encoder_push_debug_group wgpu_encoder_push_debug_group
+#define wgpu_render_bundle_encoder_pop_debug_group wgpu_encoder_pop_debug_group
+#define wgpu_render_bundle_encoder_insert_debug_marker wgpu_encoder_insert_debug_marker
 
 #define wgpu_render_bundle_encoder_set_pipeline wgpu_encoder_set_pipeline
-#define wgpu_render_bundle_encoder_set_index_buffer wgpu_render_encoder_base_set_index_buffer
-#define wgpu_render_bundle_encoder_set_vertex_buffer wgpu_render_encoder_base_set_vertex_buffer
-#define wgpu_render_bundle_encoder_draw wgpu_render_encoder_base_draw
-#define wgpu_render_bundle_encoder_draw_indexed wgpu_render_encoder_base_draw_indexed
-#define wgpu_render_bundle_encoder_draw_indirect wgpu_render_encoder_base_draw_indirect
-#define wgpu_render_bundle_encoder_draw_indexed_indirect wgpu_render_encoder_base_draw_indexed_indirect
+#define wgpu_render_bundle_encoder_set_index_buffer wgpu_render_commands_mixin_set_index_buffer
+#define wgpu_render_bundle_encoder_set_vertex_buffer wgpu_render_commands_mixin_set_vertex_buffer
+#define wgpu_render_bundle_encoder_draw wgpu_render_commands_mixin_draw
+#define wgpu_render_bundle_encoder_draw_indexed wgpu_render_commands_mixin_draw_indexed
+#define wgpu_render_bundle_encoder_draw_indirect wgpu_render_commands_mixin_draw_indirect
+#define wgpu_render_bundle_encoder_draw_indexed_indirect wgpu_render_commands_mixin_draw_indexed_indirect
 
 /*
 dictionary GPURenderBundleEncoderDescriptor : GPURenderPassLayout {
