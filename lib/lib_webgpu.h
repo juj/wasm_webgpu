@@ -1872,6 +1872,7 @@ void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncod
 void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source __attribute__((nonnull)), const WGpuImageCopyTexture *destination __attribute__((nonnull)), uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 
 void wgpu_command_encoder_clear_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(__builtin_inf()));
+void wgpu_command_encoder_write_timestamp(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t queryIndex);
 
 void wgpu_encoder_push_debug_group(WGpuCommandEncoder commandEncoder, const char *groupLabel __attribute__((nonnull)));
 void wgpu_encoder_pop_debug_group(WGpuCommandEncoder commandEncoder);
