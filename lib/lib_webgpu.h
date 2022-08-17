@@ -166,13 +166,18 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_INDIRECT_FIRST_INSTANCE   0x80
 
 /*
-enum GPUPredefinedColorSpace {
+// WebGPU reuses the color space enum from the HTML Canvas specification:
+   https://html.spec.whatwg.org/multipage/canvas.html#predefinedcolorspace
+   Because of that reason, it is prefixed here with HTML_ as opposed to WGPU_.
+enum PredefinedColorSpace {
     "srgb",
+    "display-p3"
 };
 */
-typedef int WGPU_PREDEFINED_COLOR_SPACE;
-#define WGPU_PREDEFINED_COLOR_SPACE_INVALID 0
-#define WGPU_PREDEFINED_COLOR_SPACE_SRGB 1
+typedef int HTML_PREDEFINED_COLOR_SPACE;
+#define HTML_PREDEFINED_COLOR_SPACE_INVALID 0
+#define HTML_PREDEFINED_COLOR_SPACE_SRGB 1
+#define HTML_PREDEFINED_COLOR_SPACE_DISPLAY_P3 2
 
 /*
 interface mixin NavigatorGPU {
@@ -859,7 +864,7 @@ EM_BOOL wgpu_is_external_texture(WGpuObjectBase object);
 /*
 dictionary GPUExternalTextureDescriptor : GPUObjectDescriptorBase {
     required HTMLVideoElement source;
-    GPUPredefinedColorSpace colorSpace = "srgb";
+    PredefinedColorSpace colorSpace = "srgb";
 };
 */
 typedef struct WGpuExternalTextureDescriptor
@@ -868,7 +873,7 @@ typedef struct WGpuExternalTextureDescriptor
   // either wgpuStore() or wgpuStoreAndSetParent() on JavaScript side on a HTMLVideoElement object
   // to pin/register the video element to a Wasm referenceable object ID.
   WGpuObjectBase source;
-  WGPU_PREDEFINED_COLOR_SPACE colorSpace;
+  HTML_PREDEFINED_COLOR_SPACE colorSpace;
 } WGpuExternalTextureDescriptor;
 extern const WGpuExternalTextureDescriptor WGPU_EXTERNAL_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
@@ -1922,7 +1927,7 @@ dictionary GPUImageCopyTexture {
 
 /*
 dictionary GPUImageCopyTextureTagged : GPUImageCopyTexture {
-    GPUPredefinedColorSpace colorSpace = "srgb";
+    PredefinedColorSpace colorSpace = "srgb";
     boolean premultipliedAlpha = false;
 };
 */
@@ -2400,7 +2405,7 @@ dictionary GPUCanvasConfiguration : GPUObjectDescriptorBase {
     required GPUTextureFormat format;
     GPUTextureUsageFlags usage = 0x10;  // GPUTextureUsage.RENDER_ATTACHMENT
     sequence<GPUTextureFormat> viewFormats = [];
-    GPUPredefinedColorSpace colorSpace = "srgb";
+    PredefinedColorSpace colorSpace = "srgb";
     GPUCanvasAlphaMode alphaMode = "opaque";
     GPUExtent3D size;
 };
@@ -2579,7 +2584,7 @@ typedef struct WGpuCanvasConfiguration
   WGPU_TEXTURE_USAGE_FLAGS usage;
   int numViewFormats;
   WGPU_TEXTURE_FORMAT *viewFormats;
-  WGPU_PREDEFINED_COLOR_SPACE colorSpace;
+  HTML_PREDEFINED_COLOR_SPACE colorSpace;
   WGPU_CANVAS_ALPHA_MODE alphaMode;
   WGpuExtent3D size; // If size.width == 0 (as default initialized via WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER), then full screen size is used.
 } WGpuCanvasConfiguration;
@@ -2633,7 +2638,7 @@ typedef struct WGpuImageCopyTextureTagged
   WGpuOrigin3D origin;
   WGPU_TEXTURE_ASPECT aspect;
 
-  WGPU_PREDEFINED_COLOR_SPACE colorSpace; // = "srgb";
+  HTML_PREDEFINED_COLOR_SPACE colorSpace; // = "srgb";
   EM_BOOL premultipliedAlpha; // = false;
 } WGpuImageCopyTextureTagged;
 extern const WGpuImageCopyTextureTagged WGPU_IMAGE_COPY_TEXTURE_TAGGED_DEFAULT_INITIALIZER;

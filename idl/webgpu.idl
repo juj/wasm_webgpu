@@ -41,8 +41,6 @@ interface GPUSupportedFeatures {
     readonly setlike<DOMString>;
 };
 
-enum GPUPredefinedColorSpace {
-    "srgb"
 };
 
 interface mixin NavigatorGPU {
@@ -357,7 +355,7 @@ GPUExternalTexture includes GPUObjectBase;
 
 dictionary GPUExternalTextureDescriptor : GPUObjectDescriptorBase {
     required HTMLVideoElement source;
-    GPUPredefinedColorSpace colorSpace = "srgb";
+    PredefinedColorSpace colorSpace = "srgb";
 };
 
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -860,7 +858,7 @@ dictionary GPUImageCopyTexture {
 };
 
 dictionary GPUImageCopyTextureTagged : GPUImageCopyTexture {
-    GPUPredefinedColorSpace colorSpace = "srgb";
+    PredefinedColorSpace colorSpace = "srgb";
     boolean premultipliedAlpha = false;
 };
 
@@ -1102,8 +1100,8 @@ dictionary GPUCanvasConfiguration {
     required GPUTextureFormat format;
     GPUTextureUsageFlags usage = 0x10;  // GPUTextureUsage.RENDER_ATTACHMENT
     sequence<GPUTextureFormat> viewFormats = [];
-    GPUPredefinedColorSpace colorSpace = "srgb";
     GPUExtent3D size;
+    PredefinedColorSpace colorSpace = "srgb";
     GPUCanvasAlphaMode alphaMode = "opaque";
 };
 

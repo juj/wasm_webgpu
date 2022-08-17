@@ -15,7 +15,7 @@ typedef int WGpuObjectBase;
 typedef struct WGpuObjectDescriptorBase WGpuObjectDescriptorBase;
 typedef struct WGpuSupportedLimits WGpuSupportedLimits;
 typedef int WGPU_FEATURES_BITFIELD;
-typedef int WGPU_PREDEFINED_COLOR_SPACE;
+typedef int HTML_PREDEFINED_COLOR_SPACE;
 typedef struct WGpuRequestAdapterOptions WGpuRequestAdapterOptions;
 typedef int WGPU_POWER_PREFERENCE;
 typedef int WGpuAdapter;
