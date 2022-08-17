@@ -162,7 +162,6 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 
 #define TEST_FEATURE(x) emscripten_mini_stdio_printf("Adapter supports feature " #x ": %s\n", (features & (x) ? "yes" : "no"))
   TEST_FEATURE(WGPU_FEATURE_DEPTH_CLIP_CONTROL);
-  TEST_FEATURE(WGPU_FEATURE_DEPTH24UNORM_STENCIL8);
   TEST_FEATURE(WGPU_FEATURE_DEPTH32FLOAT_STENCIL8);
   TEST_FEATURE(WGPU_FEATURE_TEXTURE_COMPRESSION_BC);
   TEST_FEATURE(WGPU_FEATURE_TEXTURE_COMPRESSION_ETC2);
