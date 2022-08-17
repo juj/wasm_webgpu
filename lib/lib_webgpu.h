@@ -1480,7 +1480,7 @@ typedef struct WGpuMultisampleState
 
 /*
 dictionary GPUFragmentState: GPUProgrammableStage {
-    required sequence<GPUColorTargetState> targets;
+    required sequence<GPUColorTargetState?> targets;
 };
 */
 typedef struct WGpuFragmentState
@@ -2136,7 +2136,7 @@ typedef sequence<GPURenderPassTimestampWrite> GPURenderPassTimestampWrites;
 // TODO: Add support for this
 
 dictionary GPURenderPassDescriptor : GPUObjectDescriptorBase {
-    required sequence<GPURenderPassColorAttachment> colorAttachments;
+    required sequence<GPURenderPassColorAttachment?> colorAttachments;
     GPURenderPassDepthStencilAttachment depthStencilAttachment;
     GPUQuerySet occlusionQuerySet;
 };
@@ -2208,7 +2208,7 @@ typedef int WGPU_STORE_OP;
 
 /*
 dictionary GPURenderPassLayout: GPUObjectDescriptorBase {
-    required sequence<GPUTextureFormat> colorFormats;
+    required sequence<GPUTextureFormat?> colorFormats;
     GPUTextureFormat depthStencilFormat;
     GPUSize32 sampleCount = 1;
 };
