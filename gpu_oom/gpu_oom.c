@@ -22,18 +22,18 @@ uint32_t initialData[1024*1024];
 
 void deviceLost(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message, void *userData)
 {
-  emscripten_mini_stdio_fprintf(EM_STDERR, "WebGPU device lost! reason: %d, message: \"%s\"\n", deviceLostReason, message);  
+  emscripten_mini_stdio_fprintf(EM_STDERR, "WebGPU device lost! reason: %d, message: \"%s\"\n", deviceLostReason, message);
 }
 
-void oom(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessage, void *userData)
+void oom(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage, void *userData)
 {
-  if (errorType == WGPU_ERROR_FILTER_OUT_OF_MEMORY)
+  if (errorType == WGPU_ERROR_TYPE_OUT_OF_MEMORY)
     emscripten_mini_stdio_fprintf(EM_STDERR, "WebGPU device is out of memory! Error message: %s\n", errorMessage ? errorMessage : "(no error message specified)");
   else
     emscripten_mini_stdio_printf("WebGPU device no oom error reported.\n");
 }
 
-void uncapturedError(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessage, void *userData)
+void uncapturedError(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage, void *userData)
 {
   emscripten_mini_stdio_fprintf(EM_STDERR, "Uncaptured WebGPU error: type: %d, message: %s\n", errorType, errorMessage);
 }

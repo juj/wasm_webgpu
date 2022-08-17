@@ -130,6 +130,7 @@ typedef int WGPU_CANVAS_COMPOSITING_ALPHA_MODE;
 typedef struct WGpuCanvasConfiguration WGpuCanvasConfiguration;
 typedef int WGPU_DEVICE_LOST_REASON;
 typedef int WGPU_ERROR_FILTER;
+typedef int WGPU_ERROR_TYPE;
 typedef struct WGpuColor WGpuColor;
 typedef struct WGpuOrigin2D WGpuOrigin2D;
 typedef struct WGpuOrigin3D WGpuOrigin3D;
@@ -142,7 +143,7 @@ typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData, WGPU_MA
 typedef void (*WGpuGetCompilationInfoCallback)(WGpuShaderModule shaderModule, WGpuCompilationInfo *compilationInfo, void *userData);
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
 typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message, void *userData);
-typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_FILTER errorType, const char *errorMessage, void *userData);
+typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage, void *userData);
 
 #ifdef __cplusplus
 } // ~extern "C"
