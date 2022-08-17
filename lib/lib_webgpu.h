@@ -1228,7 +1228,7 @@ void wgpu_shader_module_get_compilation_info_async(WGpuShaderModule shaderModule
 
 /*
 dictionary GPUShaderModuleCompilationHint {
-    required (GPUPipelineLayout or GPUAutoLayoutMode) layout;
+    (GPUPipelineLayout or GPUAutoLayoutMode) layout;
 };
 */
 typedef struct WGpuShaderModuleCompilationHint
