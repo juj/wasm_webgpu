@@ -82,7 +82,6 @@ dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
 
 enum GPUFeatureName {
     "depth-clip-control",
-    "depth24unorm-stencil8",
     "depth32float-stencil8",
     "texture-compression-bc",
     "texture-compression-etc2",
@@ -279,9 +278,6 @@ enum GPUTextureFormat {
     "depth24plus",
     "depth24plus-stencil8",
     "depth32float",
-
-    // "depth24unorm-stencil8" feature
-    "depth24unorm-stencil8",
 
     // "depth32float-stencil8" feature
     "depth32float-stencil8",
