@@ -853,13 +853,15 @@ typedef int WGPU_TEXTURE_FORMAT;
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUExternalTexture {
+    readonly attribute boolean expired;
 };
 GPUExternalTexture includes GPUObjectBase;
 */
 typedef int WGpuExternalTexture;
 // Returns true if the given handle references a valid GPUExternalTexture.
 EM_BOOL wgpu_is_external_texture(WGpuObjectBase object);
-
+// Returns true if the given GPUExternalTexture object has expired.
+EM_BOOL wgpu_external_texture_is_expired(WGpuExternalTexture externalTexture);
 
 /*
 dictionary GPUExternalTextureDescriptor : GPUObjectDescriptorBase {
