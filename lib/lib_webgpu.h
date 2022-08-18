@@ -339,6 +339,7 @@ enum GPUFeatureName {
     "timestamp-query",
     "indirect-first-instance",
     "shader-f16",
+    "bgra8unorm-storage",
 };
 */
 typedef int WGPU_FEATURE_NAME;
@@ -352,6 +353,7 @@ typedef int WGPU_FEATURE_NAME;
 #define WGPU_FEATURE_NAME_TIMESTAMP_QUERY 7
 #define WGPU_FEATURE_NAME_INDIRECT_FIRST_INSTANCE 8
 #define WGPU_FEATURE_NAME_SHADER_F16 9
+#define WGPU_FEATURE_NAME_BGRA8UNORM_STORAGE 10
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
