@@ -179,6 +179,23 @@ typedef int HTML_PREDEFINED_COLOR_SPACE;
 #define HTML_PREDEFINED_COLOR_SPACE_DISPLAY_P3 2
 
 /*
+[Exposed=(Window, DedicatedWorker), SecureContext]
+interface GPUAdapterInfo {
+    readonly attribute DOMString vendor;
+    readonly attribute DOMString architecture;
+    readonly attribute DOMString device;
+    readonly attribute DOMString description;
+};
+*/
+typedef struct WGpuAdapterInfo
+{
+  char vendor[512];
+  char architecture[512];
+  char device[512];
+  char description[512];
+} WGpuAdapterInfo;
+
+/*
 interface mixin NavigatorGPU {
     [SameObject, SecureContext] readonly attribute GPU gpu;
 };
@@ -243,21 +260,17 @@ typedef int WGPU_POWER_PREFERENCE;
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUAdapter {
-    readonly attribute DOMString name;
     [SameObject] readonly attribute GPUSupportedFeatures features;
     [SameObject] readonly attribute WGpuSupportedLimits limits;
     readonly attribute boolean isFallbackAdapter;
 
     Promise<GPUDevice> requestDevice(optional GPUDeviceDescriptor descriptor = {});
+    Promise<GPUAdapterInfo> requestAdapterInfo(optional sequence<DOMString> unmaskHints = []);
 };
 */
 typedef int WGpuAdapter;
 // Returns true if the given handle references a valid GPUAdapter.
 EM_BOOL wgpu_is_adapter(WGpuObjectBase object);
-
-// Writes the name of the adapter to the provided string pointer. If the length of the adapter name would not fit in dstNameSize, then it will be truncated.
-// Returns the number of bytes written. (if return value == dstNameSize, truncation likely occurred)
-int wgpu_adapter_get_name(WGpuAdapter adapter, char *dstName __attribute__((nonnull)), int dstNameSize);
 
 // Returns a bitfield of all the supported features on this adapter.
 WGPU_FEATURES_BITFIELD wgpu_adapter_or_device_get_features(WGpuAdapter adapter);
@@ -282,6 +295,15 @@ WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDevic
 // Like above, but tiny code size without options.
 void wgpu_adapter_request_device_async_simple(WGpuAdapter adapter, WGpuRequestDeviceCallback deviceCallback);
 WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter);
+
+// Callback function type that is called when GPUAdapter information has been obtained. The information will be reported in a struct of
+// type WGpuAdapterInfo. Do not hold on to this struct pointer after the duration of this call (but make a copy of the contents if desirable)
+typedef void (*WGpuRequestAdapterInfoCallback)(WGpuAdapter adapter, const WGpuAdapterInfo *adapterInfo __attribute__((nonnull)), void *userData);
+
+// Begins a process to asynchronously request GPUAdapter information. 'unmaskHints' should be a null-terminated array of null-terminated strings
+// of which information to retrieve, e.g. { "vendor", "architecture", "device", "description", 0 }.
+void wgpu_adapter_request_adapter_info_async(WGpuAdapter adapter, const char **unmaskHints, WGpuRequestAdapterInfoCallback callback, void *userData);
+// TODO: Create asyncified wgpu_adapter_request_adapter_info_sync() function.
 
 /*
 dictionary GPUQueueDescriptor : GPUObjectDescriptorBase {

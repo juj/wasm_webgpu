@@ -152,13 +152,9 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 
   adapter = result;
 
-  char name[256];
   WGpuSupportedLimits limits;
   WGPU_FEATURES_BITFIELD features = wgpu_adapter_get_features(adapter);
-  wgpu_adapter_get_name(adapter, name, sizeof(name));
   wgpu_adapter_get_limits(adapter, &limits);
-
-  emscripten_mini_stdio_printf("Adapter name: %s\n", name);
 
 #define TEST_FEATURE(x) emscripten_mini_stdio_printf("Adapter supports feature " #x ": %s\n", (features & (x) ? "yes" : "no"))
   TEST_FEATURE(WGPU_FEATURE_DEPTH_CLIP_CONTROL);
