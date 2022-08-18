@@ -13,6 +13,10 @@ into your project, then `#include "lib_webgpu.h"` in your code to access the API
 
 The other files in the `lib/` directory are only used by the demo samples in this repository, and are not needed to be deployed into user applications.
 
+## Implementation Status
+
+The repository was last updated to be up to date with the WebGPU specification as of **8/18/2022**.
+
 ## Features and Design
 
 This bindings library is developed with the following:
