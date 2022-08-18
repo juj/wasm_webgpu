@@ -418,6 +418,9 @@ interface GPUBuffer {
     undefined unmap();
 
     undefined destroy();
+
+    readonly attribute GPUSize64 size;
+    readonly attribute GPUBufferUsageFlags usage;
 };
 GPUBuffer includes GPUObjectBase;
 */
@@ -441,6 +444,10 @@ WGpuBufferMappedRangeStartOffset wgpu_buffer_get_mapped_range(WGpuBuffer buffer,
 void wgpu_buffer_read_mapped_range(WGpuBuffer buffer, WGpuBufferMappedRangeStartOffset startOffset, double_int53_t subOffset, void *dst __attribute__((nonnull)), double_int53_t size);
 void wgpu_buffer_write_mapped_range(WGpuBuffer buffer, WGpuBufferMappedRangeStartOffset startOffset, double_int53_t subOffset, const void *src __attribute__((nonnull)), double_int53_t size);
 void wgpu_buffer_unmap(WGpuBuffer buffer);
+
+// Getters for retrieving buffer properties:
+double_int53_t wgpu_buffer_size(WGpuBuffer buffer);
+WGPU_BUFFER_USAGE_FLAGS wgpu_buffer_usage(WGpuBuffer buffer);
 
 /*
 dictionary GPUBufferDescriptor : GPUObjectDescriptorBase {
@@ -502,6 +509,15 @@ interface GPUTexture {
     GPUTextureView createView(optional GPUTextureViewDescriptor descriptor = {});
 
     undefined destroy();
+
+    readonly attribute GPUIntegerCoordinate width;
+    readonly attribute GPUIntegerCoordinate height;
+    readonly attribute GPUIntegerCoordinate depthOrArrayLayers;
+    readonly attribute GPUIntegerCoordinate mipLevelCount;
+    readonly attribute GPUSize32 sampleCount;
+    readonly attribute GPUTextureDimension dimension;
+    readonly attribute GPUTextureFormat format;
+    readonly attribute GPUTextureUsageFlags usage;
 };
 GPUTexture includes GPUObjectBase;
 */
@@ -513,6 +529,15 @@ WGpuTextureView wgpu_texture_create_view(WGpuTexture texture, const WGpuTextureV
 // Same as above, but does not take any descriptor args.
 WGpuTextureView wgpu_texture_create_view_simple(WGpuTexture texture);
 
+// Getters for retrieving texture properties:
+uint32_t wgpu_texture_width(WGpuTexture texture);
+uint32_t wgpu_texture_height(WGpuTexture texture);
+uint32_t wgpu_texture_depth_or_array_layers(WGpuTexture texture);
+uint32_t wgpu_texture_mip_level_count(WGpuTexture texture);
+uint32_t wgpu_texture_sample_count(WGpuTexture texture);
+WGPU_TEXTURE_DIMENSION wgpu_texture_dimension(WGpuTexture texture);
+WGPU_TEXTURE_FORMAT wgpu_texture_format(WGpuTexture texture);
+WGPU_TEXTURE_USAGE_FLAGS wgpu_texture_usage(WGpuTexture texture);
 /*
 dictionary GPUTextureDescriptor : GPUObjectDescriptorBase {
     required GPUExtent3D size;
@@ -2325,12 +2350,18 @@ void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuImageC
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUQuerySet {
     undefined destroy();
+
+    readonly attribute GPUQueryType type;
+    readonly attribute GPUSize32 count;
 };
 GPUQuerySet includes GPUObjectBase;
 */
 typedef int WGpuQuerySet;
 // Returns true if the given handle references a valid GPUQuerySet.
 EM_BOOL wgpu_is_query_set(WGpuObjectBase object);
+// Getters for retrieving query set properties:
+WGPU_QUERY_TYPE wgpu_query_set_type(WGpuQuerySet querySet);
+uint32_t wgpu_query_set_count(WGpuQuerySet querySet);
 
 /*
 dictionary GPUQuerySetDescriptor : GPUObjectDescriptorBase {
