@@ -24,6 +24,7 @@ typedef struct WGpuDeviceDescriptor WGpuDeviceDescriptor;
 typedef int WGPU_FEATURE_NAME;
 typedef int WGpuDevice;
 typedef int WGpuBuffer;
+typedef int WGPU_BUFFER_MAP_STATE;
 typedef struct WGpuBufferDescriptor WGpuBufferDescriptor;
 typedef int WGPU_BUFFER_USAGE_FLAGS;
 typedef int WGPU_MAP_MODE_FLAGS;

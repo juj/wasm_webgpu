@@ -445,14 +445,16 @@ WGpuQuerySet wgpu_device_create_query_set(WGpuDevice device, const WGpuQuerySetD
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUBuffer {
+    readonly attribute GPUSize64 size;
+    readonly attribute GPUBufferUsageFlags usage;
+
+    readonly attribute GPUBufferMapState mapState;
+
     Promise<undefined> mapAsync(GPUMapModeFlags mode, optional GPUSize64 offset = 0, optional GPUSize64 size);
     ArrayBuffer getMappedRange(optional GPUSize64 offset = 0, optional GPUSize64 size);
     undefined unmap();
 
     undefined destroy();
-
-    readonly attribute GPUSize64 size;
-    readonly attribute GPUBufferUsageFlags usage;
 };
 GPUBuffer includes GPUObjectBase;
 */
@@ -480,6 +482,20 @@ void wgpu_buffer_unmap(WGpuBuffer buffer);
 // Getters for retrieving buffer properties:
 double_int53_t wgpu_buffer_size(WGpuBuffer buffer);
 WGPU_BUFFER_USAGE_FLAGS wgpu_buffer_usage(WGpuBuffer buffer);
+WGPU_BUFFER_MAP_STATE wgpu_buffer_map_state(WGpuBuffer buffer);
+
+/*
+enum GPUBufferMapState {
+    "unmapped",
+    "pending",
+    "mapped"
+};
+*/
+typedef int WGPU_BUFFER_MAP_STATE;
+#define WGPU_BUFFER_MAP_STATE_INVALID  0
+#define WGPU_BUFFER_MAP_STATE_UNMAPPED 1
+#define WGPU_BUFFER_MAP_STATE_PENDING  2
+#define WGPU_BUFFER_MAP_STATE_MAPPED   3
 
 /*
 dictionary GPUBufferDescriptor : GPUObjectDescriptorBase {

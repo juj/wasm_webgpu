@@ -300,6 +300,7 @@ const stringArrays = {
   '$GPUCompareFunctions': [/*undefined*/, 'never', 'less', 'equal', 'less-equal', 'greater', 'not-equal', 'greater-equal', 'always'],
   '$GPUBlendOperations': [/*undefined*/, 'add', 'subtract', 'reverse-subtract', 'min', 'max'],
   '$GPUIndexFormats': [/*undefined*/, 'uint16', 'uint32'],
+  '$GPUBufferMapStates': [/*undefined*/, 'unmapped', 'pending', 'mapped'],
   '$GPUTextureDimensions': [/*undefined*/, '1d', '2d', '3d'],
   '$GPUTextureViewDimensions': [/*undefined*/, '1d', '2d', '2d-array', 'cube', 'cube-array', '3d'],
   '$GPUAddressModes': [/*undefined*/, 'clamp-to-edge', 'repeat', 'mirror-repeat'],
