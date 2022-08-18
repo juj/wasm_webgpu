@@ -78,6 +78,7 @@ interface GPUAdapter {
 dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
     sequence<GPUFeatureName> requiredFeatures = [];
     record<DOMString, GPUSize64> requiredLimits = {};
+    GPUQueueDescriptor defaultQueue = {};
 };
 
 enum GPUFeatureName {
@@ -1033,6 +1034,9 @@ GPURenderBundleEncoder includes GPURenderCommandsMixin;
 dictionary GPURenderBundleEncoderDescriptor : GPURenderPassLayout {
     boolean depthReadOnly = false;
     boolean stencilReadOnly = false;
+};
+
+dictionary GPUQueueDescriptor : GPUObjectDescriptorBase {
 };
 
 [Exposed=(Window, DedicatedWorker), SecureContext]

@@ -284,15 +284,26 @@ void wgpu_adapter_request_device_async_simple(WGpuAdapter adapter, WGpuRequestDe
 WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter);
 
 /*
+dictionary GPUQueueDescriptor : GPUObjectDescriptorBase {
+};
+*/
+typedef struct WGpuQueueDescriptor
+{
+  const char *label;
+} WGpuQueueDescriptor;
+
+/*
 dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
     sequence<GPUFeatureName> requiredFeatures = [];
     record<DOMString, GPUSize64> requiredLimits = {};
+    GPUQueueDescriptor defaultQueue = {};
 };
 */
 typedef struct WGpuDeviceDescriptor
 {
   WGPU_FEATURES_BITFIELD requiredFeatures;
   WGpuSupportedLimits requiredLimits;
+  WGpuQueueDescriptor defaultQueue;
 } WGpuDeviceDescriptor;
 extern const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
