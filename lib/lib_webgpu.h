@@ -1227,6 +1227,7 @@ dictionary GPUShaderModuleCompilationHint {
 typedef struct WGpuShaderModuleCompilationHint
 {
   const char *entryPointName;
+  // WGPU_AUTO_LAYOUT_MODE
   WGpuPipelineLayout layout;  // Assign the special value WGPU_AUTO_LAYOUT_MODE_AUTO (default) to hint an automatically created pipeline object.
 } WGpuShaderModuleCompilationHint;
 extern const WGpuShaderModuleCompilationHint WGPU_SHADER_MODULE_COMPILATION_HINT_DEFAULT_INITIALIZER;
@@ -1323,7 +1324,8 @@ enum GPUAutoLayoutMode {
 };
 */
 typedef int WGPU_AUTO_LAYOUT_MODE;
-#define WGPU_AUTO_LAYOUT_MODE_AUTO 0
+#define WGPU_AUTO_LAYOUT_MODE_NO_HINT 0 // In shader compilation, specifies that no hint is to be passed. Invalid to be used in pipeline creation.
+#define WGPU_AUTO_LAYOUT_MODE_AUTO    1 // In shader compilation, specifies that the hint { layout: 'auto' } is to be passed. In pipeline creation, uses automatic layout creation.
 
 /*
 dictionary GPUPipelineDescriptorBase : GPUObjectDescriptorBase {
@@ -2701,7 +2703,7 @@ typedef struct WGpuRenderPipelineDescriptor
   WGpuDepthStencilState depthStencil;
   WGpuMultisampleState multisample;
   WGpuFragmentState fragment;
-  WGpuPipelineLayout layout;
+  WGpuPipelineLayout layout; // Set to special value WGPU_AUTO_LAYOUT_MODE_AUTO to specify that automatic layout should be used.
 } WGpuRenderPipelineDescriptor;
 extern const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
