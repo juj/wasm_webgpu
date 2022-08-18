@@ -16,6 +16,7 @@ typedef struct WGpuObjectDescriptorBase WGpuObjectDescriptorBase;
 typedef struct WGpuSupportedLimits WGpuSupportedLimits;
 typedef int WGPU_FEATURES_BITFIELD;
 typedef int HTML_PREDEFINED_COLOR_SPACE;
+typedef struct WGpuAdapterInfo WGpuAdapterInfo;
 typedef struct WGpuRequestAdapterOptions WGpuRequestAdapterOptions;
 typedef int WGPU_POWER_PREFERENCE;
 typedef int WGpuAdapter;
@@ -135,6 +136,8 @@ typedef struct WGpuColor WGpuColor;
 typedef struct WGpuOrigin2D WGpuOrigin2D;
 typedef struct WGpuOrigin3D WGpuOrigin3D;
 typedef struct WGpuExtent3D WGpuExtent3D;
+typedef struct WGpuBindGroupLayoutEntry WGpuBindGroupLayoutEntry;
+typedef int WGpuImageBitmap;
 
 // Callbacks in the order of appearance in the WebIDL:
 
