@@ -59,6 +59,8 @@ Currently both 2GB and 4GB build modes are supported. Wasm64 is also planned to 
 
 ## Samples
 
+Don't expect flashy demos. The test cases in this repository exercise features relevant to data marshalling between WebAssembly and JavaScript languages, and are not intended to showcase fancy graphical effects.
+
 To build the samples, first install Emscripten via [Emsdk](https://github.com/emscripten-core/emsdk), then enter Emsdk command line environment (`emsdk_env`), and type
 
 ```bash
