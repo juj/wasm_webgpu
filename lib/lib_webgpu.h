@@ -2121,31 +2121,6 @@ void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, WGp
 #define wgpu_render_pass_encoder_draw_indexed_indirect wgpu_render_commands_mixin_draw_indexed_indirect
 
 /*
-enum GPURenderPassTimestampLocation {
-    "beginning",
-    "end",
-};
-// TODO: Add support for this
-
-dictionary GPURenderPassTimestampWrite {
-    required GPUQuerySet querySet;
-    required GPUSize32 queryIndex;
-    required GPURenderPassTimestampLocation location;
-};
-// TODO: Add support for this
-
-typedef sequence<GPURenderPassTimestampWrite> GPURenderPassTimestampWrites;
-// TODO: Add support for this
-
-dictionary GPURenderPassDescriptor : GPUObjectDescriptorBase {
-    required sequence<GPURenderPassColorAttachment?> colorAttachments;
-    GPURenderPassDepthStencilAttachment depthStencilAttachment;
-    GPUQuerySet occlusionQuerySet;
-};
-*/
-// Defined at the end of this file
-
-/*
 dictionary GPURenderPassColorAttachment {
     required GPUTextureView view;
     GPUTextureView resolveTarget;
@@ -2601,16 +2576,40 @@ typedef struct WGpuCanvasConfiguration
 } WGpuCanvasConfiguration;
 extern const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
 
+/*
+enum GPURenderPassTimestampLocation {
+    "beginning",
+    "end",
+};
+// TODO: Add support for this
+
+dictionary GPURenderPassTimestampWrite {
+    required GPUQuerySet querySet;
+    required GPUSize32 queryIndex;
+    required GPURenderPassTimestampLocation location;
+};
+// TODO: Add support for this
+
+typedef sequence<GPURenderPassTimestampWrite> GPURenderPassTimestampWrites;
+// TODO: Add support for this
+
+dictionary GPURenderPassDescriptor : GPUObjectDescriptorBase {
+    required sequence<GPURenderPassColorAttachment?> colorAttachments;
+    GPURenderPassDepthStencilAttachment depthStencilAttachment;
+    GPUQuerySet occlusionQuerySet;
+    GPURenderPassTimestampWrites timestampWrites = [];
+    GPUSize64 maxDrawCount = 50000000;
+};
+*/
 typedef struct WGpuRenderPassDescriptor
 {
   int numColorAttachments;
   const WGpuRenderPassColorAttachment *colorAttachments;
   WGpuRenderPassDepthStencilAttachment depthStencilAttachment;
   WGpuQuerySet occlusionQuerySet;
-
-  // TODO: Add support for this
+  double_int53_t maxDrawCount; // If set to zero, the default value (50000000) will be used.
+  // TODO: Add support for timestamp writes
   //GPURenderPassTimestampWrites timestampWrites = [];
-
 } WGpuRenderPassDescriptor;
 
 typedef struct WGpuRenderPassColorAttachment
