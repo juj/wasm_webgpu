@@ -340,6 +340,7 @@ enum GPUFeatureName {
     "indirect-first-instance",
     "shader-f16",
     "bgra8unorm-storage",
+    "rg11b10ufloat-renderable"
 };
 */
 typedef int WGPU_FEATURE_NAME;
@@ -354,6 +355,7 @@ typedef int WGPU_FEATURE_NAME;
 #define WGPU_FEATURE_NAME_INDIRECT_FIRST_INSTANCE 8
 #define WGPU_FEATURE_NAME_SHADER_F16 9
 #define WGPU_FEATURE_NAME_BGRA8UNORM_STORAGE 10
+#define WGPU_FEATURE_NAME_RG11B10UFLOAT_RENDERABLE 11
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
