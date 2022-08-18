@@ -2397,19 +2397,6 @@ typedef int WGPU_CANVAS_ALPHA_MODE;
 #define WGPU_CANVAS_ALPHA_MODE_PREMULTIPLIED 2
 
 /*
-dictionary GPUCanvasConfiguration : GPUObjectDescriptorBase {
-    required GPUDevice device;
-    required GPUTextureFormat format;
-    GPUTextureUsageFlags usage = 0x10;  // GPUTextureUsage.RENDER_ATTACHMENT
-    sequence<GPUTextureFormat> viewFormats = [];
-    PredefinedColorSpace colorSpace = "srgb";
-    GPUCanvasAlphaMode alphaMode = "opaque";
-    GPUExtent3D size;
-};
-*/
-// Specified at the end of this file
-
-/*
 enum GPUDeviceLostReason {
     "destroyed",
 };
@@ -2574,6 +2561,17 @@ typedef struct WGpuOrigin3D
 ////////////////////////////////////////////////////////
 // Sorted struct definitions for proper C parsing order:
 
+/*
+dictionary GPUCanvasConfiguration : GPUObjectDescriptorBase {
+    required GPUDevice device;
+    required GPUTextureFormat format;
+    GPUTextureUsageFlags usage = 0x10;  // GPUTextureUsage.RENDER_ATTACHMENT
+    sequence<GPUTextureFormat> viewFormats = [];
+    PredefinedColorSpace colorSpace = "srgb";
+    GPUCanvasAlphaMode alphaMode = "opaque";
+    GPUExtent3D size;
+};
+*/
 typedef struct WGpuCanvasConfiguration
 {
   WGpuDevice device;
@@ -2583,7 +2581,6 @@ typedef struct WGpuCanvasConfiguration
   WGPU_TEXTURE_FORMAT *viewFormats;
   HTML_PREDEFINED_COLOR_SPACE colorSpace;
   WGPU_CANVAS_ALPHA_MODE alphaMode;
-  WGpuExtent3D size; // If size.width == 0 (as default initialized via WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER), then full screen size is used.
 } WGpuCanvasConfiguration;
 extern const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
 
