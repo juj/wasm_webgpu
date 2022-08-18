@@ -110,6 +110,8 @@ interface GPUSupportedLimits {
     readonly attribute unsigned long maxVertexAttributes;
     readonly attribute unsigned long maxVertexBufferArrayStride;
     readonly attribute unsigned long maxInterStageShaderComponents;
+    readonly attribute unsigned long maxInterStageShaderVariables;
+    readonly attribute unsigned long maxColorAttachments;
     readonly attribute unsigned long maxComputeWorkgroupStorageSize;
     readonly attribute unsigned long maxComputeInvocationsPerWorkgroup;
     readonly attribute unsigned long maxComputeWorkgroupSizeX;
@@ -120,6 +122,8 @@ interface GPUSupportedLimits {
 */
 typedef struct WGpuSupportedLimits
 {
+  // See the table in https://www.w3.org/TR/webgpu/#limits for the minimum/maximum
+  // default values for these limits.
   uint32_t maxTextureDimension1D; // required >= 8192
   uint32_t maxTextureDimension2D; // required >= 8192
   uint32_t maxTextureDimension3D; // required >= 2048
@@ -132,17 +136,19 @@ typedef struct WGpuSupportedLimits
   uint32_t maxStorageBuffersPerShaderStage; // required >= 8
   uint32_t maxStorageTexturesPerShaderStage; // required >= 8
   uint32_t maxUniformBuffersPerShaderStage; // required >= 12
-  uint32_t minUniformBufferOffsetAlignment;
-  uint32_t minStorageBufferOffsetAlignment;
+  uint32_t minUniformBufferOffsetAlignment; // required >= 256 bytes
+  uint32_t minStorageBufferOffsetAlignment; // required >= 256 bytes
   uint32_t maxVertexBuffers; // required >= 8
   uint32_t maxVertexAttributes; // required >= 16
   uint32_t maxVertexBufferArrayStride; // required >= 2048
-  uint32_t maxInterStageShaderComponents;
-  uint32_t maxComputeWorkgroupStorageSize;
-  uint32_t maxComputeInvocationsPerWorkgroup;
-  uint32_t maxComputeWorkgroupSizeX;
-  uint32_t maxComputeWorkgroupSizeY;
-  uint32_t maxComputeWorkgroupSizeZ;
+  uint32_t maxInterStageShaderComponents; // required >= 60
+  uint32_t maxInterStageShaderVariables; // required >= 16
+  uint32_t maxColorAttachments; // required >= 8
+  uint32_t maxComputeWorkgroupStorageSize; // required >= 16384 bytes
+  uint32_t maxComputeInvocationsPerWorkgroup; // required >= 256
+  uint32_t maxComputeWorkgroupSizeX; // required >= 256
+  uint32_t maxComputeWorkgroupSizeY; // required >= 256
+  uint32_t maxComputeWorkgroupSizeZ; // required >= 64
   uint32_t _dummyPadding; // Explicitly mark a padding field to reflect that 'maxUniformBufferBindingSize' needs to be 64-bit aligned
 
   uint64_t maxUniformBufferBindingSize; // required >= 16384
