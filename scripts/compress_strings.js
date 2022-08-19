@@ -370,7 +370,7 @@ function addNums(arr) {
   return out;
 }
 
-let numIterations = 10;//0;
+let numIterations = 10;
 
 for(var i in stringArrays) {
   let strArray = stringArrays[i];
