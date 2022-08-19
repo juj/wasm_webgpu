@@ -168,30 +168,30 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   wgpu_canvas_context_configure(canvasContext, &config);
 
   WGpuShaderModule vs = wgpu_device_create_shader_module(device, &(WGpuShaderModuleDescriptor) {
-    .code = "struct In {"
-    "  [[location(0)]] pos : vec2<f32>;"
-    "  [[location(1)]] color : f32;"
-    "};"
+    .code = "struct In {\n"
+    "  @location(0) pos : vec2<f32>,\n"
+    "  @location(1) color : f32\n"
+    "};\n"
 
-    "struct Out {"
-    "  [[builtin(position)]] pos : vec4<f32>;"
-    "  [[location(0)]] color : f32;"
-    "};"
+    "struct Out {\n"
+    "  @builtin(position) pos : vec4<f32>,\n"
+    "  @location(0) color : f32\n"
+    "};\n"
 
-    "[[stage(vertex)]]"
-    "fn main(in: In) -> Out {"
-      "var out: Out;"
-      "out.pos = vec4<f32>(in.pos, 0.0, 1.0);"
-      "out.color = in.color;"
-      "return out;"
-    "}"
+    "@vertex\n"
+    "fn main(in: In) -> Out {\n"
+      "var out: Out;\n"
+      "out.pos = vec4<f32>(in.pos, 0.0, 1.0);\n"
+      "out.color = in.color;\n"
+      "return out;\n"
+    "}\n"
   });
 
   WGpuShaderModule fs = wgpu_device_create_shader_module(device, &(WGpuShaderModuleDescriptor) {
-    .code = "[[stage(fragment)]]"
-    "fn main([[location(0)]] inColor : f32) -> [[location(0)]] vec4<f32> {"
-      "return vec4<f32>(inColor, inColor, abs(inColor), 1.0);"
-    "}"
+    .code = "@fragment\n"
+    "fn main(@location(0) inColor : f32) -> @location(0) vec4<f32> {\n"
+      "return vec4<f32>(inColor, inColor, abs(inColor), 1.0);\n"
+    "}\n"
   });
 
   WGpuVertexAttribute vertexAttr[2] = {};

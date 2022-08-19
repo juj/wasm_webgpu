@@ -91,31 +91,31 @@ void DownloadedImage(WGpuImageBitmap bitmap, int width, int height, void *userDa
   wgpu_canvas_context_configure(canvasContext, &config);
 
   const char *vertexShader =
-    "struct In {"
-    "  [[location(0)]] pos : vec2<f32>;"
-    "  [[location(1)]] uv : vec2<f32>;"
-    "};"
+    "struct In {\n"
+    "  @location(0) pos : vec2<f32>,\n"
+    "  @location(1) uv : vec2<f32>\n"
+    "};\n"
 
-    "struct Out {"
-    "  [[builtin(position)]] pos : vec4<f32>;"
-    "  [[location(0)]] uv : vec2<f32>;"
-    "};"
+    "struct Out {\n"
+    "  @builtin(position) pos : vec4<f32>,\n"
+    "  @location(0) uv : vec2<f32>\n"
+    "};\n"
 
-    "[[stage(vertex)]]"
-    "fn main(in: In) -> Out {"
-      "var out: Out;"
-      "out.pos = vec4<f32>(in.pos, 0.0, 1.0);"
-      "out.uv = in.uv;"
-      "return out;"
-    "}";
+    "@vertex\n"
+    "fn main(in: In) -> Out {\n"
+      "var out: Out;\n"
+      "out.pos = vec4<f32>(in.pos, 0.0, 1.0);\n"
+      "out.uv = in.uv;\n"
+      "return out;\n"
+    "}\n";
 
   const char *fragmentShader =
-    "[[group(0), binding(0)]] var myTexture : texture_2d<f32>;\n"
-    "[[group(0), binding(1)]] var mySampler : sampler;\n"
-    "[[stage(fragment)]]\n"
-    "fn main([[location(0)]] uv : vec2<f32>) -> [[location(0)]] vec4<f32> {\n"
-      "return textureSample(myTexture, mySampler, uv);"
-    "}";
+    "@group(0) @binding(0) var myTexture : texture_2d<f32>;\n"
+    "@group(0) @binding(1) var mySampler : sampler;\n"
+    "@fragment\n"
+    "fn main(@location(0) uv : vec2<f32>) -> @location(0) vec4<f32> {\n"
+      "return textureSample(myTexture, mySampler, uv);\n"
+    "}\n";
 
   WGpuRenderPipelineDescriptor renderPipelineDesc = WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
