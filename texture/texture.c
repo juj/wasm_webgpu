@@ -23,7 +23,7 @@ float v[] = {
   -1.f,  1.f, 0.f, 1.f,
    1.f, -1.f, 1.f, 0.f,
    1.f,  1.f, 1.f, 1.f
-};  
+};
 
 void CreateGeometryAndRender()
 {
@@ -56,6 +56,8 @@ void CreateGeometryAndRender()
   WGpuRenderPassColorAttachment colorAttachment = WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;
   colorAttachment.view = wgpu_texture_create_view(wgpu_canvas_context_get_current_texture(canvasContext), 0);
   colorAttachment.loadOp = WGPU_LOAD_OP_CLEAR;
+  colorAttachment.clearValue.r = colorAttachment.clearValue.g =
+  colorAttachment.clearValue.b = colorAttachment.clearValue.a = 1.0;
 
   WGpuRenderPassDescriptor passDesc = {};
   passDesc.numColorAttachments = 1;
@@ -146,6 +148,9 @@ void DownloadedImage(WGpuImageBitmap bitmap, int width, int height, void *userDa
 
   WGpuColorTargetState colorTarget = WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER;
   colorTarget.format = config.format;
+  colorTarget.blend.color.operation = WGPU_BLEND_OPERATION_ADD;
+  colorTarget.blend.color.srcFactor = WGPU_BLEND_FACTOR_SRC_ALPHA;
+  colorTarget.blend.color.dstFactor = WGPU_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
   renderPipelineDesc.fragment.numTargets = 1;
   renderPipelineDesc.fragment.targets = &colorTarget;
 
