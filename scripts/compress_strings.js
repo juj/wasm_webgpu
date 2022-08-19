@@ -336,10 +336,17 @@ console.log(`
   },
 `);
 
-let numIterations = 100;
+function addNums(arr) {
+  let out = [];
+  for(let i = 0; i < arr.length; ++i) out.push(`${arr[i]} (${i})`);
+  return out;
+}
+
+let numIterations = 10;//0;
 
 for(var i in stringArrays) {
   let strArray = stringArrays[i];
+  let origArray = strArray.slice(0);
   if (Array.isArray(strArray)) {
     const firstElemIsUndefined = !strArray[0];
     if (firstElemIsUndefined) strArray.splice(0, 1);
@@ -355,7 +362,7 @@ for(var i in stringArrays) {
       console.log(`  ${i}: [${undefinedComma}'${strArray.join("', '")}'],`);
     } else {
       console.log(`  ${i}__deps: ['$wgpuDecodeStrings'],`);
-      console.log(`//${i}: [${firstElemIsUndefined ? '/*undefined*/, ' : '' }${strArray.map(x => `'${x}'`).join(', ')}],`)
+      console.log(`//${i}: [${addNums(origArray.map(x => `'${x}'`)).join(', ')}],`)
       if (firstElemIsUndefined) console.log(`  ${i}: "${opt}",`);
       else console.log(`  ${i}: "${opt}.slice(1)",`);
     }
