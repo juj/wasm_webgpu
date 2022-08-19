@@ -18,7 +18,7 @@ function resizeCanvas() {
   canvas.width = Math.round(window.innerWidth * window.devicePixelRatio);
   canvas.height = Math.round(window.innerHeight * window.devicePixelRatio);
   if (window.resizeCallback) {
-    dynCall('v', window.resizeCallback);
+    getWasmTableEntry(window.resizeCallback)();
   }
 }
 
