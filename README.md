@@ -4,7 +4,7 @@
 
 This repository contains an Emscripten system library for utilizing WebGPU from a C/C++ codebase, along with a few small C code examples on how to use it.
 
-To utilize the library in your own application, deploy the following files in the `lib/` directory:
+To utilize the library in your own application, copy the contents of the `lib/` directory into your project:
 
  - [lib/lib_webgpu.h](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu.h)
  - [lib/lib_webgpu.js](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu.js)
@@ -15,6 +15,7 @@ To utilize the library in your own application, deploy the following files in th
 
 into your project, then `#include "lib_webgpu.h"` in your code to access the API, and compile in `lib_webpgu.cpp` and link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/master/samples/CMakeLists.txt) for example usage.
 
+For your convenience, a forward declaration header is also provided, and can be included with `#include "lib_webgpu_fwd.h"`.
 
 ## Implementation Status
 
