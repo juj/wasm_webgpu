@@ -1,5 +1,11 @@
 #pragma once
 
+#ifndef __EMSCRIPTEN__
+// Any non-Emscripten targeting code that includes this header is probably accidental, so
+// early out error from the build if this is detected.
+#error Including lib_webgpu.h when targeting some other platform/compiler than the Emscripten toolchain. This was probably unintentional?
+#endif
+
 #include <emscripten/html5.h>
 #include <stdint.h>
 
