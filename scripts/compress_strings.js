@@ -1,3 +1,15 @@
+/*
+  This file produces compressed string arrays of the different string values in the WebGPU specification,
+  enabling smaller output binaries.
+
+  Usage: run 'node compress_strings.js', and copy paste the results into src/lib_webgpu.js.
+         Optionally, modify numIterations parameter below to choose how long to search for
+         compressed string representations (via a randomized search)
+*/
+
+// Customize to choose run time.
+const numIterations = 10;
+
 // Calculates all the possible sub-strings of 's' of length 'n', and the frequency (count) that they occur.
 function findSubStringsOfLengthN(n, s) {
   var subs = {};
@@ -369,8 +381,6 @@ function addNums(arr) {
   for(let i = 0; i < arr.length; ++i) out.push(`${arr[i]} (${i})`);
   return out;
 }
-
-let numIterations = 10;
 
 for(var i in stringArrays) {
   let strArray = stringArrays[i];
