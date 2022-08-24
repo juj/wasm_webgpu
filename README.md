@@ -13,7 +13,7 @@ To utilize the library in your own application, copy the contents of the `lib/` 
 
 <img align=right src='./screenshots/emscripten-logo.svg' width=30%>
 
-into your project, then `#include "lib_webgpu.h"` in your code to access the API, and compile in `lib_webpgu.cpp` and link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/master/samples/CMakeLists.txt) for example usage.
+Then `#include "lib_webgpu.h"` to access the API, compile in `lib_webpgu.cpp` with the rest of your project files, and finally link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/master/samples/CMakeLists.txt) for example usage.
 
 For your convenience, a forward declaration header is also provided, and can be included with `#include "lib_webgpu_fwd.h"`.
 
