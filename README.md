@@ -19,7 +19,7 @@ For your convenience, a forward declaration header is also provided, and can be 
 
 ## Implementation Status
 
-The repository was last updated to be up to date with the WebGPU specification as of **8/24/2022**.
+The repository was last updated to be up to date with the WebGPU specification as of 🗓 **8/24/2022**.
 
 ## Features and Design
 
@@ -126,6 +126,6 @@ The test [vertex_buffer/vertex_buffer.c](https://github.com/juj/wasm_webgpu/blob
 ## 🚧 TODOs
 
 The following features are planned:
- - Rendering from a Web Worker support
+ - Rendering from a Web Worker support (e.g. Emscripten's `-pthread` and `-sPROXY_TO_PTHREAD=1` linker flags)
  - Multithreading support when WebGPU spec and browsers enable WebGPU multithreaded rendering
  - When more test cases become available, examine how to reduce generated garbage further by e.g. pooling arrays and descriptors.
