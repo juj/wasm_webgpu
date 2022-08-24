@@ -13,7 +13,7 @@ into your project, then `#include "lib_webgpu.h"` in your code to access the API
 
 ## Implementation Status
 
-The repository was last updated to be up to date with the WebGPU specification as of **8/18/2022**.
+The repository was last updated to be up to date with the WebGPU specification as of **8/24/2022**.
 
 ## Features and Design
 
