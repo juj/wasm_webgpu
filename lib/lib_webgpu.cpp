@@ -1,7 +1,8 @@
 #include "lib_webgpu.h"
 
-extern "C"
-{
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 const char *wgpu_compilation_message_type_to_string(WGPU_COMPILATION_MESSAGE_TYPE type)
 {
@@ -176,4 +177,6 @@ extern const WGpuImageCopyTextureTagged WGPU_IMAGE_COPY_TEXTURE_TAGGED_DEFAULT_I
   .premultipliedAlpha = EM_FALSE
 };
 
+#ifdef __cplusplus
 } // ~extern "C"
+#endif
