@@ -9,7 +9,7 @@ To utilize the library in your own application, deploy the following files in th
  - [lib/lib_webgpu.h](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu.h)
  - [lib/lib_webgpu.js](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu.js)
  - [lib/lib_webgpu.cpp](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu.cpp)
- - [lib/lib_webgpu_fwd.h](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu_fwd.h) (optional, not needed if you don't care about using forward declaration headers)
+ - [lib/lib_webgpu_fwd.h](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu_fwd.h)
 
 <img align=right src='./screenshots/emscripten-logo.svg' width=30%>
 
