@@ -31,6 +31,7 @@ macro(append_linker_flags_minsizerel FLAGS)
 endmacro()
 
 cmake_path(SET LIB_DIR NORMALIZE "${CMAKE_CURRENT_LIST_DIR}/../lib")
+cmake_path(SET COMMON_DIR NORMALIZE "${CMAKE_CURRENT_LIST_DIR}/common")
 
 if (EMSCRIPTEN)
 	set(CMAKE_EXECUTABLE_SUFFIX ".html")
@@ -41,8 +42,8 @@ if (EMSCRIPTEN)
 	append_linker_flags_debug("-s ASSERTIONS=1 -jsDWEBGPU_DEBUG=1")
 
 	append_linker_flags("--js-library ${LIB_DIR}/lib_webgpu.js")
-	append_linker_flags("--js-library ${LIB_DIR}/lib_demo.js")
-	append_linker_flags("--js-library ${LIB_DIR}/library_miniprintf.js")
+	append_linker_flags("--js-library ${COMMON_DIR}/lib_demo.js")
+	append_linker_flags("--js-library ${COMMON_DIR}/library_miniprintf.js")
 	append_linker_flags("-s MINIMAL_RUNTIME=2 -s TEXTDECODER=2 -s ABORTING_MALLOC=0 -s SUPPORT_ERRNO=0")
 	append_linker_flags("-s ENVIRONMENT=web -s MIN_FIREFOX_VERSION=87 -s MIN_SAFARI_VERSION=140000 -s MIN_EDGE_VERSION=90 -s MIN_CHROME_VERSION=90")
 	append_linker_flags("--shell-file \"${CMAKE_SOURCE_DIR}/shell.html\"")
@@ -64,6 +65,7 @@ if (EMSCRIPTEN)
 endif()
 
 include_directories("${LIB_DIR}")
+include_directories("${COMMON_DIR}")
 
 file(GLOB_RECURSE lib ${LIB_DIR}/*.cpp)
 add_library(webgpu STATIC ${lib})

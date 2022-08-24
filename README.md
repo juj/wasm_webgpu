@@ -11,8 +11,6 @@ To utilize the library in your own application, deploy the following files in th
 
 into your project, then `#include "lib_webgpu.h"` in your code to access the API, and compile in `lib_webpgu.cpp` and link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/master/CMakeLists.txt) for example usage.
 
-The other files in the `lib/` directory are only used by the demo samples in this repository, and are not needed to be deployed into user applications.
-
 ## Implementation Status
 
 The repository was last updated to be up to date with the WebGPU specification as of **8/18/2022**.
