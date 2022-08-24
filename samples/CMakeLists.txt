@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.20)
 
 project(wasm_webgpu)
 
@@ -30,6 +30,8 @@ macro(append_linker_flags_minsizerel FLAGS)
   set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} ${FLAGS}")
 endmacro()
 
+cmake_path(SET LIB_DIR NORMALIZE "${CMAKE_CURRENT_LIST_DIR}/../lib")
+
 if (EMSCRIPTEN)
 	set(CMAKE_EXECUTABLE_SUFFIX ".html")
 
@@ -38,9 +40,9 @@ if (EMSCRIPTEN)
 	append_linker_flags_debug("-g3")
 	append_linker_flags_debug("-s ASSERTIONS=1 -jsDWEBGPU_DEBUG=1")
 
-	append_linker_flags("--js-library ${CMAKE_CURRENT_LIST_DIR}/lib/lib_webgpu.js")
-	append_linker_flags("--js-library ${CMAKE_CURRENT_LIST_DIR}/lib/lib_demo.js")
-	append_linker_flags("--js-library ${CMAKE_CURRENT_LIST_DIR}/lib/library_miniprintf.js")
+	append_linker_flags("--js-library ${LIB_DIR}/lib_webgpu.js")
+	append_linker_flags("--js-library ${LIB_DIR}/lib_demo.js")
+	append_linker_flags("--js-library ${LIB_DIR}/library_miniprintf.js")
 	append_linker_flags("-s MINIMAL_RUNTIME=2 -s TEXTDECODER=2 -s ABORTING_MALLOC=0 -s SUPPORT_ERRNO=0")
 	append_linker_flags("-s ENVIRONMENT=web -s MIN_FIREFOX_VERSION=87 -s MIN_SAFARI_VERSION=140000 -s MIN_EDGE_VERSION=90 -s MIN_CHROME_VERSION=90")
 	append_linker_flags("--shell-file \"${CMAKE_SOURCE_DIR}/shell.html\"")
@@ -61,9 +63,9 @@ if (EMSCRIPTEN)
 	append_linker_flags_minsizerel("-Oz")
 endif()
 
-include_directories("${CMAKE_CURRENT_LIST_DIR}/lib")
+include_directories("${LIB_DIR}")
 
-file(GLOB_RECURSE lib lib/*.cpp)
+file(GLOB_RECURSE lib ${LIB_DIR}/*.cpp)
 add_library(webgpu STATIC ${lib})
 
 add_executable(clear_screen clear_screen/clear_screen.c)

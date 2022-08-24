@@ -63,7 +63,9 @@ Currently both 2GB and 4GB build modes are supported. Wasm64 is also planned to 
 
 ## Samples
 
-Don't expect flashy demos. The test cases in this repository exercise features relevant to data marshalling between WebAssembly and JavaScript languages, and are not intended to showcase fancy graphical effects.
+Several test cases are available under the `samples/` subdirectory.
+
+Don't expect flashy demos. The test cases exercise features relevant to data marshalling between WebAssembly and JavaScript languages, and are not intended to showcase fancy graphical effects.
 
 To build the samples, first install Emscripten via [Emsdk](https://github.com/emscripten-core/emsdk), then enter Emsdk command line environment (`emsdk_env`), and type
 
@@ -71,7 +73,7 @@ To build the samples, first install Emscripten via [Emsdk](https://github.com/em
 cd path/to/wasm_webgpu
 mkdir build
 cd build
-emcmake cmake .. -DCMAKE_BUILD_TYPE=Debug # Or MinSizeRel, RelWithDebInfo or Release
+emcmake cmake ../samples -DCMAKE_BUILD_TYPE=Debug # Or MinSizeRel, RelWithDebInfo or Release
 make -j
 ```
 
@@ -81,37 +83,37 @@ On Windows, the last `make` command is not available, so either install Mingw32-
 
 ![clear_screen](./screenshots/clear_screen.png)
 
-For the smallest Clear Screen "hello world" example, see [clear_screen.c/clear_screen.c](https://github.com/juj/wasm_webgpu/blob/master/clear_screen/clear_screen.c).
+For the smallest Clear Screen "hello world" example, see [clear_screen.c/clear_screen.c](https://github.com/juj/wasm_webgpu/blob/master/samples/clear_screen/clear_screen.c).
 
-There is also an Emscripten ASYNCIFY-enabled variant of the same demo, at [clear_screen.c/clear_screen_sync.c](https://github.com/juj/wasm_webgpu/blob/master/clear_screen/clear_screen.c).
+There is also an Emscripten ASYNCIFY-enabled variant of the same demo, at [clear_screen.c/clear_screen_sync.c](https://github.com/juj/wasm_webgpu/blob/master/samples/clear_screen/clear_screen.c).
 
 ### failing_shader_compilation
 
-The demo [failing_shader_compilation/failing_shader_compilation.c](https://github.com/juj/wasm_webgpu/blob/master/failing_shader_compilation/failing_shader_compilation.c) tests handling of shader compilation errors.
+The demo [failing_shader_compilation/failing_shader_compilation.c](https://github.com/juj/wasm_webgpu/blob/master/samples/failing_shader_compilation/failing_shader_compilation.c) tests handling of shader compilation errors.
 
 ### gpu_oom
 
-The demo [gpu_oom/gpu_oom.c](https://github.com/juj/wasm_webgpu/blob/master/gpu_oom/gpu_oom.c) exhausts the GPU VRAM, testing handling of GPU OOM events.
+The demo [gpu_oom/gpu_oom.c](https://github.com/juj/wasm_webgpu/blob/master/samples/gpu_oom/gpu_oom.c) exhausts the GPU VRAM, testing handling of GPU OOM events.
 
 ### hello_triangle
 
 ![hello_triangle](./screenshots/hello_triangle.png)
 
-The demo [hello_triangle/hello_triangle_minimal.c](https://github.com/juj/wasm_webgpu/blob/master/hello_triangle/hello_triangle_minimal.c) contains the smallest triangle rendering demo.
+The demo [hello_triangle/hello_triangle_minimal.c](https://github.com/juj/wasm_webgpu/blob/master/samples/hello_triangle/hello_triangle_minimal.c) contains the smallest triangle rendering demo.
 
-The variant [hello_triangle/hello_triangle_verbose.c](https://github.com/juj/wasm_webgpu/blob/master/hello_triangle/hello_triangle_verbose.c) offers the same, but with verbose debug logging.
+The variant [hello_triangle/hello_triangle_verbose.c](https://github.com/juj/wasm_webgpu/blob/master/samples/hello_triangle/hello_triangle_verbose.c) offers the same, but with verbose debug logging.
 
 ### texture
 
 ![texture](./screenshots/texture.png)
 
-The sample [texture/texture.c](https://github.com/juj/wasm_webgpu/blob/master/texture/texture.c) tests the `wgpu_load_image_bitmap_from_url_async()` API.
+The sample [texture/texture.c](https://github.com/juj/wasm_webgpu/blob/master/samples/texture/texture.c) tests the `wgpu_load_image_bitmap_from_url_async()` API.
 
 ### vertex_buffer
 
 ![vertex_buffer](./screenshots/vertex_buffer.png)
 
-The test [vertex_buffer/vertex_buffer.c](https://github.com/juj/wasm_webgpu/blob/master/vertex_buffer/vertex_buffer.c) shows an example of how to map a GPU buffer and use the function `wgpu_buffer_write_mapped_range()`.
+The test [vertex_buffer/vertex_buffer.c](https://github.com/juj/wasm_webgpu/blob/master/samples/vertex_buffer/vertex_buffer.c) shows an example of how to map a GPU buffer and use the function `wgpu_buffer_write_mapped_range()`.
 
 ## TODOs
 
