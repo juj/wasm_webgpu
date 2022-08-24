@@ -30,7 +30,9 @@ For the most parts, the JavaScript side WebGPU API is directly mapped 1:1 over t
 
 Type names and structs follow a naming convention `WGpu*`, mapped from JS names by transforming `GPUAdapter` -> `WGpuAdapter`. API function names use a prefix `wgpu_*`, and are mapped using the convention `GPUCanvasContext.configure(...)` -> `wgpu_canvas_context_configure(canvasContext, ...)`. Enums and #defines use a prefix `WGPU_`, e.g. `GPUPowerPreference` -> `WGPU_POWER_PREFERENCE`.
 
-### 🚀 Best performance and  Minimal code size
+A few exceptions to this are done in the name of accommodating better Wasm<->JS language marshalling, noted where present in the `lib_webgpu.h` header.
+
+### 🚀 Best performance and Minimal code size
 
 The primary design goal of the library is to provide absolutely best runtime speed and minimal generated code size overhead, carefully shaving down every individual byte possible. The intent is to enable using this library in extremely code size constrained deployment scenarios.
 
