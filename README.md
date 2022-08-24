@@ -9,7 +9,7 @@ To utilize the library in your own application, deploy the following files in th
  - [lib/lib_webgpu.cpp](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu.cpp)
  - [lib/lib_webgpu_fwd.h](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu_fwd.h) (optional, not needed if you don't care about using forward declaration headers)
 
-into your project, then `#include "lib_webgpu.h"` in your code to access the API, and compile in `lib_webpgu.cpp` and link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/master/CMakeLists.txt) for example usage.
+into your project, then `#include "lib_webgpu.h"` in your code to access the API, and compile in `lib_webpgu.cpp` and link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/master/samples/CMakeLists.txt) for example usage.
 
 ## Implementation Status
 
