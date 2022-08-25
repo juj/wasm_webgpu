@@ -167,14 +167,31 @@ interface GPUSupportedFeatures {
     readonly setlike<DOMString>;
 };
 */
+/*
+enum GPUFeatureName {
+    "depth-clip-control",
+    "depth32float-stencil8",
+    "texture-compression-bc",
+    "texture-compression-etc2",
+    "texture-compression-astc",
+    "timestamp-query",
+    "indirect-first-instance",
+    "shader-f16",
+    "bgra8unorm-storage",
+    "rg11b10ufloat-renderable"
+};
+*/
 typedef int WGPU_FEATURES_BITFIELD;
-#define WGPU_FEATURE_DEPTH_CLIP_CONTROL        0x01
-#define WGPU_FEATURE_DEPTH32FLOAT_STENCIL8     0x02
-#define WGPU_FEATURE_TEXTURE_COMPRESSION_BC    0x04
-#define WGPU_FEATURE_TEXTURE_COMPRESSION_ETC2  0x08
-#define WGPU_FEATURE_TEXTURE_COMPRESSION_ASTC  0x10
-#define WGPU_FEATURE_TIMESTAMP_QUERY           0x20
-#define WGPU_FEATURE_INDIRECT_FIRST_INSTANCE   0x40
+#define WGPU_FEATURE_DEPTH_CLIP_CONTROL         0x01
+#define WGPU_FEATURE_DEPTH32FLOAT_STENCIL8      0x02
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_BC     0x04
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_ETC2   0x08
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_ASTC   0x10
+#define WGPU_FEATURE_TIMESTAMP_QUERY            0x20
+#define WGPU_FEATURE_INDIRECT_FIRST_INSTANCE    0x40
+#define WGPU_FEATURE_SHADER_F16                 0x80
+#define WGPU_FEATURE_BGRA8UNORM_STORAGE        0x100
+#define WGPU_FEATURE_RG11B10UFLOAT_RENDERABLE  0x200
 
 /*
 // WebGPU reuses the color space enum from the HTML Canvas specification:
@@ -340,34 +357,6 @@ typedef struct WGpuDeviceDescriptor
   WGpuQueueDescriptor defaultQueue;
 } WGpuDeviceDescriptor;
 extern const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER;
-
-/*
-enum GPUFeatureName {
-    "depth-clip-control",
-    "depth32float-stencil8",
-    "texture-compression-bc",
-    "texture-compression-etc2",
-    "texture-compression-astc",
-    "timestamp-query",
-    "indirect-first-instance",
-    "shader-f16",
-    "bgra8unorm-storage",
-    "rg11b10ufloat-renderable"
-};
-*/
-typedef int WGPU_FEATURE_NAME;
-#define WGPU_FEATURE_NAME_INVALID 0
-#define WGPU_FEATURE_NAME_DEPTH_CLIP_CONTROL 1
-#define WGPU_FEATURE_NAME_DEPTH32FLOAT_STENCIL8 2
-#define WGPU_FEATURE_NAME_PIPELINE_STATISTICS_QUERY 3
-#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_BC 4
-#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_ETC2 5
-#define WGPU_FEATURE_NAME_TEXTURE_COMPRESSION_ASTC 6
-#define WGPU_FEATURE_NAME_TIMESTAMP_QUERY 7
-#define WGPU_FEATURE_NAME_INDIRECT_FIRST_INSTANCE 8
-#define WGPU_FEATURE_NAME_SHADER_F16 9
-#define WGPU_FEATURE_NAME_BGRA8UNORM_STORAGE 10
-#define WGPU_FEATURE_NAME_RG11B10UFLOAT_RENDERABLE 11
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]

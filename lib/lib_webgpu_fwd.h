@@ -27,7 +27,6 @@ typedef struct WGpuRequestAdapterOptions WGpuRequestAdapterOptions;
 typedef int WGPU_POWER_PREFERENCE;
 typedef int WGpuAdapter;
 typedef struct WGpuDeviceDescriptor WGpuDeviceDescriptor;
-typedef int WGPU_FEATURE_NAME;
 typedef int WGpuDevice;
 typedef int WGpuBuffer;
 typedef int WGPU_BUFFER_MAP_STATE;
