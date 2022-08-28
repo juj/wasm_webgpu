@@ -2069,7 +2069,7 @@ interface mixin GPUBindingCommandsMixin {
 typedef int WGpuBindingCommandsMixin;
 // Returns true if the given handle references a valid GPUBindingCommandsMixin. (one of: GPUComputePassEncoder, GPURenderPassEncoder, or GPURenderBundleEncoder)
 EM_BOOL wgpu_is_binding_commands_mixin(WGpuObjectBase object);
-void wgpu_encoder_set_bind_group(WGpuBindingCommandsMixin encoder, uint32_t index, WGpuBindGroup bindGroup, uint32_t *dynamicOffsets _WGPU_DEFAULT_VALUE(0), uint32_t numDynamicOffsets _WGPU_DEFAULT_VALUE(0));
+void wgpu_encoder_set_bind_group(WGpuBindingCommandsMixin encoder, uint32_t index, WGpuBindGroup bindGroup, const uint32_t *dynamicOffsets _WGPU_DEFAULT_VALUE(0), uint32_t numDynamicOffsets _WGPU_DEFAULT_VALUE(0));
 
 // Some of the functions in GPURenderBundleEncoder, GPURenderPassEncoder and GPUComputePassEncoder are identical in implementation,
 // so group them under a common base class.
@@ -2202,7 +2202,7 @@ void wgpu_render_pass_encoder_set_blend_constant(WGpuRenderPassEncoder encoder, 
 void wgpu_render_pass_encoder_set_stencil_reference(WGpuRenderPassEncoder encoder, uint32_t stencilValue);
 void wgpu_render_pass_encoder_begin_occlusion_query(WGpuRenderPassEncoder encoder, int32_t queryIndex);
 void wgpu_render_pass_encoder_end_occlusion_query(WGpuRenderPassEncoder encoder);
-void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, WGpuRenderBundle *bundles, int numBundles);
+void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, const WGpuRenderBundle *bundles, int numBundles);
 #define wgpu_render_pass_encoder_end wgpu_encoder_end
 
 // Inherited from GPUDebugCommandsMixin:
