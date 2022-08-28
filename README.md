@@ -6,14 +6,14 @@ This repository contains an Emscripten system library for utilizing WebGPU from 
 
 To utilize the library in your own application, copy the contents of the `lib/` directory into your project:
 
- - [lib/lib_webgpu.h](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu.h)
- - [lib/lib_webgpu.js](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu.js)
- - [lib/lib_webgpu.cpp](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu.cpp)
- - [lib/lib_webgpu_fwd.h](https://github.com/juj/wasm_webgpu/blob/master/lib/lib_webgpu_fwd.h)
+ - [lib/lib_webgpu.h](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu.h)
+ - [lib/lib_webgpu.js](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu.js)
+ - [lib/lib_webgpu.cpp](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu.cpp)
+ - [lib/lib_webgpu_fwd.h](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu_fwd.h)
 
 <img align=right src='./screenshots/emscripten-logo.svg' width=30%>
 
-Then `#include "lib_webgpu.h"` to access the API, compile in `lib_webpgu.cpp` with the rest of your project files, and finally link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/master/samples/CMakeLists.txt) for example usage.
+Then `#include "lib_webgpu.h"` to access the API, compile in `lib_webpgu.cpp` with the rest of your project files, and finally link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/main/samples/CMakeLists.txt) for example usage.
 
 For your convenience, a forward declaration header is also provided, and can be included with `#include "lib_webgpu_fwd.h"`.
 
@@ -49,11 +49,11 @@ If there is a tradeoff between generated garbage, code size, or runtime speed, b
 
 Some WebGPU features do not interop well between JS and Wasm if translated 1:1. Buffer mapping is one of these features. To help JS<->Wasm interop, this library provides custom functions `wgpu_buffer_read_mapped_range()` and `wgpu_buffer_write_mapped_range()` that do not exist in the official WebGPU specification.
 
-For an example of how this works in practice, see the sample [vertex_buffer/vertex_buffer.c](https://github.com/juj/wasm_webgpu/blob/master/vertex_buffer/vertex_buffer.c)
+For an example of how this works in practice, see the sample [vertex_buffer/vertex_buffer.c](https://github.com/juj/wasm_webgpu/blob/main/vertex_buffer/vertex_buffer.c)
 
 ### 🔌 Extensions for binding with other JS APIs
 
-To enable easy uploading of image URLs to WebGPU textures, an extension function `wgpu_load_image_bitmap_from_url_async()` is provided. For an example of this, see the sample [texture/texture.c](https://github.com/juj/wasm_webgpu/blob/master/texture/texture.c)
+To enable easy uploading of image URLs to WebGPU textures, an extension function `wgpu_load_image_bitmap_from_url_async()` is provided. For an example of this, see the sample [texture/texture.c](https://github.com/juj/wasm_webgpu/blob/main/texture/texture.c)
 
 ### 🚦 Asyncify support
 
@@ -91,37 +91,37 @@ On Windows, the last `make` command is not available, so either install Mingw32-
 
 ![clear_screen](./screenshots/clear_screen.png)
 
-For the smallest Clear Screen "hello world" example, see [clear_screen.c/clear_screen.c](https://github.com/juj/wasm_webgpu/blob/master/samples/clear_screen/clear_screen.c).
+For the smallest Clear Screen "hello world" example, see [clear_screen.c/clear_screen.c](https://github.com/juj/wasm_webgpu/blob/main/samples/clear_screen/clear_screen.c).
 
-There is also an Emscripten ASYNCIFY-enabled variant of the same demo, at [clear_screen.c/clear_screen_sync.c](https://github.com/juj/wasm_webgpu/blob/master/samples/clear_screen/clear_screen.c).
+There is also an Emscripten ASYNCIFY-enabled variant of the same demo, at [clear_screen.c/clear_screen_sync.c](https://github.com/juj/wasm_webgpu/blob/main/samples/clear_screen/clear_screen.c).
 
 ### failing_shader_compilation
 
-The demo [failing_shader_compilation/failing_shader_compilation.c](https://github.com/juj/wasm_webgpu/blob/master/samples/failing_shader_compilation/failing_shader_compilation.c) tests handling of shader compilation errors.
+The demo [failing_shader_compilation/failing_shader_compilation.c](https://github.com/juj/wasm_webgpu/blob/main/samples/failing_shader_compilation/failing_shader_compilation.c) tests handling of shader compilation errors.
 
 ### gpu_oom
 
-The demo [gpu_oom/gpu_oom.c](https://github.com/juj/wasm_webgpu/blob/master/samples/gpu_oom/gpu_oom.c) exhausts the GPU VRAM, testing handling of GPU OOM events.
+The demo [gpu_oom/gpu_oom.c](https://github.com/juj/wasm_webgpu/blob/main/samples/gpu_oom/gpu_oom.c) exhausts the GPU VRAM, testing handling of GPU OOM events.
 
 ### hello_triangle
 
 ![hello_triangle](./screenshots/hello_triangle.png)
 
-The demo [hello_triangle/hello_triangle_minimal.c](https://github.com/juj/wasm_webgpu/blob/master/samples/hello_triangle/hello_triangle_minimal.c) contains the smallest triangle rendering demo.
+The demo [hello_triangle/hello_triangle_minimal.c](https://github.com/juj/wasm_webgpu/blob/main/samples/hello_triangle/hello_triangle_minimal.c) contains the smallest triangle rendering demo.
 
-The variant [hello_triangle/hello_triangle_verbose.c](https://github.com/juj/wasm_webgpu/blob/master/samples/hello_triangle/hello_triangle_verbose.c) offers the same, but with verbose debug logging.
+The variant [hello_triangle/hello_triangle_verbose.c](https://github.com/juj/wasm_webgpu/blob/main/samples/hello_triangle/hello_triangle_verbose.c) offers the same, but with verbose debug logging.
 
 ### texture
 
 ![texture](./screenshots/texture.png)
 
-The sample [texture/texture.c](https://github.com/juj/wasm_webgpu/blob/master/samples/texture/texture.c) tests the `wgpu_load_image_bitmap_from_url_async()` API.
+The sample [texture/texture.c](https://github.com/juj/wasm_webgpu/blob/main/samples/texture/texture.c) tests the `wgpu_load_image_bitmap_from_url_async()` API.
 
 ### vertex_buffer
 
 ![vertex_buffer](./screenshots/vertex_buffer.png)
 
-The test [vertex_buffer/vertex_buffer.c](https://github.com/juj/wasm_webgpu/blob/master/samples/vertex_buffer/vertex_buffer.c) shows an example of how to map a GPU buffer and use the function `wgpu_buffer_write_mapped_range()`.
+The test [vertex_buffer/vertex_buffer.c](https://github.com/juj/wasm_webgpu/blob/main/samples/vertex_buffer/vertex_buffer.c) shows an example of how to map a GPU buffer and use the function `wgpu_buffer_write_mapped_range()`.
 
 ## 🚧 TODOs
 
