@@ -423,8 +423,8 @@ typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineBase p
 
 // N.b. not currently using signature WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuComputePipelineDescriptor *computePipelineDesc);
 // since WGpuComputePipelineDescriptor is a such a light struct. (if it is expanded in the future, switch to using that signature)
-WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuShaderModule computeModule, const char *entryPoint __attribute__((nonnull)), WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants);
-void wgpu_device_create_compute_pipeline_async(WGpuDevice device, const WGpuShaderModule computeModule, const char *entryPoint __attribute__((nonnull)), WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants, WGpuCreatePipelineCallback callback, void *userData);
+WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, WGpuShaderModule computeModule, const char *entryPoint __attribute__((nonnull)), WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants);
+void wgpu_device_create_compute_pipeline_async(WGpuDevice device, WGpuShaderModule computeModule, const char *entryPoint __attribute__((nonnull)), WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants, WGpuCreatePipelineCallback callback, void *userData);
 
 WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc __attribute__((nonnull)));
 void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc __attribute__((nonnull)), WGpuCreatePipelineCallback callback, void *userData);
