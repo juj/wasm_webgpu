@@ -49,11 +49,11 @@ If there is a tradeoff between generated garbage, code size, or runtime speed, b
 
 Some WebGPU features do not interop well between JS and Wasm if translated 1:1. Buffer mapping is one of these features. To help JS<->Wasm interop, this library provides custom functions `wgpu_buffer_read_mapped_range()` and `wgpu_buffer_write_mapped_range()` that do not exist in the official WebGPU specification.
 
-For an example of how this works in practice, see the sample [vertex_buffer/vertex_buffer.c](https://github.com/juj/wasm_webgpu/blob/main/vertex_buffer/vertex_buffer.c)
+For an example of how this works in practice, see the sample [vertex_buffer/vertex_buffer.c](https://github.com/juj/wasm_webgpu/blob/main/samples/vertex_buffer/vertex_buffer.c)
 
 ### 🔌 Extensions for binding with other JS APIs
 
-To enable easy uploading of image URLs to WebGPU textures, an extension function `wgpu_load_image_bitmap_from_url_async()` is provided. For an example of this, see the sample [texture/texture.c](https://github.com/juj/wasm_webgpu/blob/main/texture/texture.c)
+To enable easy uploading of image URLs to WebGPU textures, an extension function `wgpu_load_image_bitmap_from_url_async()` is provided. For an example of this, see the sample [texture/texture.c](https://github.com/juj/wasm_webgpu/blob/main/samples/texture/texture.c)
 
 ### 🚦 Asyncify support
 
