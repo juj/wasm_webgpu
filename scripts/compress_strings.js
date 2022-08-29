@@ -8,7 +8,7 @@
 */
 
 // Customize to choose run time.
-const numIterations = 10000;
+const numIterations = 1000;
 
 // Calculates all the possible sub-strings of 's' of length 'n', and the frequency (count) that they occur.
 function findSubStringsOfLengthN(n, s) {
