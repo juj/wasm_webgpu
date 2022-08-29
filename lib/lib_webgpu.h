@@ -123,6 +123,7 @@ interface GPUSupportedLimits {
     readonly attribute unsigned long maxInterStageShaderComponents;
     readonly attribute unsigned long maxInterStageShaderVariables;
     readonly attribute unsigned long maxColorAttachments;
+    readonly attribute unsigned long maxColorAttachmentBytesPerPixel;
     readonly attribute unsigned long maxComputeWorkgroupStorageSize;
     readonly attribute unsigned long maxComputeInvocationsPerWorkgroup;
     readonly attribute unsigned long maxComputeWorkgroupSizeX;
@@ -161,6 +162,7 @@ typedef struct WGpuSupportedLimits
   uint32_t maxInterStageShaderComponents; // required >= 60
   uint32_t maxInterStageShaderVariables; // required >= 16
   uint32_t maxColorAttachments; // required >= 8
+  uint32_t maxColorAttachmentBytesPerPixel; // required >= 32
   uint32_t maxComputeWorkgroupStorageSize; // required >= 16384 bytes
   uint32_t maxComputeInvocationsPerWorkgroup; // required >= 256
   uint32_t maxComputeWorkgroupSizeX; // required >= 256
