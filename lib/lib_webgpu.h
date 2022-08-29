@@ -130,6 +130,11 @@ typedef struct WGpuSupportedLimits
 {
   // See the table in https://www.w3.org/TR/webgpu/#limits for the minimum/maximum
   // default values for these limits.
+
+  // 64-bit fields must be present first before the 32-bit fields in this struct.
+  uint64_t maxUniformBufferBindingSize; // required >= 16384
+  uint64_t maxStorageBufferBindingSize; // required >= 128*1024*1024 (128MB)
+
   uint32_t maxTextureDimension1D; // required >= 8192
   uint32_t maxTextureDimension2D; // required >= 8192
   uint32_t maxTextureDimension3D; // required >= 2048
@@ -155,10 +160,7 @@ typedef struct WGpuSupportedLimits
   uint32_t maxComputeWorkgroupSizeX; // required >= 256
   uint32_t maxComputeWorkgroupSizeY; // required >= 256
   uint32_t maxComputeWorkgroupSizeZ; // required >= 64
-  uint32_t _dummyPadding; // Explicitly mark a padding field to reflect that 'maxUniformBufferBindingSize' needs to be 64-bit aligned
-
-  uint64_t maxUniformBufferBindingSize; // required >= 16384
-  uint64_t maxStorageBufferBindingSize; // required >= 128*1024*1024 (128MB)
+  uint32_t _explicitPaddingFor8BytesAlignedSize;
 } WGpuSupportedLimits;
 
 /*
@@ -353,8 +355,10 @@ dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
 typedef struct WGpuDeviceDescriptor
 {
   WGPU_FEATURES_BITFIELD requiredFeatures;
+  uint32_t _explicitPaddingFor8BytesAlignedSize; // alignof(WGpuSupportedLimits) is 64-bit, hence explicitly show a padding here.
   WGpuSupportedLimits requiredLimits;
   WGpuQueueDescriptor defaultQueue;
+  uint32_t _explicitPaddingFor8BytesAlignedSize2;
 } WGpuDeviceDescriptor;
 extern const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
@@ -2025,6 +2029,7 @@ typedef struct WGpuImageCopyBuffer
   uint32_t bytesPerRow;
   uint32_t rowsPerImage;
   WGpuBuffer buffer;
+  uint32_t _explicitPaddingFor8BytesAlignedSize;
 } WGpuImageCopyBuffer;
 extern const WGpuImageCopyBuffer WGPU_IMAGE_COPY_BUFFER_DEFAULT_INITIALIZER;
 
