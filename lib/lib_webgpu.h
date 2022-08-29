@@ -9,6 +9,10 @@
 #include <emscripten/html5.h>
 #include <stdint.h>
 
+// The internal struct member offset layout is extremely important when marshalling structs to JS,
+// so never let the compiler add any padding (we manually & explicitly make the fields the right size)
+#pragma clang diagnostic error "-Wpadded"
+
 #include "lib_webgpu_fwd.h"
 
 // Some WebGPU JS API functions have default parameters so that the user can omit passing them.
