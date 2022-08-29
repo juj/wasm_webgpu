@@ -8,6 +8,11 @@ if (CCACHE_PROGRAM)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
+macro(append_compiler_flags FLAGS)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${FLAGS}")
+  set(CMAKE_CXX_FLAGSG "${CMAKE_CXX_FLAGS} ${FLAGS}")
+endmacro()
+
 macro(append_compiler_flags_debug FLAGS)
   set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${FLAGS}")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${FLAGS}")
@@ -36,8 +41,10 @@ cmake_path(SET COMMON_DIR NORMALIZE "${CMAKE_CURRENT_LIST_DIR}/common")
 if (EMSCRIPTEN)
 	set(CMAKE_EXECUTABLE_SUFFIX ".html")
 
+	append_compiler_flags("-Wall")
 	append_compiler_flags_debug("-g3")
 
+	append_linker_flags("-Wall")
 	append_linker_flags_debug("-g3")
 	append_linker_flags_debug("-s ASSERTIONS=1 -jsDWEBGPU_DEBUG=1")
 
