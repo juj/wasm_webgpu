@@ -181,6 +181,7 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
   ADAPTER_LIMIT(minUniformBufferOffsetAlignment);
   ADAPTER_LIMIT(minStorageBufferOffsetAlignment);
   ADAPTER_LIMIT(maxVertexBuffers);
+  ADAPTER_LIMIT(maxBufferSize);
   ADAPTER_LIMIT(maxVertexAttributes);
   ADAPTER_LIMIT(maxVertexBufferArrayStride);
   ADAPTER_LIMIT(maxInterStageShaderComponents);

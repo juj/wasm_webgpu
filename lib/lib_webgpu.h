@@ -117,6 +117,7 @@ interface GPUSupportedLimits {
     readonly attribute unsigned long minUniformBufferOffsetAlignment;
     readonly attribute unsigned long minStorageBufferOffsetAlignment;
     readonly attribute unsigned long maxVertexBuffers;
+    readonly attribute unsigned long long maxBufferSize;
     readonly attribute unsigned long maxVertexAttributes;
     readonly attribute unsigned long maxVertexBufferArrayStride;
     readonly attribute unsigned long maxInterStageShaderComponents;
@@ -138,6 +139,7 @@ typedef struct WGpuSupportedLimits
   // 64-bit fields must be present first before the 32-bit fields in this struct.
   uint64_t maxUniformBufferBindingSize; // required >= 16384
   uint64_t maxStorageBufferBindingSize; // required >= 128*1024*1024 (128MB)
+  uint64_t maxBufferSize;               // required >= 256*1024*1024 (256MB)
 
   uint32_t maxTextureDimension1D; // required >= 8192
   uint32_t maxTextureDimension2D; // required >= 8192

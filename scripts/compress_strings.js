@@ -8,7 +8,7 @@
 */
 
 // Customize to choose run time.
-const numIterations = 10;
+const numIterations = 10000;
 
 // Calculates all the possible sub-strings of 's' of length 'n', and the frequency (count) that they occur.
 function findSubStringsOfLengthN(n, s) {
@@ -127,6 +127,7 @@ function searchOptimizedStringArrayRepresentation(s, numIterations, subCharStart
 }
 
 const stringArrays = {
+
   // This array combines GPUTextureFormat and GPUVertexFormat values, since they share many of the same strings.
   '$GPUTextureAndVertexFormats': [/*undefined*/,
     // GPUTextureFormat types:
@@ -309,6 +310,11 @@ const stringArrays = {
     'maxComputeWorkgroupSizeY',
     'maxComputeWorkgroupSizeZ'],
 
+  'wgpu64BitLimitNames': [
+    'maxUniformBufferBindingSize',
+    'maxStorageBufferBindingSize',
+    'maxBufferSize'],
+
   'wgpuFeatures': [
     'depth-clip-control',
     'depth32float-stencil8',
@@ -360,7 +366,8 @@ const stringArrays = {
 };
 
 const subCharRanges = {
-  'wgpu32BitLimitNames': { 'start': 52 /*4*/, 'end': 65}
+  'wgpu32BitLimitNames': { 'start': 52 /*4*/, 'end': 65},
+  'wgpu64BitLimitNames': { 'start': 52 /*4*/, 'end': 65}
 };
 
 const defaultSubCharStart = 65; // uppercase 'A'
