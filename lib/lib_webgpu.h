@@ -2574,7 +2574,7 @@ interface GPUUncapturedErrorEvent : Event {
 };
 
 dictionary GPUUncapturedErrorEventInit : EventInit {
-    required GPUError error;
+    [SameObject] required GPUError error;
 };
 
 partial interface GPUDevice {
