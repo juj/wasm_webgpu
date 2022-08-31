@@ -105,6 +105,7 @@ interface GPUSupportedLimits {
     readonly attribute unsigned long maxTextureDimension3D;
     readonly attribute unsigned long maxTextureArrayLayers;
     readonly attribute unsigned long maxBindGroups;
+    readonly attribute unsigned long maxBindingsPerBindGroup;
     readonly attribute unsigned long maxDynamicUniformBuffersPerPipelineLayout;
     readonly attribute unsigned long maxDynamicStorageBuffersPerPipelineLayout;
     readonly attribute unsigned long maxSampledTexturesPerShaderStage;
@@ -147,6 +148,7 @@ typedef struct WGpuSupportedLimits
   uint32_t maxTextureDimension3D; // required >= 2048
   uint32_t maxTextureArrayLayers; // required >= 2048
   uint32_t maxBindGroups; // required >= 4
+  uint32_t maxBindingsPerBindGroup; // required >= 640
   uint32_t maxDynamicUniformBuffersPerPipelineLayout; // required >= 8
   uint32_t maxDynamicStorageBuffersPerPipelineLayout; // required >= 4
   uint32_t maxSampledTexturesPerShaderStage; // required >= 16
