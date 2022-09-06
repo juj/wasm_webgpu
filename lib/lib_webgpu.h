@@ -2531,17 +2531,6 @@ partial interface GPUDevice {
 typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message __attribute__((nonnull)), void *userData);
 void wgpu_device_set_lost_callback(WGpuDevice device, WGpuDeviceLostCallback callback, void *userData);
 
-/*
-enum GPUErrorFilter {
-    "out-of-memory",
-    "validation"
-};
-*/
-typedef int WGPU_ERROR_FILTER;
-#define WGPU_ERROR_FILTER_INVALID       0
-#define WGPU_ERROR_FILTER_OUT_OF_MEMORY 1
-#define WGPU_ERROR_FILTER_VALIDATION    2
-
 // Specifies the type of an error that occurred.
 // N.b. the values of these should be kept in sync with values of WGPU_ERROR_FILTER_*. (except for the unknown error value)
 typedef int WGPU_ERROR_TYPE;
@@ -2557,15 +2546,33 @@ interface GPUError {
 };
 
 [Exposed=(Window, DedicatedWorker), SecureContext]
+interface GPUValidationError : GPUError {
+    constructor(DOMString message);
+};
+
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUOutOfMemoryError : GPUError {
     constructor(DOMString message);
 };
 
 [Exposed=(Window, DedicatedWorker), SecureContext]
-interface GPUValidationError : GPUError {
+interface GPUInternalError : GPUError {
     constructor(DOMString message);
 };
 
+enum GPUErrorFilter {
+    "validation",
+    "out-of-memory",
+    "internal"
+};
+*/
+typedef int WGPU_ERROR_FILTER;
+#define WGPU_ERROR_FILTER_INVALID       0
+#define WGPU_ERROR_FILTER_OUT_OF_MEMORY 1
+#define WGPU_ERROR_FILTER_VALIDATION    2
+#define WGPU_ERROR_FILTER_INTERNAL      3
+
+/*
 partial interface GPUDevice {
     undefined pushErrorScope(GPUErrorFilter filter);
     Promise<GPUError?> popErrorScope();
