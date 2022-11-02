@@ -305,7 +305,7 @@ const stringArrays = {
     'maxInterStageShaderComponents',
     'maxInterStageShaderVariables',
     'maxColorAttachments',
-    'maxColorAttachmentBytesPerPixel',
+    'maxColorAttachmentBytesPerSample',
     'maxComputeWorkgroupStorageSize',
     'maxComputeInvocationsPerWorkgroup',
     'maxComputeWorkgroupSizeX',
