@@ -25,7 +25,7 @@ For your convenience, a forward declaration header is also provided, and can be 
 
 ## Implementation Status
 
-The repository was last updated to be up to date with the WebGPU specification as of 🗓 **9/6/2022**.
+The repository was last updated to be up to date with the WebGPU specification as of 🗓 **2nd of November 2022**.
 
 ## Features and Design
 
