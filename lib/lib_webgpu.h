@@ -2063,7 +2063,7 @@ dictionary GPUImageCopyTextureTagged : GPUImageCopyTexture {
 
 /*
 dictionary GPUImageCopyExternalImage {
-    required (ImageBitmap or HTMLCanvasElement or OffscreenCanvas) source;
+    required (ImageBitmap or HTMLVideoElement or HTMLCanvasElement or OffscreenCanvas) source;
     GPUOrigin2D origin = {};
     boolean flipY = false;
 };
@@ -2752,7 +2752,7 @@ extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEF
 
 typedef struct WGpuImageCopyExternalImage
 {
-  WGpuObjectBase source; // must point to a WGpuImageBitmap (could also point to a HTMLCanvasElement or OffscreenCanvas, but those are currently unimplemented)
+  WGpuObjectBase source; // must point to a WGpuImageBitmap (could also point to a HTMLVideoElement, HTMLCanvasElement or OffscreenCanvas, but those are currently unimplemented)
   WGpuOrigin2D origin;
   EM_BOOL flipY; // defaults to EM_FALSE.
 } WGpuImageCopyExternalImage;
