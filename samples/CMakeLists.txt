@@ -58,6 +58,7 @@ if (EMSCRIPTEN)
 	append_linker_flags("-s ALLOW_MEMORY_GROWTH=1")
 	append_linker_flags("-s USE_SDL=0 -s FILESYSTEM=0 -s AUTO_JS_LIBRARIES=0 -s DISABLE_EXCEPTION_THROWING=1")
 	append_linker_flags("-lmath.js -lhtml5.js -lint53.js")
+	append_linker_flags("--closure-args=--externs=${LIB_DIR}/webgpu-closure-externs.js")
 
 	append_linker_flags("-s INITIAL_MEMORY=16MB -s MALLOC=emmalloc --memory-init-file 0")
 

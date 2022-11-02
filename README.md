@@ -11,6 +11,12 @@ To utilize the library in your own application, copy the contents of the `lib/` 
  - [lib/lib_webgpu.cpp](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu.cpp)
  - [lib/lib_webgpu_fwd.h](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu_fwd.h)
 
+Additionally, if you are using Closure Compiler, also copy the Closure externs file into your project:
+
+ - [lib/webgpu-closure-externs.js](https://github.com/juj/wasm_webgpu/blob/main/lib/webgpu-closure-externs.js)
+
+ and specify the Emscripten linker argument `--closure-args=--externs=/path/to/webgpu-closure-externs.js` when linking your project.
+
 <img align=right src='./screenshots/emscripten-logo.svg' width=30%>
 
 Then `#include "lib_webgpu.h"` to access the API, compile in `lib_webpgu.cpp` with the rest of your project files, and finally link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/main/samples/CMakeLists.txt) for example usage.

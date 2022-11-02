@@ -32,6 +32,7 @@ EM_BOOL raf(double time, void *userData)
   // should return the same binding to the swap chain texture.
   WGpuTexture swapChainTexture2 = wgpu_canvas_context_get_current_texture(canvasContext);
   assert(swapChainTexture == swapChainTexture2);
+  (void)swapChainTexture2;
 
   WGpuRenderPassColorAttachment colorAttachment = WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;
   colorAttachment.view = wgpu_texture_create_view(swapChainTexture, 0);
