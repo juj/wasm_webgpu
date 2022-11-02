@@ -135,3 +135,4 @@ The following features are planned:
  - Rendering from a Web Worker support (e.g. Emscripten's `-pthread` and `-sPROXY_TO_PTHREAD=1` linker flags)
  - Multithreading support when WebGPU spec and browsers enable WebGPU multithreaded rendering
  - When more test cases become available, examine how to reduce generated garbage further by e.g. pooling arrays and descriptors.
+ - Wasm64 build mode support
