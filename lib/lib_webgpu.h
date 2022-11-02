@@ -2301,7 +2301,7 @@ typedef int WGPU_STORE_OP;
 #define WGPU_STORE_OP_DISCARD 1
 
 /*
-dictionary GPURenderPassLayout: GPUObjectDescriptorBase {
+dictionary GPURenderPassLayout : GPUObjectDescriptorBase {
     required sequence<GPUTextureFormat?> colorFormats;
     GPUTextureFormat depthStencilFormat;
     GPUSize32 sampleCount = 1;
