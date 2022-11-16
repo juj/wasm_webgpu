@@ -2423,8 +2423,10 @@ void wgpu_queue_submit_multiple_and_destroy(WGpuQueue queue, const WGpuCommandBu
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
 void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmittedWorkDoneCallback callback, void *userData);
 
-void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, const void *data __attribute__((nonnull)), double_int53_t size); // TODO other buffer sources?
-void wgpu_queue_write_texture(WGpuQueue queue, const WGpuImageCopyTexture *destination __attribute__((nonnull)), const void *data __attribute__((nonnull)), uint32_t bytesPerBlockRow, uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1)); // TODO other buffer sources?
+// Uploads data to the given GPUBuffer. Data is copied from memory in byte addresses data[0], data[1], ... data[size-1], and uploaded
+// to the GPU buffer at byte offset bufferOffset, bufferOffset+1, ..., bufferOffset+size-1.
+void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, const void *data __attribute__((nonnull)), double_int53_t size);
+void wgpu_queue_write_texture(WGpuQueue queue, const WGpuImageCopyTexture *destination __attribute__((nonnull)), const void *data __attribute__((nonnull)), uint32_t bytesPerBlockRow, uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuImageCopyExternalImage *source __attribute__((nonnull)), const WGpuImageCopyTextureTagged *destination __attribute__((nonnull)), uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 
 /*
