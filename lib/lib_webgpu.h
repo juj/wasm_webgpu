@@ -2127,17 +2127,27 @@ void wgpu_compute_pass_encoder_dispatch_workgroups_indirect(WGpuComputePassEncod
     "beginning",
     "end",
 };
-// TODO: Add support for this
+*/
+typedef int WGPU_COMPUTE_PASS_TIMESTAMP_LOCATION;
+#define WGPU_COMPUTE_PASS_TIMESTAMP_LOCATION_BEGINNING 0
+#define WGPU_COMPUTE_PASS_TIMESTAMP_LOCATION_END       1
 
+/*
 dictionary GPUComputePassTimestampWrite {
     required GPUQuerySet querySet;
     required GPUSize32 queryIndex;
     required GPUComputePassTimestampLocation location;
 };
-// TODO: Add support for this
+*/
+typedef struct WGpuComputePassTimestampWrite
+{
+  WGpuQuerySet querySet;
+  uint32_t queryIndex;
+  WGPU_COMPUTE_PASS_TIMESTAMP_LOCATION location;
+} WGpuComputePassTimestampWrite;
 
+/*
 typedef sequence<GPUComputePassTimestampWrite> GPUComputePassTimestampWrites;
-// TODO: Add support for this
 
 dictionary GPUComputePassDescriptor : GPUObjectDescriptorBase {
   GPUComputePassTimestampWrites timestampWrites = [];
@@ -2145,8 +2155,8 @@ dictionary GPUComputePassDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuComputePassDescriptor
 {
-  // TODO: Add support for timestampWrites member and remove _dummyPadding below.
-  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size.
+  uint32_t numTimestampWrites;
+  WGpuComputePassTimestampWrite *timestampWrites;
 } WGpuComputePassDescriptor;
 
 /*
@@ -2712,17 +2722,27 @@ enum GPURenderPassTimestampLocation {
     "beginning",
     "end",
 };
-// TODO: Add support for this
+*/
+typedef int WGPU_RENDER_PASS_TIMESTAMP_LOCATION;
+#define WGPU_RENDER_PASS_TIMESTAMP_LOCATION_BEGINNING 0
+#define WGPU_RENDER_PASS_TIMESTAMP_LOCATION_END       1
 
+/*
 dictionary GPURenderPassTimestampWrite {
     required GPUQuerySet querySet;
     required GPUSize32 queryIndex;
     required GPURenderPassTimestampLocation location;
 };
-// TODO: Add support for this
+*/
+typedef struct WGpuRenderPassTimestampWrite
+{
+  WGpuQuerySet querySet;
+  uint32_t queryIndex;
+  WGPU_RENDER_PASS_TIMESTAMP_LOCATION location;
+} WGpuRenderPassTimestampWrite;
 
+/*
 typedef sequence<GPURenderPassTimestampWrite> GPURenderPassTimestampWrites;
-// TODO: Add support for this
 
 dictionary GPURenderPassDescriptor : GPUObjectDescriptorBase {
     required sequence<GPURenderPassColorAttachment?> colorAttachments;
@@ -2739,8 +2759,8 @@ typedef struct WGpuRenderPassDescriptor
   WGpuRenderPassDepthStencilAttachment depthStencilAttachment;
   WGpuQuerySet occlusionQuerySet;
   double_int53_t maxDrawCount; // If set to zero, the default value (50000000) will be used.
-  // TODO: Add support for timestamp writes
-  //GPURenderPassTimestampWrites timestampWrites = [];
+  uint32_t numTimestampWrites;
+  WGpuRenderPassTimestampWrite *timestampWrites;
 } WGpuRenderPassDescriptor;
 
 typedef struct WGpuRenderPassColorAttachment
