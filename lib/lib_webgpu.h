@@ -2461,11 +2461,13 @@ typedef struct WGpuQuerySetDescriptor
 /*
 enum GPUQueryType {
     "occlusion",
+    "timestamp"
 };
 */
 typedef int WGPU_QUERY_TYPE;
 #define WGPU_QUERY_TYPE_INVALID 0
 #define WGPU_QUERY_TYPE_OCCLUSION 1
+#define WGPU_QUERY_TYPE_TIMESTAMP 2
 
 /*
 enum GPUPipelineStatisticName {
