@@ -2002,7 +2002,10 @@ void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEnco
 void wgpu_command_encoder_clear_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(__builtin_inf()));
 void wgpu_command_encoder_write_timestamp(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t queryIndex);
 void wgpu_command_encoder_resolve_query_set(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t firstQuery, uint32_t queryCount, WGpuBuffer destination, double_int53_t destinationOffset);
-WGpuCommandBuffer wgpu_command_encoder_finish(WGpuCommandEncoder commandEncoder);
+
+// GPUCommandEncoder and GPURenderBundleEncoder share the same finish() command.
+WGpuObjectBase wgpu_encoder_finish(WGpuObjectBase commandOrRenderBundleEncoder);
+#define wgpu_command_encoder_finish wgpu_encoder_finish
 
 // Inherited from GPUDebugCommandsMixin
 #define wgpu_command_encoder_push_debug_group wgpu_encoder_push_debug_group
@@ -2353,7 +2356,7 @@ GPURenderBundleEncoder includes GPURenderCommandsMixin;
 typedef int WGpuRenderBundleEncoder;
 // Returns true if the given handle references a valid GPURenderBundleEncoder.
 EM_BOOL wgpu_is_render_bundle_encoder(WGpuObjectBase object);
-void wgpu_render_bundle_encoder_finish(const WGpuRenderBundleDescriptor *renderBundleDescriptor __attribute__((nonnull)));
+#define wgpu_render_bundle_encoder_finish wgpu_encoder_finish
 
 #define wgpu_render_bundle_encoder_set_bind_group wgpu_encoder_set_bind_group
 // Inherited from GPUDebugCommandsMixin:
