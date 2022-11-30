@@ -2535,6 +2535,16 @@ void wgpu_canvas_context_unconfigure(WGpuCanvasContext canvasContext);
 
 WGpuTexture wgpu_canvas_context_get_current_texture(WGpuCanvasContext canvasContext);
 
+// Native Dawn implementation has a concept of a SwapChain. Web does not have this.
+// Dawn SwapChain returns a TextureView, whereas GPUCanvasContext.getCurrentTexture() returns a Texture,
+// so provide a convenient function wgpu_canvas_context_get_current_texture_view() to obtain
+// a TextureView in a cross-platform manner.
+#ifdef __EMSCRIPTEN__
+#define wgpu_canvas_context_get_current_texture_view(canvasContext) wgpu_texture_create_view_simple(wgpu_canvas_context_get_current_texture((canvasContext)))
+#else
+WGpuTextureView wgpu_canvas_context_get_current_texture_view(WGpuCanvasContext canvasContext);
+#endif
+
 #ifdef __EMSCRIPTEN__
 void wgpu_canvas_context_present(WGpuCanvasContext canvasContext) __attribute__((deprecated("The function wgpu_canvas_context_present() is not available when targeting the web. Presentation always occurs when yielding out from browser event loop. Refactor the code to avoid any blocking render loop and calling wgpu_canvas_context_present() when targeting web browsers.", "Use emscripten_request_animation_frame_loop() instead.")));
 #else

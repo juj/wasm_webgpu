@@ -21,7 +21,7 @@ EM_BOOL raf(double time, void *userData)
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder_simple(device);
 
   WGpuRenderPassColorAttachment colorAttachment = WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;
-  colorAttachment.view = wgpu_texture_create_view_simple(wgpu_canvas_context_get_current_texture(canvasContext));
+  colorAttachment.view = wgpu_canvas_context_get_current_texture_view(canvasContext);
 
   double hue = time * 0.00005;
   colorAttachment.clearValue.r = hue2color(hue + 1.0 / 3.0);
