@@ -24,7 +24,11 @@ typedef double double_int53_t;
 typedef uint64_t double_int53_t;
 #endif
 
+#ifdef __GNUC__
 #define NOTNULL __attribute__((nonnull))
+#else
+#define NOTNULL
+#endif
 
 // The following should be kept sorted in the order of the WebIDL for easier diffing across changes to the spec: https://www.w3.org/TR/webgpu/#idl-index
 // with the exception that the callback typedefs should appear last in this file to see the necessary definitions.
