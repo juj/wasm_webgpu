@@ -55,7 +55,13 @@ void wgpu_object_destroy(WGpuObjectBase wgpuObject);
 void wgpu_destroy_all_objects(void);
 
 // Acquires a canvas context from a canvas by calling canvas.getCanvasContext().
+#ifdef __EMSCRIPTEN__
 WGpuCanvasContext wgpu_canvas_get_webgpu_context(const char *canvasSelector NOTNULL);
+#elif defined (_WIN32)
+WGpuCanvasContext wgpu_canvas_get_webgpu_context(HWND hwnd);
+#else
+#error Targeting currently unsupported platform! (no declaration for wgpu_canvas_get_webgpu_context())
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // The ordering and structure of this remainder of this file follows the official WebGPU WebIDL definitions at https://www.w3.org/TR/webgpu/#idl-index
