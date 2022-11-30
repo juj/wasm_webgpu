@@ -46,7 +46,7 @@ void wgpu_object_destroy(WGpuObjectBase wgpuObject);
 void wgpu_destroy_all_objects(void);
 
 // Acquires a canvas context from a canvas by calling canvas.getCanvasContext().
-WGpuCanvasContext wgpu_canvas_get_webgpu_context(const char *canvasSelector __attribute__((nonnull)));
+WGpuCanvasContext wgpu_canvas_get_webgpu_context(const char *canvasSelector NOTNULL);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // The ordering and structure of this remainder of this file follows the official WebGPU WebIDL definitions at https://www.w3.org/TR/webgpu/#idl-index
@@ -61,12 +61,12 @@ typedef int WGpuObjectBase;
 // Returns true if the given handle references a valid WebGPU object
 EM_BOOL wgpu_is_valid_object(WGpuObjectBase obj);
 // Set a human-readable label for the given WebGPU object. Pass an empty string "" to clear a label.
-void wgpu_object_set_label(WGpuObjectBase obj, const char *label __attribute__((nonnull)));
+void wgpu_object_set_label(WGpuObjectBase obj, const char *label NOTNULL);
 // Gets the human-readable label of a WebGPU object. If dstLabelSize is too short to
 // contain the label string, then the label is truncated.
 // dstLabelSize: length of dstLabel array in bytes.
 // Returns the number of bytes written (excluding null byte at end).
-int wgpu_object_get_label(WGpuObjectBase obj, char *dstLabel __attribute__((nonnull)), uint32_t dstLabelSize);
+int wgpu_object_get_label(WGpuObjectBase obj, char *dstLabel NOTNULL, uint32_t dstLabelSize);
 
 /*
 dictionary GPUObjectDescriptorBase {
@@ -320,16 +320,16 @@ EM_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapter, WGPU_FEATUR
 #define wgpu_adapter_supports_feature wgpu_adapter_or_device_supports_feature
 
 // Populates the adapter.limits field of the given adapter to the provided structure.
-void wgpu_adapter_or_device_get_limits(WGpuAdapter adapter, WGpuSupportedLimits *limits __attribute__((nonnull)));
+void wgpu_adapter_or_device_get_limits(WGpuAdapter adapter, WGpuSupportedLimits *limits NOTNULL);
 #define wgpu_adapter_get_limits wgpu_adapter_or_device_get_limits
 
 EM_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter);
 
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 
-void wgpu_adapter_request_device_async(WGpuAdapter adapter, const WGpuDeviceDescriptor *descriptor __attribute__((nonnull)), WGpuRequestDeviceCallback deviceCallback, void *userData);
+void wgpu_adapter_request_device_async(WGpuAdapter adapter, const WGpuDeviceDescriptor *descriptor NOTNULL, WGpuRequestDeviceCallback deviceCallback, void *userData);
 // Requests a WebGPU device synchronously. Requires building with -sASYNCIFY=1 linker flag to work.
-WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDeviceDescriptor *descriptor __attribute__((nonnull)));
+WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDeviceDescriptor *descriptor NOTNULL);
 
 // Like above, but tiny code size without options.
 void wgpu_adapter_request_device_async_simple(WGpuAdapter adapter, WGpuRequestDeviceCallback deviceCallback);
@@ -337,7 +337,7 @@ WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter);
 
 // Callback function type that is called when GPUAdapter information has been obtained. The information will be reported in a struct of
 // type WGpuAdapterInfo. Do not hold on to this struct pointer after the duration of this call (but make a copy of the contents if desirable)
-typedef void (*WGpuRequestAdapterInfoCallback)(WGpuAdapter adapter, const WGpuAdapterInfo *adapterInfo __attribute__((nonnull)), void *userData);
+typedef void (*WGpuRequestAdapterInfoCallback)(WGpuAdapter adapter, const WGpuAdapterInfo *adapterInfo NOTNULL, void *userData);
 
 // Begins a process to asynchronously request GPUAdapter information. 'unmaskHints' should be a null-terminated array of null-terminated strings
 // of which information to retrieve, e.g. { "vendor", "architecture", "device", "description", 0 }.
@@ -412,10 +412,10 @@ EM_BOOL wgpu_is_device(WGpuObjectBase object);
 
 WGpuQueue wgpu_device_get_queue(WGpuDevice device);
 
-WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescriptor *bufferDesc __attribute__((nonnull)));
-WGpuTexture wgpu_device_create_texture(WGpuDevice device, const WGpuTextureDescriptor *textureDesc __attribute__((nonnull)));
-WGpuSampler wgpu_device_create_sampler(WGpuDevice device, const WGpuSamplerDescriptor *samplerDesc __attribute__((nonnull)));
-WGpuExternalTexture wgpu_device_import_external_texture(WGpuDevice device, const WGpuExternalTextureDescriptor *externalTextureDesc __attribute__((nonnull)));
+WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescriptor *bufferDesc NOTNULL);
+WGpuTexture wgpu_device_create_texture(WGpuDevice device, const WGpuTextureDescriptor *textureDesc NOTNULL);
+WGpuSampler wgpu_device_create_sampler(WGpuDevice device, const WGpuSamplerDescriptor *samplerDesc NOTNULL);
+WGpuExternalTexture wgpu_device_import_external_texture(WGpuDevice device, const WGpuExternalTextureDescriptor *externalTextureDesc NOTNULL);
 
 // N.b. not currently using signature WGpuBindGroupLayout wgpu_device_create_bind_group_layout(WGpuDevice device, const WGpuBindGroupLayoutDescriptor *bindGroupLayoutDesc);
 // since WGpuBindGroupLayoutDescriptor is a single element struct consisting only of a single array. (if it is expanded in the future, switch to using that signature)
@@ -429,25 +429,25 @@ WGpuPipelineLayout wgpu_device_create_pipeline_layout(WGpuDevice device, const W
 // since WGpuBindGroupDescriptor is a such a light struct. (if it is expanded in the future, switch to using that signature)
 WGpuBindGroup wgpu_device_create_bind_group(WGpuDevice device, WGpuBindGroupLayout bindGroupLayout, const WGpuBindGroupEntry *entries, int numEntries);
 
-WGpuShaderModule wgpu_device_create_shader_module(WGpuDevice device, const WGpuShaderModuleDescriptor *shaderModuleDesc __attribute__((nonnull)));
+WGpuShaderModule wgpu_device_create_shader_module(WGpuDevice device, const WGpuShaderModuleDescriptor *shaderModuleDesc NOTNULL);
 
 typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineBase pipeline, void *userData);
 
 // N.b. not currently using signature WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuComputePipelineDescriptor *computePipelineDesc);
 // since WGpuComputePipelineDescriptor is a such a light struct. (if it is expanded in the future, switch to using that signature)
-WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, WGpuShaderModule computeModule, const char *entryPoint __attribute__((nonnull)), WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants);
-void wgpu_device_create_compute_pipeline_async(WGpuDevice device, WGpuShaderModule computeModule, const char *entryPoint __attribute__((nonnull)), WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants, WGpuCreatePipelineCallback callback, void *userData);
+WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, WGpuShaderModule computeModule, const char *entryPoint NOTNULL, WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants);
+void wgpu_device_create_compute_pipeline_async(WGpuDevice device, WGpuShaderModule computeModule, const char *entryPoint NOTNULL, WGpuPipelineLayout layout, const WGpuPipelineConstant *constants, int numConstants, WGpuCreatePipelineCallback callback, void *userData);
 
-WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc __attribute__((nonnull)));
-void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc __attribute__((nonnull)), WGpuCreatePipelineCallback callback, void *userData);
+WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc NOTNULL);
+void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc NOTNULL, WGpuCreatePipelineCallback callback, void *userData);
 
 WGpuCommandEncoder wgpu_device_create_command_encoder(WGpuDevice device, const WGpuCommandEncoderDescriptor *commandEncoderDesc);
 // Same as above, but without any descriptor args.
 WGpuCommandEncoder wgpu_device_create_command_encoder_simple(WGpuDevice device);
 
-WGpuRenderBundleEncoder wgpu_device_create_render_bundle_encoder(WGpuDevice device, const WGpuRenderBundleEncoderDescriptor *renderBundleEncoderDesc __attribute__((nonnull)));
+WGpuRenderBundleEncoder wgpu_device_create_render_bundle_encoder(WGpuDevice device, const WGpuRenderBundleEncoderDescriptor *renderBundleEncoderDesc NOTNULL);
 
-WGpuQuerySet wgpu_device_create_query_set(WGpuDevice device, const WGpuQuerySetDescriptor *querySetDesc __attribute__((nonnull)));
+WGpuQuerySet wgpu_device_create_query_set(WGpuDevice device, const WGpuQuerySetDescriptor *querySetDesc NOTNULL);
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -482,8 +482,8 @@ void wgpu_buffer_map_sync(WGpuBuffer buffer, WGPU_MAP_MODE_FLAGS mode, double_in
 // Calls buffer.getMappedRange(). Returns `startOffset`, which is used as an ID token to wgpu_buffer_read/write_mapped_range().
 // If .getMappedRange() fails, the value WGPU_BUFFER_GET_MAPPED_RANGE_FAILED (-1) will be returned.
 double_int53_t wgpu_buffer_get_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAP_MAX_LENGTH));
-void wgpu_buffer_read_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t subOffset, void *dst __attribute__((nonnull)), double_int53_t size);
-void wgpu_buffer_write_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t subOffset, const void *src __attribute__((nonnull)), double_int53_t size);
+void wgpu_buffer_read_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t subOffset, void *dst NOTNULL, double_int53_t size);
+void wgpu_buffer_write_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t subOffset, const void *src NOTNULL, double_int53_t size);
 void wgpu_buffer_unmap(WGpuBuffer buffer);
 
 // Getters for retrieving buffer properties:
@@ -1325,7 +1325,7 @@ typedef WGpuObjectBase WGpuShaderModule;
 // Returns true if the given handle references a valid GPUShaderModule.
 EM_BOOL wgpu_is_shader_module(WGpuObjectBase object);
 
-typedef void (*WGpuGetCompilationInfoCallback)(WGpuShaderModule shaderModule, WGpuCompilationInfo *compilationInfo __attribute__((nonnull)), void *userData);
+typedef void (*WGpuGetCompilationInfoCallback)(WGpuShaderModule shaderModule, WGpuCompilationInfo *compilationInfo NOTNULL, void *userData);
 
 // Asynchronously obtains information about WebGPU shader module compilation to the given callback.
 // !! Remember to call wgpu_free_compilation_info() in the callback function after being done with the data.
@@ -1933,9 +1933,9 @@ interface mixin GPUDebugCommandsMixin {
 */
 typedef WGpuObjectBase WGpuDebugCommandsMixin; // One of GPURenderBundleEncoder, GPURenderPassEncoder, GPUComputePassEncoder or GPUCommandEncoder
 
-void wgpu_encoder_push_debug_group(WGpuDebugCommandsMixin encoder, const char *groupLabel __attribute__((nonnull)));
+void wgpu_encoder_push_debug_group(WGpuDebugCommandsMixin encoder, const char *groupLabel NOTNULL);
 void wgpu_encoder_pop_debug_group(WGpuDebugCommandsMixin encoder);
-void wgpu_encoder_insert_debug_marker(WGpuDebugCommandsMixin encoder, const char *markerLabel __attribute__((nonnull)));
+void wgpu_encoder_insert_debug_marker(WGpuDebugCommandsMixin encoder, const char *markerLabel NOTNULL);
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -1989,14 +1989,14 @@ typedef WGpuObjectBase WGpuCommandEncoder;
 // Returns true if the given handle references a valid GPUCommandEncoder.
 EM_BOOL wgpu_is_command_encoder(WGpuObjectBase object);
 
-WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder commandEncoder, const WGpuRenderPassDescriptor *renderPassDesc __attribute__((nonnull)));
+WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder commandEncoder, const WGpuRenderPassDescriptor *renderPassDesc NOTNULL);
 // Like above, but tiny code size path for the case when there is exactly one color and zero depth-stencil targets and no occlusion query set specified for the render pass.
-WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass_1color_0depth(WGpuCommandEncoder commandEncoder, const WGpuRenderPassDescriptor *renderPassDesc __attribute__((nonnull)));
+WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass_1color_0depth(WGpuCommandEncoder commandEncoder, const WGpuRenderPassDescriptor *renderPassDesc NOTNULL);
 WGpuComputePassEncoder wgpu_command_encoder_begin_compute_pass(WGpuCommandEncoder commandEncoder, const WGpuComputePassDescriptor *computePassDesc _WGPU_DEFAULT_VALUE(0));
 void wgpu_command_encoder_copy_buffer_to_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer source, double_int53_t sourceOffset, WGpuBuffer destination, double_int53_t destinationOffset, double_int53_t size);
-void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyBuffer *source __attribute__((nonnull)), const WGpuImageCopyTexture *destination __attribute__((nonnull)), uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
-void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source __attribute__((nonnull)), const WGpuImageCopyBuffer *destination __attribute__((nonnull)), uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
-void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source __attribute__((nonnull)), const WGpuImageCopyTexture *destination __attribute__((nonnull)), uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyBuffer *source NOTNULL, const WGpuImageCopyTexture *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source NOTNULL, const WGpuImageCopyBuffer *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source NOTNULL, const WGpuImageCopyTexture *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 void wgpu_command_encoder_clear_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(__builtin_inf()));
 void wgpu_command_encoder_write_timestamp(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t queryIndex);
 void wgpu_command_encoder_resolve_query_set(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t firstQuery, uint32_t queryCount, WGpuBuffer destination, double_int53_t destinationOffset);
@@ -2436,9 +2436,9 @@ void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmi
 
 // Uploads data to the given GPUBuffer. Data is copied from memory in byte addresses data[0], data[1], ... data[size-1], and uploaded
 // to the GPU buffer at byte offset bufferOffset, bufferOffset+1, ..., bufferOffset+size-1.
-void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, const void *data __attribute__((nonnull)), double_int53_t size);
-void wgpu_queue_write_texture(WGpuQueue queue, const WGpuImageCopyTexture *destination __attribute__((nonnull)), const void *data __attribute__((nonnull)), uint32_t bytesPerBlockRow, uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
-void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuImageCopyExternalImage *source __attribute__((nonnull)), const WGpuImageCopyTextureTagged *destination __attribute__((nonnull)), uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, const void *data NOTNULL, double_int53_t size);
+void wgpu_queue_write_texture(WGpuQueue queue, const WGpuImageCopyTexture *destination NOTNULL, const void *data NOTNULL, uint32_t bytesPerBlockRow, uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuImageCopyExternalImage *source NOTNULL, const WGpuImageCopyTextureTagged *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -2507,7 +2507,7 @@ EM_BOOL wgpu_is_canvas_context(WGpuObjectBase object);
 // TODO: Add char *wgpu_canvas_context_get_canvas_selector_id() for 'canvas' member property, as both CSS ID selector and object ID.
 
 // Configures the swap chain for this context.
-void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCanvasConfiguration *config __attribute__((nonnull)));
+void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCanvasConfiguration *config NOTNULL, int width _WGPU_DEFAULT_VALUE(0), int height _WGPU_DEFAULT_VALUE(0));
 void wgpu_canvas_context_unconfigure(WGpuCanvasContext canvasContext);
 
 WGpuTexture wgpu_canvas_context_get_current_texture(WGpuCanvasContext canvasContext);
@@ -2543,7 +2543,7 @@ partial interface GPUDevice {
     readonly attribute Promise<GPUDeviceLostInfo> lost;
 };
 */
-typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message __attribute__((nonnull)), void *userData);
+typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message NOTNULL, void *userData);
 void wgpu_device_set_lost_callback(WGpuDevice device, WGpuDeviceLostCallback callback, void *userData);
 
 // Specifies the type of an error that occurred.
@@ -2595,7 +2595,7 @@ partial interface GPUDevice {
 */
 void wgpu_device_push_error_scope(WGpuDevice device, WGPU_ERROR_FILTER filter);
 
-typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage __attribute__((nonnull)), void *userData);
+typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage NOTNULL, void *userData);
 void wgpu_device_pop_error_scope_async(WGpuDevice device, WGpuDeviceErrorCallback callback, void *userData);
 
 /*
@@ -2883,7 +2883,7 @@ typedef WGpuObjectBase WGpuImageBitmap;
 // Called when the ImageBitmap finishes loading. If loading fails, this callback will be called with width==height==0.
 typedef void (*WGpuLoadImageBitmapCallback)(WGpuImageBitmap bitmap, int width, int height, void *userData);
 
-void wgpu_load_image_bitmap_from_url_async(const char *url __attribute__((nonnull)), EM_BOOL flipY, WGpuLoadImageBitmapCallback callback, void *userData);
+void wgpu_load_image_bitmap_from_url_async(const char *url NOTNULL, EM_BOOL flipY, WGpuLoadImageBitmapCallback callback, void *userData);
 
 
 #ifdef __cplusplus

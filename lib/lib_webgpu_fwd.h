@@ -6,6 +6,8 @@ extern "C" {
 
 typedef double double_int53_t;
 
+#define NOTNULL __attribute__((nonnull))
+
 // The following should be kept sorted in the order of the WebIDL for easier diffing across changes to the spec: https://www.w3.org/TR/webgpu/#idl-index
 // with the exception that the callback typedefs should appear last in this file to see the necessary definitions.
 
@@ -141,10 +143,10 @@ typedef WGpuObjectBase WGpuImageBitmap;
 
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
-typedef void (*WGpuRequestAdapterInfoCallback)(WGpuAdapter adapter, const WGpuAdapterInfo *adapterInfo __attribute__((nonnull)), void *userData);
+typedef void (*WGpuRequestAdapterInfoCallback)(WGpuAdapter adapter, const WGpuAdapterInfo *adapterInfo NOTNULL, void *userData);
 typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineBase pipeline, void *userData);
 typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset, double_int53_t size);
-typedef void (*WGpuGetCompilationInfoCallback)(WGpuShaderModule shaderModule, WGpuCompilationInfo *compilationInfo __attribute__((nonnull)), void *userData);
+typedef void (*WGpuGetCompilationInfoCallback)(WGpuShaderModule shaderModule, WGpuCompilationInfo *compilationInfo NOTNULL, void *userData);
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
 typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message, void *userData);
 typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage, void *userData);
