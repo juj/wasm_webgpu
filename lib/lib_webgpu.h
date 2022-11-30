@@ -2529,7 +2529,11 @@ EM_BOOL wgpu_is_canvas_context(WGpuObjectBase object);
 // TODO: Add char *wgpu_canvas_context_get_canvas_selector_id() for 'canvas' member property, as both CSS ID selector and object ID.
 
 // Configures the swap chain for this context.
+#ifdef __EMSCRIPTEN__
+void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCanvasConfiguration *config NOTNULL);
+#else
 void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCanvasConfiguration *config NOTNULL, int width _WGPU_DEFAULT_VALUE(0), int height _WGPU_DEFAULT_VALUE(0));
+#endif
 void wgpu_canvas_context_unconfigure(WGpuCanvasContext canvasContext);
 
 WGpuTexture wgpu_canvas_context_get_current_texture(WGpuCanvasContext canvasContext);
