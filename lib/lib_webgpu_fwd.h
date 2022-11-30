@@ -6,7 +6,23 @@
 extern "C" {
 #endif
 
+// The type 'double_int53_t' shall be an integer-like
+// type that can represent at least 53-bits of consecutive
+// unsigned integers. On the web, this will be a 'double',
+// on other platforms it will be a 64-bit unsigned integer.
+// The reason for using double on the web is due to the
+// JavaScript WebGPU API does not not allow utilizing
+// BigInt to represent real 64-bit integers, so only 53 bits
+// of integer values is available.
+#ifdef __EMSCRIPTEN__
+// Use double to represent a JavaScript number that can
+// address 2^53 == 9007199254740992 = ~9.0 petabytes.
 typedef double double_int53_t;
+#else
+// On other platforms than the web, double_int53_t is a real
+// integer type.
+typedef uint64_t double_int53_t;
+#endif
 
 #define NOTNULL __attribute__((nonnull))
 

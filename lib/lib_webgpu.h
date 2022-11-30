@@ -42,10 +42,6 @@
 extern "C" {
 #endif
 
-// Use double to represent a JavaScript number that can
-// address 2^53 == 9007199254740992 = ~9.0 petabytes.
-typedef double double_int53_t;
-
 
 // Returns the number of WebGPU objects referenced by the WebGPU JS library.
 uint32_t wgpu_get_num_live_objects(void);
