@@ -2527,6 +2527,12 @@ void wgpu_canvas_context_unconfigure(WGpuCanvasContext canvasContext);
 
 WGpuTexture wgpu_canvas_context_get_current_texture(WGpuCanvasContext canvasContext);
 
+#ifdef __EMSCRIPTEN__
+void wgpu_canvas_context_present(WGpuCanvasContext canvasContext) __attribute__((deprecated("The function wgpu_canvas_context_present() is not available when targeting the web. Presentation always occurs when yielding out from browser event loop. Refactor the code to avoid any blocking render loop and calling wgpu_canvas_context_present() when targeting web browsers.", "Use emscripten_request_animation_frame_loop() instead.")));
+#else
+void wgpu_canvas_context_present(WGpuCanvasContext canvasContext);
+#endif
+
 /*
 enum GPUCanvasAlphaMode {
     "opaque",
