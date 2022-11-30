@@ -1,4 +1,4 @@
-# WebGPU in Wasm via Emscripten
+# WebGPU in Wasm via Emscripten (or Dawn)
 
 <img align=right src='./screenshots/webgpu-logo.svg' width=27%>
 
@@ -20,9 +20,17 @@ Additionally, if you are using Closure Compiler, also copy the Closure externs f
 
 <img align=right src='./screenshots/emscripten-logo.svg' width=30%>
 
-Then `#include "lib_webgpu.h"` to access the API, compile in `lib_webpgu.cpp` with the rest of your project files, and finally link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/main/samples/CMakeLists.txt) for example usage.
+Then `#include "lib_webgpu.h"` to access the API, compile in `lib_webpgu.cpp` and `lib_webgpu_cpp20.cpp` with the rest of your project files, and finally link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](https://github.com/juj/wasm_webgpu/blob/main/samples/CMakeLists.txt) for example usage.
 
 For your convenience, a forward declaration header is also provided, and can be included with `#include "lib_webgpu_fwd.h"`.
+
+# Using WebGPU via Dawn
+
+It is also possible to target WebGPU outside the browser via Dawn. When doing so, also compile the dawn-specific file with your project:
+
+ - [lib/lib_webgpu_dawn.cpp](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu_dawn.cpp)
+
+TODO: add more instructions about targeting Dawn natively.
 
 ## Implementation Status
 
