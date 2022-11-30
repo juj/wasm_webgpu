@@ -312,7 +312,7 @@ interface GPUAdapter {
     Promise<GPUAdapterInfo> requestAdapterInfo(optional sequence<DOMString> unmaskHints = []);
 };
 */
-typedef int WGpuAdapter;
+typedef WGpuObjectBase WGpuAdapter;
 // Returns true if the given handle references a valid GPUAdapter.
 EM_BOOL wgpu_is_adapter(WGpuObjectBase object);
 
@@ -407,7 +407,7 @@ interface GPUDevice : EventTarget {
 };
 GPUDevice includes GPUObjectBase;
 */
-typedef int WGpuDevice;
+typedef WGpuObjectBase WGpuDevice;
 // Returns true if the given handle references a valid GPUDevice.
 EM_BOOL wgpu_is_device(WGpuObjectBase object);
 
@@ -470,7 +470,7 @@ interface GPUBuffer {
 };
 GPUBuffer includes GPUObjectBase;
 */
-typedef int WGpuBuffer;
+typedef WGpuObjectBase WGpuBuffer;
 // Returns true if the given handle references a valid GPUBuffer.
 EM_BOOL wgpu_is_buffer(WGpuObjectBase object);
 
@@ -581,7 +581,7 @@ interface GPUTexture {
 };
 GPUTexture includes GPUObjectBase;
 */
-typedef int WGpuTexture;
+typedef WGpuObjectBase WGpuTexture;
 // Returns true if the given handle references a valid GPUTexture.
 EM_BOOL wgpu_is_texture(WGpuObjectBase object);
 // textureViewDesc: Can be null, in which case a default view is created.
@@ -661,7 +661,7 @@ interface GPUTextureView {
 };
 GPUTextureView includes GPUObjectBase;
 */
-typedef int WGpuTextureView;
+typedef WGpuObjectBase WGpuTextureView;
 // Returns true if the given handle references a valid GPUTextureView.
 EM_BOOL wgpu_is_texture_view(WGpuObjectBase object);
 
@@ -967,7 +967,7 @@ interface GPUExternalTexture {
 };
 GPUExternalTexture includes GPUObjectBase;
 */
-typedef int WGpuExternalTexture;
+typedef WGpuObjectBase WGpuExternalTexture;
 // Returns true if the given handle references a valid GPUExternalTexture.
 EM_BOOL wgpu_is_external_texture(WGpuObjectBase object);
 // Returns true if the given GPUExternalTexture object has expired.
@@ -995,7 +995,7 @@ interface GPUSampler {
 };
 GPUSampler includes GPUObjectBase;
 */
-typedef int WGpuSampler;
+typedef WGpuObjectBase WGpuSampler;
 // Returns true if the given handle references a valid GPUSampler.
 EM_BOOL wgpu_is_sampler(WGpuObjectBase object);
 
@@ -1092,7 +1092,7 @@ interface GPUBindGroupLayout {
 };
 GPUBindGroupLayout includes GPUObjectBase;
 */
-typedef int WGpuBindGroupLayout;
+typedef WGpuObjectBase WGpuBindGroupLayout;
 // Returns true if the given handle references a valid GPUBindGroupLayout.
 EM_BOOL wgpu_is_bind_group_layout(WGpuObjectBase object);
 
@@ -1261,7 +1261,7 @@ interface GPUBindGroup {
 };
 GPUBindGroup includes GPUObjectBase;
 */
-typedef int WGpuBindGroup;
+typedef WGpuObjectBase WGpuBindGroup;
 // Returns true if the given handle references a valid GPUBindGroup.
 EM_BOOL wgpu_is_bind_group(WGpuObjectBase object);
 
@@ -1308,7 +1308,7 @@ interface GPUPipelineLayout {
 };
 GPUPipelineLayout includes GPUObjectBase;
 */
-typedef int WGpuPipelineLayout;
+typedef WGpuObjectBase WGpuPipelineLayout;
 // Returns true if the given handle references a valid GPUPipelineLayout.
 EM_BOOL wgpu_is_pipeline_layout(WGpuObjectBase object);
 
@@ -1326,7 +1326,7 @@ interface GPUShaderModule {
 };
 GPUShaderModule includes GPUObjectBase;
 */
-typedef int WGpuShaderModule;
+typedef WGpuObjectBase WGpuShaderModule;
 // Returns true if the given handle references a valid GPUShaderModule.
 EM_BOOL wgpu_is_shader_module(WGpuObjectBase object);
 
@@ -1487,7 +1487,7 @@ interface GPUComputePipeline {
 GPUComputePipeline includes GPUObjectBase;
 GPUComputePipeline includes GPUPipelineBase;
 */
-typedef int WGpuComputePipeline;
+typedef WGpuObjectBase WGpuComputePipeline;
 // Returns true if the given handle references a valid GPUComputePipeline.
 EM_BOOL wgpu_is_compute_pipeline(WGpuObjectBase object);
 
@@ -1505,8 +1505,8 @@ interface GPURenderPipeline {
 GPURenderPipeline includes GPUObjectBase;
 GPURenderPipeline includes GPUPipelineBase;
 */
-typedef int WGpuRenderPipeline;
-typedef int WGpuPipelineBase;
+typedef WGpuObjectBase WGpuRenderPipeline;
+typedef WGpuObjectBase WGpuPipelineBase;
 // Returns true if the given handle references a valid GPURenderPipeline.
 EM_BOOL wgpu_is_render_pipeline(WGpuObjectBase object);
 
@@ -1915,7 +1915,7 @@ interface GPUCommandBuffer {
 };
 GPUCommandBuffer includes GPUObjectBase;
 */
-typedef int WGpuCommandBuffer;
+typedef WGpuObjectBase WGpuCommandBuffer;
 // Returns true if the given handle references a valid GPUCommandBuffer.
 EM_BOOL wgpu_is_command_buffer(WGpuObjectBase object);
 
@@ -1936,7 +1936,7 @@ interface mixin GPUDebugCommandsMixin {
     undefined insertDebugMarker(USVString markerLabel);
 };
 */
-typedef int WGpuDebugCommandsMixin; // One of GPURenderBundleEncoder, GPURenderPassEncoder, GPUComputePassEncoder or GPUCommandEncoder
+typedef WGpuObjectBase WGpuDebugCommandsMixin; // One of GPURenderBundleEncoder, GPURenderPassEncoder, GPUComputePassEncoder or GPUCommandEncoder
 
 void wgpu_encoder_push_debug_group(WGpuDebugCommandsMixin encoder, const char *groupLabel __attribute__((nonnull)));
 void wgpu_encoder_pop_debug_group(WGpuDebugCommandsMixin encoder);
@@ -1990,7 +1990,7 @@ GPUCommandEncoder includes GPUObjectBase;
 GPUCommandEncoder includes GPUCommandsMixin;
 GPUCommandEncoder includes GPUDebugCommandsMixin;
 */
-typedef int WGpuCommandEncoder;
+typedef WGpuObjectBase WGpuCommandEncoder;
 // Returns true if the given handle references a valid GPUCommandEncoder.
 EM_BOOL wgpu_is_command_encoder(WGpuObjectBase object);
 
@@ -2087,7 +2087,7 @@ interface mixin GPUBindingCommandsMixin {
                       GPUSize32 dynamicOffsetsDataLength);
 };
 */
-typedef int WGpuBindingCommandsMixin;
+typedef WGpuObjectBase WGpuBindingCommandsMixin;
 // Returns true if the given handle references a valid GPUBindingCommandsMixin. (one of: GPUComputePassEncoder, GPURenderPassEncoder, or GPURenderBundleEncoder)
 EM_BOOL wgpu_is_binding_commands_mixin(WGpuObjectBase object);
 void wgpu_encoder_set_bind_group(WGpuBindingCommandsMixin encoder, uint32_t index, WGpuBindGroup bindGroup, const uint32_t *dynamicOffsets _WGPU_DEFAULT_VALUE(0), uint32_t numDynamicOffsets _WGPU_DEFAULT_VALUE(0));
@@ -2111,7 +2111,7 @@ GPUComputePassEncoder includes GPUCommandsMixin;
 GPUComputePassEncoder includes GPUDebugCommandsMixin;
 GPUComputePassEncoder includes GPUBindingCommandsMixin;
 */
-typedef int WGpuComputePassEncoder;
+typedef WGpuObjectBase WGpuComputePassEncoder;
 // Returns true if the given handle references a valid GPUComputePassEncoder.
 EM_BOOL wgpu_is_compute_pass_encoder(WGpuObjectBase object);
 
@@ -2184,7 +2184,7 @@ interface mixin GPURenderCommandsMixin {
 };
 */
 // Deliberate API naming divergence: in upstream WebGPU API, there are base "mixin" classes
-typedef int WGpuRenderCommandsMixin;
+typedef WGpuObjectBase WGpuRenderCommandsMixin;
 // Returns true if the given handle references a valid GPURenderCommandsMixin.
 EM_BOOL wgpu_is_render_commands_mixin(WGpuObjectBase object);
 
@@ -2223,7 +2223,7 @@ GPURenderPassEncoder includes GPUDebugCommandsMixin;
 GPURenderPassEncoder includes GPUBindingCommandsMixin;
 GPURenderPassEncoder includes GPURenderCommandsMixin;
 */
-typedef int WGpuRenderPassEncoder;
+typedef WGpuObjectBase WGpuRenderPassEncoder;
 // Returns true if the given handle references a valid GPURenderPassEncoder.
 EM_BOOL wgpu_is_render_pass_encoder(WGpuObjectBase object);
 
@@ -2331,7 +2331,7 @@ interface GPURenderBundle {
 };
 GPURenderBundle includes GPUObjectBase;
 */
-typedef int WGpuRenderBundle;
+typedef WGpuObjectBase WGpuRenderBundle;
 // Returns true if the given handle references a valid GPURenderBundle.
 EM_BOOL wgpu_is_render_bundle(WGpuObjectBase object);
 
@@ -2356,7 +2356,7 @@ GPURenderBundleEncoder includes GPUDebugCommandsMixin;
 GPURenderBundleEncoder includes GPUBindingCommandsMixin;
 GPURenderBundleEncoder includes GPURenderCommandsMixin;
 */
-typedef int WGpuRenderBundleEncoder;
+typedef WGpuObjectBase WGpuRenderBundleEncoder;
 // Returns true if the given handle references a valid GPURenderBundleEncoder.
 EM_BOOL wgpu_is_render_bundle_encoder(WGpuObjectBase object);
 #define wgpu_render_bundle_encoder_finish wgpu_encoder_finish
@@ -2418,7 +2418,7 @@ interface GPUQueue {
 };
 GPUQueue includes GPUObjectBase;
 */
-typedef int WGpuQueue;
+typedef WGpuObjectBase WGpuQueue;
 // Returns true if the given handle references a valid GPUQueue.
 EM_BOOL wgpu_is_queue(WGpuObjectBase object);
 
@@ -2455,7 +2455,7 @@ interface GPUQuerySet {
 };
 GPUQuerySet includes GPUObjectBase;
 */
-typedef int WGpuQuerySet;
+typedef WGpuObjectBase WGpuQuerySet;
 // Returns true if the given handle references a valid GPUQuerySet.
 EM_BOOL wgpu_is_query_set(WGpuObjectBase object);
 // Getters for retrieving query set properties:
@@ -2505,7 +2505,7 @@ interface GPUCanvasContext {
     GPUTexture getCurrentTexture();
 };
 */
-typedef int WGpuCanvasContext;
+typedef WGpuObjectBase WGpuCanvasContext;
 // Returns true if the given handle references a valid GPUCanvasContext.
 EM_BOOL wgpu_is_canvas_context(WGpuObjectBase object);
 
@@ -2883,7 +2883,7 @@ extern const WGpuBindGroupLayoutEntry WGPU_BUFFER_BINDING_LAYOUT_ENTRY_DEFAULT_I
 ////////////////////////////////////////////////////////////////
 // Extensions to the WebGPU specification:
 
-typedef int WGpuImageBitmap;
+typedef WGpuObjectBase WGpuImageBitmap;
 
 // Called when the ImageBitmap finishes loading. If loading fails, this callback will be called with width==height==0.
 typedef void (*WGpuLoadImageBitmapCallback)(WGpuImageBitmap bitmap, int width, int height, void *userData);
