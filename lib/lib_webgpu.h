@@ -80,7 +80,6 @@ interface mixin GPUObjectBase {
     attribute USVString label;
 };
 */
-typedef int WGpuObjectBase;
 // Returns true if the given handle references a valid WebGPU object
 EM_BOOL wgpu_is_valid_object(WGpuObjectBase obj);
 // Set a human-readable label for the given WebGPU object. Pass an empty string "" to clear a label.

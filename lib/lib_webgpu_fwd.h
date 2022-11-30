@@ -28,8 +28,12 @@ typedef uint64_t double_int53_t;
 
 // The following should be kept sorted in the order of the WebIDL for easier diffing across changes to the spec: https://www.w3.org/TR/webgpu/#idl-index
 // with the exception that the callback typedefs should appear last in this file to see the necessary definitions.
-
+#ifdef __EMSCRIPTEN__
 typedef int WGpuObjectBase;
+#else
+typedef struct _WGpuObject *WGpuObjectBase;
+#endif
+
 typedef struct WGpuObjectDescriptorBase WGpuObjectDescriptorBase;
 typedef struct WGpuSupportedLimits WGpuSupportedLimits;
 typedef int WGPU_FEATURES_BITFIELD;
