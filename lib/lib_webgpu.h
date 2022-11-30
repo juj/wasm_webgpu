@@ -9,9 +9,12 @@
 #include <emscripten/html5.h>
 #include <stdint.h>
 
+#ifdef __clang__
 // The internal struct member offset layout is extremely important when marshalling structs to JS,
 // so never let the compiler add any padding (we manually & explicitly make the fields the right size)
+#pragma clang diagnostic push
 #pragma clang diagnostic error "-Wpadded"
+#endif
 
 #include "lib_webgpu_fwd.h"
 
@@ -2890,4 +2893,8 @@ void wgpu_load_image_bitmap_from_url_async(const char *url __attribute__((nonnul
 
 #ifdef __cplusplus
 } // ~extern "C"
+#endif
+
+#ifdef __clang__
+#pragma clang diagnostic pop
 #endif
