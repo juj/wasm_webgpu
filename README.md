@@ -10,6 +10,7 @@ To utilize the library in your own application, copy the contents of the `lib/` 
  - [lib/lib_webgpu.js](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu.js)
  - [lib/lib_webgpu.cpp](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu.cpp)
  - [lib/lib_webgpu_fwd.h](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu_fwd.h)
+ - [lib/lib_webgpu_cpp20.cpp](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu_cpp20.cpp) or [lib/lib_webgpu_cpp11.cpp](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu_cpp11.cpp), depending on if your compiler has C++20 or C++11.
 
 Additionally, if you are using Closure Compiler, also copy the Closure externs file into your project:
 
