@@ -38,6 +38,12 @@
 #define WGPU_INFINITY ((double)INFINITY)
 #endif
 
+#ifndef __EMSCRIPTEN__
+#define EM_BOOL int
+#define EM_TRUE 1
+#define EM_FALSE 0
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
