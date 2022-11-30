@@ -9,6 +9,11 @@
 // The internal struct member offset layout is extremely important when marshalling structs to JS,
 // so never let the compiler add any padding (we manually & explicitly make the fields the right size)
 #pragma clang diagnostic push
+#elif defined(_MSC_VER)
+#pragma warning(push)
+#endif
+
+#ifdef __clang__
 #pragma clang diagnostic error "-Wpadded"
 #endif
 
@@ -2892,4 +2897,6 @@ void wgpu_load_image_bitmap_from_url_async(const char *url NOTNULL, EM_BOOL flip
 
 #ifdef __clang__
 #pragma clang diagnostic pop
+#elif defined(_MSC_VER)
+#pragma warning(pop)
 #endif
