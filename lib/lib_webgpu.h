@@ -3,7 +3,6 @@
 #ifdef __EMSCRIPTEN__
 #include <emscripten/html5.h>
 #endif
-#include <stdint.h>
 
 #ifdef __clang__
 // The internal struct member offset layout is extremely important when marshalling structs to JS,
