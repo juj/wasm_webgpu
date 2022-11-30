@@ -48,7 +48,7 @@ void alloc_gpu_buffer()
   WGpuBuffer buffer = wgpu_device_create_buffer(device, &bufferDesc);
   wgpu_device_pop_error_scope_async(device, oom, 0);
 
-  WGpuBufferMappedRangeStartOffset ofs = wgpu_buffer_get_mapped_range(buffer, 0, allocSize);
+  double_int53_t ofs = wgpu_buffer_get_mapped_range(buffer, 0, allocSize);
   if (ofs == WGPU_BUFFER_GET_MAPPED_RANGE_FAILED)
   {
     emscripten_mini_stdio_fprintf(EM_STDERR, "wgpu_buffer_get_mapped_range() of size %f failed!\n", (double)allocSize);

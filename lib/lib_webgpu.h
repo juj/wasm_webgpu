@@ -35,7 +35,6 @@ extern "C" {
 // address 2^53 == 9007199254740992 = ~9.0 petabytes.
 typedef double double_int53_t;
 
-typedef double_int53_t WGpuBufferMappedRangeStartOffset;
 
 // Returns the number of WebGPU objects referenced by the WebGPU JS library.
 uint32_t wgpu_get_num_live_objects(void);
@@ -482,13 +481,13 @@ void wgpu_buffer_map_async(WGpuBuffer buffer, WGpuBufferMapCallback callback, vo
 // Maps the given WGpuBuffer synchronously. Requires building with -sASYNCIFY=1 linker flag to work.
 void wgpu_buffer_map_sync(WGpuBuffer buffer, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAP_MAX_LENGTH));
 
-#define WGPU_BUFFER_GET_MAPPED_RANGE_FAILED ((WGpuBufferMappedRangeStartOffset)-1)
+#define WGPU_BUFFER_GET_MAPPED_RANGE_FAILED ((double_int53_t)-1)
 
 // Calls buffer.getMappedRange(). Returns `startOffset`, which is used as an ID token to wgpu_buffer_read/write_mapped_range().
 // If .getMappedRange() fails, the value WGPU_BUFFER_GET_MAPPED_RANGE_FAILED (-1) will be returned.
-WGpuBufferMappedRangeStartOffset wgpu_buffer_get_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAP_MAX_LENGTH));
-void wgpu_buffer_read_mapped_range(WGpuBuffer buffer, WGpuBufferMappedRangeStartOffset startOffset, double_int53_t subOffset, void *dst __attribute__((nonnull)), double_int53_t size);
-void wgpu_buffer_write_mapped_range(WGpuBuffer buffer, WGpuBufferMappedRangeStartOffset startOffset, double_int53_t subOffset, const void *src __attribute__((nonnull)), double_int53_t size);
+double_int53_t wgpu_buffer_get_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAP_MAX_LENGTH));
+void wgpu_buffer_read_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t subOffset, void *dst __attribute__((nonnull)), double_int53_t size);
+void wgpu_buffer_write_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t subOffset, const void *src __attribute__((nonnull)), double_int53_t size);
 void wgpu_buffer_unmap(WGpuBuffer buffer);
 
 // Getters for retrieving buffer properties:
