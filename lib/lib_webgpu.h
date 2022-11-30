@@ -17,6 +17,10 @@
 #pragma clang diagnostic error "-Wpadded"
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(disable : 4200) // Disable MSVC complaining about zero-sized arrays for copy/move assignment in WGpuCompilationInfo
+#endif
+
 #include "lib_webgpu_fwd.h"
 
 // Some WebGPU JS API functions have default parameters so that the user can omit passing them.
