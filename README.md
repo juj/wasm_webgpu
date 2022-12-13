@@ -34,7 +34,7 @@ TODO: add more instructions about targeting Dawn natively.
 
 ## Implementation Status
 
-The repository was last updated to be up to date with the WebGPU specification as of 🗓 **18th of November 2022**.
+The repository was last updated to be up to date with the WebGPU specification as of 🗓 **13th of December 2022**.
 
 ## Features and Design
 
