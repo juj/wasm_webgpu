@@ -72,10 +72,50 @@ if (EMSCRIPTEN)
 	append_linker_flags_minsizerel("-Oz")
 endif()
 
+if (MSVC)
+	if (${MSVC_TOOLSET_VERSION} LESS 142)
+		message(FATAL_ERROR "At least Visual Studio 2019 is needed to build.")
+	else()
+		append_compiler_flags("/std:c++20") # This is needed on Visual Studio 2019 at least. TODO: In which future Visual Studio is this no longer needed?
+		                                    # See https://cmake.org/cmake/help/latest/variable/MSVC_TOOLSET_VERSION.html#variable:MSVC_TOOLSET_VERSION
+	endif()
+endif()
+
 include_directories("${LIB_DIR}")
 include_directories("${COMMON_DIR}")
 
-add_library(webgpu STATIC ${LIB_DIR}/lib_webgpu.cpp ${LIB_DIR}/lib_webgpu_cpp20.cpp)
+if (NOT EMSCRIPTEN)
+	set(DAWN_SRC ${LIB_DIR}/lib_webgpu_dawn.cpp)
+	message(STATUS "DAWN_ROOT=\"${DAWN_ROOT}\"")
+	message(STATUS "DAWN_BUILD=\"${DAWN_BUILD}\"")
+	if (NOT DEFINED DAWN_ROOT OR NOT DEFINED DAWN_BUILD)
+		message(FATAL_ERROR "When not targeting Emscripten, must specify Dawn root directory in -DDAWN_ROOT=/path/to/dawn, and Dawn build directory in -DDAWN_BUILD=/path/to/dawn/out/Debug")
+	endif()
+#	include_directories("${DAWN_ROOT}/include")
+	include_directories("${DAWN_BUILD}/gen/include")
+endif()
+
+if (MSVC)
+	add_library(webgpu STATIC ${LIB_DIR}/lib_webgpu.cpp ${LIB_DIR}/lib_webgpu_cpp11.cpp ${DAWN_SRC})
+	set_property(TARGET webgpu PROPERTY CXX_STANDARD 17) # Dawn headers require /std:c++17
+else()
+	add_library(webgpu STATIC ${LIB_DIR}/lib_webgpu.cpp ${LIB_DIR}/lib_webgpu_cpp20.cpp)
+	set_property(TARGET webgpu PROPERTY CXX_STANDARD 20)
+endif()
+
+if (NOT EMSCRIPTEN)
+	target_link_libraries(webgpu PRIVATE ${DAWN_BUILD}/src/dawn/dawncpp.lib)
+	target_link_libraries(webgpu PRIVATE ${DAWN_BUILD}/src/dawn/dawn_proc.lib)
+	target_link_libraries(webgpu PRIVATE ${DAWN_BUILD}/src/dawn/common/dawn_common.lib)
+	target_link_libraries(webgpu PRIVATE ${DAWN_BUILD}/src/dawn/platform/dawn_platform.lib)
+	target_link_libraries(webgpu PRIVATE ${DAWN_BUILD}/src/dawn/native/dawn_native.lib)
+	target_link_libraries(webgpu PRIVATE ${DAWN_BUILD}/src/dawn/utils/dawn_utils.lib)
+
+#	target_link_libraries(webgpu PRIVATE ${DAWN_BUILD}/src/tint/tint.lib)
+#	target_link_libraries(webgpu PRIVATE ${DAWN_BUILD}/src/tint/tint_diagnostic_utils.lib)
+#	target_link_libraries(webgpu PRIVATE ${DAWN_BUILD}/src/tint/tint_utils_io.lib)
+#	target_link_libraries(webgpu PRIVATE ${DAWN_BUILD}/src/tint/tint_val.lib)
+endif()
 
 add_executable(clear_screen clear_screen/clear_screen.c)
 target_link_libraries(clear_screen webgpu)

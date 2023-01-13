@@ -4,7 +4,7 @@
 
 This repository contains an Emscripten system library for utilizing WebGPU from a C/C++ codebase, along with a few small C code examples on how to use it.
 
-To utilize the library in your own application, copy the contents of the `lib/` directory into your project:
+To utilize the library in your own WebAssembly application, copy the contents of the `lib/` directory into your project:
 
  - [lib/lib_webgpu.h](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu.h)
  - [lib/lib_webgpu.js](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu.js)
@@ -26,11 +26,7 @@ For your convenience, a forward declaration header is also provided, and can be 
 
 # Using WebGPU via Dawn
 
-It is also possible to target WebGPU outside the browser via Dawn. When doing so, also compile the dawn-specific file with your project:
-
- - [lib/lib_webgpu_dawn.cpp](https://github.com/juj/wasm_webgpu/blob/main/lib/lib_webgpu_dawn.cpp)
-
-TODO: add more instructions about targeting Dawn natively.
+It is also possible to target WebGPU outside the browser via Dawn. See the instructions in [README_DAWN.md](https://github.com/juj/wasm_webgpu/blob/main/README_DAWN.md).
 
 ## Implementation Status
 

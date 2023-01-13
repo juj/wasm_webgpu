@@ -38,6 +38,12 @@ typedef int WGpuObjectBase;
 typedef struct _WGpuObject *WGpuObjectBase;
 #endif
 
+#ifdef WIN32
+// Forward-declare some needed identifiers from Windows.h (unlikely that these can ever change in Windows)
+struct HWND__;
+typedef struct HWND__* HWND;
+#endif
+
 typedef struct WGpuObjectDescriptorBase WGpuObjectDescriptorBase;
 typedef struct WGpuSupportedLimits WGpuSupportedLimits;
 typedef int WGPU_FEATURES_BITFIELD;
