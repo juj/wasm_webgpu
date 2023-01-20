@@ -209,7 +209,6 @@ enum GPUFeatureName {
     "timestamp-query",
     "indirect-first-instance",
     "shader-f16",
-    "bgra8unorm-storage",
     "rg11b10ufloat-renderable"
 };
 */
@@ -222,8 +221,7 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_TIMESTAMP_QUERY            0x20
 #define WGPU_FEATURE_INDIRECT_FIRST_INSTANCE    0x40
 #define WGPU_FEATURE_SHADER_F16                 0x80
-#define WGPU_FEATURE_BGRA8UNORM_STORAGE        0x100
-#define WGPU_FEATURE_RG11B10UFLOAT_RENDERABLE  0x200
+#define WGPU_FEATURE_RG11B10UFLOAT_RENDERABLE  0x100
 
 /*
 // WebGPU reuses the color space enum from the HTML Canvas specification:
