@@ -1234,6 +1234,7 @@ typedef struct WGpuTextureBindingLayout
 {
   WGPU_TEXTURE_SAMPLE_TYPE sampleType;
   WGPU_TEXTURE_VIEW_DIMENSION viewDimension;
+  EM_BOOL multisampled;
 } WGpuTextureBindingLayout;
 extern const WGpuTextureBindingLayout WGPU_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER;
 
