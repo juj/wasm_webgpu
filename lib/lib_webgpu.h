@@ -1457,7 +1457,7 @@ enum GPUAutoLayoutMode {
 };
 */
 typedef int WGPU_AUTO_LAYOUT_MODE;
-#define WGPU_AUTO_LAYOUT_MODE_NO_HINT 0 // In shader compilation, specifies that no hint is to be passed. Invalid to be used in pipeline creation.
+#define WGPU_AUTO_LAYOUT_MODE_NO_HINT 0 // In shader compilation, specifies that no hint is to be passed. In pipeline creation, means same as WGPU_AUTO_LAYOUT_MODE_AUTO.
 #define WGPU_AUTO_LAYOUT_MODE_AUTO    1 // In shader compilation, specifies that the hint { layout: 'auto' } is to be passed. In pipeline creation, uses automatic layout creation.
 
 /*
