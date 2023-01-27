@@ -158,6 +158,7 @@ void CreateGeometryAndRender()
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 {
   device = result;
+  assert(device);
   queue = wgpu_device_get_queue(device);
 
   canvasContext = wgpu_canvas_get_webgpu_context("canvas");
