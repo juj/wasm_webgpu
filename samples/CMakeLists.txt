@@ -8,8 +8,8 @@ endif()
 
 find_program(CCACHE_PROGRAM ccache)
 if (CCACHE_PROGRAM)
-	message(STATUS "Enabling use of ccache from ${CCACHE_PROGRAM}")
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+  message(STATUS "Enabling use of ccache from ${CCACHE_PROGRAM}")
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
 macro(append_compiler_flags FLAGS)
