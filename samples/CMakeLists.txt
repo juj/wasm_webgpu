@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.20)
 
 project(wasm_webgpu)
 
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
+  set(CMAKE_BUILD_TYPE "Debug") # Default to Debug build if not specified
+endif()
+
 find_program(CCACHE_PROGRAM ccache)
 if (CCACHE_PROGRAM)
 	message(STATUS "Enabling use of ccache from ${CCACHE_PROGRAM}")
