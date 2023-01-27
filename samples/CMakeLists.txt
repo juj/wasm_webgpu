@@ -46,26 +46,26 @@ if (EMSCRIPTEN)
 
 	append_linker_flags("-Wall")
 	append_linker_flags_debug("-g3")
-	append_linker_flags_debug("-s ASSERTIONS=1 -jsDWEBGPU_DEBUG=1")
+	append_linker_flags_debug("-sASSERTIONS=1 -jsDWEBGPU_DEBUG=1")
 
 	append_linker_flags("--js-library ${LIB_DIR}/lib_webgpu.js")
 	append_linker_flags("--js-library ${COMMON_DIR}/lib_demo.js")
 	append_linker_flags("--js-library ${COMMON_DIR}/library_miniprintf.js")
-	append_linker_flags("-s MINIMAL_RUNTIME=2 -s TEXTDECODER=2 -s ABORTING_MALLOC=0 -s SUPPORT_ERRNO=0")
-	append_linker_flags("-s ENVIRONMENT=web -s MIN_FIREFOX_VERSION=87 -s MIN_SAFARI_VERSION=140000 -s MIN_EDGE_VERSION=90 -s MIN_CHROME_VERSION=90")
+	append_linker_flags("-sMINIMAL_RUNTIME=2 -sTEXTDECODER=2 -sABORTING_MALLOC=0 -sSUPPORT_ERRNO=0")
+	append_linker_flags("-sENVIRONMENT=web -sMIN_FIREFOX_VERSION=87 -sMIN_SAFARI_VERSION=140000 -sMIN_EDGE_VERSION=90 -sMIN_CHROME_VERSION=90")
 	append_linker_flags("--shell-file \"${CMAKE_SOURCE_DIR}/shell.html\"")
-	append_linker_flags("-s TOTAL_STACK=16KB -s INITIAL_MEMORY=128KB")
-	append_linker_flags("-s ALLOW_MEMORY_GROWTH=1")
-	append_linker_flags("-s USE_SDL=0 -s FILESYSTEM=0 -s AUTO_JS_LIBRARIES=0 -s DISABLE_EXCEPTION_THROWING=1")
+	append_linker_flags("-sTOTAL_STACK=16KB -sINITIAL_MEMORY=128KB")
+	append_linker_flags("-sALLOW_MEMORY_GROWTH=1")
+	append_linker_flags("-sUSE_SDL=0 -sFILESYSTEM=0 -sAUTO_JS_LIBRARIES=0 -sDISABLE_EXCEPTION_THROWING=1")
 	append_linker_flags("-lmath.js -lhtml5.js -lint53.js")
 	append_linker_flags("--closure-args=--externs=${LIB_DIR}/webgpu-closure-externs.js")
 
-	append_linker_flags("-s INITIAL_MEMORY=16MB -s MALLOC=emmalloc --memory-init-file 0")
+	append_linker_flags("-sINITIAL_MEMORY=16MB -sMALLOC=emmalloc --memory-init-file 0")
 
-	#append_linker_flags("-s MAXIMUM_MEMORY=4GB")
+	#append_linker_flags("-sMAXIMUM_MEMORY=4GB")
 
 	# Manual debugging:
-	#append_linker_flags("-g2 -s SINGLE_FILE=1")
+	#append_linker_flags("-g2 -sSINGLE_FILE=1")
 
 	append_linker_flags_opts("--closure 1")
 
