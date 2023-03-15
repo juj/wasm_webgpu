@@ -2319,8 +2319,9 @@ enum GPULoadOp {
 };
 */
 typedef int WGPU_LOAD_OP;
-#define WGPU_LOAD_OP_LOAD 0
-#define WGPU_LOAD_OP_CLEAR 1
+#define WGPU_LOAD_OP_UNDEFINED 0
+#define WGPU_LOAD_OP_LOAD 1
+#define WGPU_LOAD_OP_CLEAR 2
 
 /*
 enum GPUStoreOp {
@@ -2329,8 +2330,9 @@ enum GPUStoreOp {
 };
 */
 typedef int WGPU_STORE_OP;
-#define WGPU_STORE_OP_STORE 0
-#define WGPU_STORE_OP_DISCARD 1
+#define WGPU_STORE_OP_UNDEFINED 0
+#define WGPU_STORE_OP_STORE 1
+#define WGPU_STORE_OP_DISCARD 2
 
 /*
 dictionary GPURenderPassLayout : GPUObjectDescriptorBase {
