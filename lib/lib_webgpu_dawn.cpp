@@ -565,12 +565,14 @@ const WGPUVertexStepMode WGPU_VERTEX_STEP_MODE_to_Dawn[] = {
 #define wgpu_vertex_step_mode_to_dawn(mode) WGPU_VERTEX_STEP_MODE_to_Dawn[mode]
 
 const WGPULoadOp WGPU_LOAD_OP_to_Dawn[] = {
+  WGPULoadOp_Undefined,
   WGPULoadOp_Load,
   WGPULoadOp_Clear
 };
 #define wgpu_load_op_to_dawn(op) WGPU_LOAD_OP_to_Dawn[op]
 
 const WGPUStoreOp WGPU_STORE_OP_to_Dawn[] = {
+  WGPUStoreOp_Undefined,
   WGPUStoreOp_Store,
   WGPUStoreOp_Discard
 };
