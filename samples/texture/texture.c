@@ -47,7 +47,7 @@ void CreateGeometryAndRender()
 
   wgpu_object_destroy(buffer);
   buffer = wgpu_device_create_buffer(device, &bufferDesc);
-  wgpu_buffer_get_mapped_range(buffer, 0, WGPU_MAP_MAX_LENGTH);
+  wgpu_buffer_get_mapped_range(buffer, 0, WGPU_MAX_SIZE);
   wgpu_buffer_write_mapped_range(buffer, 0, 0, v, sizeof(v));
   wgpu_buffer_unmap(buffer);
 
