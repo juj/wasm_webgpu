@@ -2570,6 +2570,10 @@ void wgpu_device_set_lost_callback(WGpuDevice device, WGpuDeviceLostCallback cal
   assert(wgpu_is_device(device));
   assert(callback);
   WGPUDevice _device = _wgpu_get_dawn<WGPUDevice>(device);
+  if (callback == nullptr) {
+    wgpuDeviceSetDeviceLostCallback(_device, nullptr, nullptr);
+    return;
+  }
   struct _Data {
     WGpuDevice device;
     WGpuDeviceLostCallback callback;
