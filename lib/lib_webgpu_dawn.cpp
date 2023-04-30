@@ -1113,6 +1113,12 @@ WGpuQueue wgpu_device_get_queue(WGpuDevice device) {
   return _wgpu_store_and_set_parent(kWebGPUQueue, queue, device);
 }
 
+void wgpu_device_tick(WGpuDevice device) {
+  assert(wgpu_is_device(device));
+  WGPUDevice _device = _wgpu_get_dawn<WGPUDevice>(device);
+  wgpuDeviceTick(_device);
+}
+
 WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescriptor* bufferDesc) {
   assert(wgpu_is_device(device));
   assert(bufferDesc);
