@@ -1125,6 +1125,7 @@ WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescript
   _desc.nextInChain = nullptr;
 
   WGPUBuffer buffer = wgpuDeviceCreateBuffer(_wgpu_get_dawn<WGPUDevice>(device), &_desc);
+  buffer->state = bufferDesc->mappedAtCreation ? kWebGPUBufferMapStateMappedForWriting : kWebGPUBufferMapStateUnmapped;
   return _wgpu_store_and_set_parent(kWebGPUBuffer, buffer, device);
 }
 
