@@ -2012,8 +2012,8 @@ WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder 
   }
   _desc.timestampWrites = timestampWrites.data();
 
+  WGPURenderPassDescriptorMaxDrawCount chainedDesc;
   if (renderPassDesc->maxDrawCount > 0) {
-    WGPURenderPassDescriptorMaxDrawCount chainedDesc;
     chainedDesc.maxDrawCount = renderPassDesc->maxDrawCount;
     chainedDesc.chain = { nullptr, WGPUSType_RenderPassDescriptorMaxDrawCount };
     _desc.nextInChain = reinterpret_cast<WGPUChainedStruct*>(&chainedDesc);
