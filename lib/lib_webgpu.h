@@ -267,6 +267,11 @@ interface GPU {
     GPUTextureFormat getPreferredCanvasFormat();
 };
 */
+// Returns true if the browser is advertising to be WebGPU-aware. This means that the browser in question is shipping with WebGPU available, but does not
+// necessarily mean that there would exist any WebGPU adapters or devices that are supported. The only way to know if WebGPU is actually possible will
+// be to try to request and adapter and then a device.
+EM_BOOL navigator_gpu_available(void);
+
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // Requests an adapter from the user agent. The user agent chooses whether to return an adapter, and, if so, chooses according to the provided options.
 // If WebGPU is not supported by the browser, returns EM_FALSE.
@@ -274,6 +279,9 @@ typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // The callback will also be resolved in the event of an initialization failure, but the ID handle
 // passed to the callback will then be zero.
 // options: may be null to request an adapter without specific options.
+// Note: If the current browser is not aware of the WebGPU API, then this function will by design abort execution
+// (fail on assert, and throw a JS exception in release builds). To gracefully detect whether the current browser is new enough to be WebGPU API aware,
+// call the function navigator_gpu_available() to check.
 EM_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions *options, WGpuRequestAdapterCallback adapterCallback, void *userData);
 // Requests a WebGPU adapter synchronously. Requires building with -sASYNCIFY=1 linker flag to work.
 // options: may be null to request an adapter without specific options.

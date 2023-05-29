@@ -66,5 +66,6 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 
 int main(int argc, char **argv)
 {
+  assert(navigator_gpu_available());
   navigator_gpu_request_adapter_async_simple(ObtainedWebGpuAdapter);
 }
