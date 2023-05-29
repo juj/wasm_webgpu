@@ -14,7 +14,7 @@ endif()
 
 macro(append_compiler_flags FLAGS)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${FLAGS}")
-  set(CMAKE_CXX_FLAGSG "${CMAKE_CXX_FLAGS} ${FLAGS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAGS}")
 endmacro()
 
 macro(append_compiler_flags_debug FLAGS)
