@@ -70,6 +70,7 @@ const WGpuSamplerBindingLayout WGPU_SAMPLER_BINDING_LAYOUT_DEFAULT_INITIALIZER =
 const WGpuTextureBindingLayout WGPU_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
   WGPU_TEXTURE_SAMPLE_TYPE_FLOAT, /* sampleType */
   WGPU_TEXTURE_VIEW_DIMENSION_2D, /* viewDimension */
+  false, /* multisampled */
 };
 
 const WGpuBindGroupEntry WGPU_BIND_GROUP_ENTRY_DEFAULT_INITIALIZER = {

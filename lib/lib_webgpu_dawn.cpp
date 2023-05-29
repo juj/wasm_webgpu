@@ -399,6 +399,13 @@ const WGPUFilterMode WGPU_FILTER_MODE_to_Dawn[] = {
   WGPUFilterMode_Linear
 };
 #define wgpu_filter_mode_to_dawn(mode) WGPU_FILTER_MODE_to_Dawn[mode]
+
+const WGPUMipmapFilterMode WGPU_MIPMAP_FILTER_MODE_to_Dawn[] = {
+  WGPUMipmapFilterMode_Force32,
+  WGPUMipmapFilterMode_Nearest,
+  WGPUMipmapFilterMode_Linear
+};
+#define wgpu_mipmap_filter_mode_to_dawn(mode) WGPU_MIPMAP_FILTER_MODE_to_Dawn[mode]
  
 const WGPUCompareFunction WGPU_COMPARE_FUNCTION_to_Dawn[] = {
   WGPUCompareFunction_Undefined,
@@ -1113,6 +1120,12 @@ WGpuQueue wgpu_device_get_queue(WGpuDevice device) {
   return _wgpu_store_and_set_parent(kWebGPUQueue, queue, device);
 }
 
+void wgpu_device_tick(WGpuDevice device) {
+  assert(wgpu_is_device(device));
+  WGPUDevice _device = _wgpu_get_dawn<WGPUDevice>(device);
+  wgpuDeviceTick(_device);
+}
+
 WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescriptor* bufferDesc) {
   assert(wgpu_is_device(device));
   assert(bufferDesc);
@@ -1165,7 +1178,7 @@ WGpuSampler wgpu_device_create_sampler(WGpuDevice device, const WGpuSamplerDescr
   _desc.addressModeW = wgpu_address_mode_to_dawn(samplerDesc->addressModeW);
   _desc.magFilter = wgpu_filter_mode_to_dawn(samplerDesc->magFilter);
   _desc.minFilter = wgpu_filter_mode_to_dawn(samplerDesc->minFilter);
-  _desc.mipmapFilter = wgpu_filter_mode_to_dawn(samplerDesc->mipmapFilter);
+  _desc.mipmapFilter = wgpu_mipmap_filter_mode_to_dawn(samplerDesc->mipmapFilter);
   _desc.lodMinClamp = samplerDesc->lodMinClamp;
   _desc.lodMaxClamp = samplerDesc->lodMaxClamp;
   _desc.compare = wgpu_compare_function_to_dawn(samplerDesc->compare);
@@ -1963,7 +1976,6 @@ static WGPURenderPassColorAttachment getColorAttachInfo(const WGpuRenderPassColo
   _attachment.resolveTarget = _wgpu_get_dawn<WGPUTextureView>(colorAttachment.resolveTarget);
   _attachment.loadOp = wgpu_load_op_to_dawn(colorAttachment.loadOp);
   _attachment.storeOp = wgpu_store_op_to_dawn(colorAttachment.storeOp);
-  _attachment.clearColor = WGPUColor{ colorAttachment.clearValue.r, colorAttachment.clearValue.g, colorAttachment.clearValue.b, colorAttachment.clearValue.a };
   _attachment.clearValue = WGPUColor{ colorAttachment.clearValue.r, colorAttachment.clearValue.g, colorAttachment.clearValue.b, colorAttachment.clearValue.a };
   return _attachment;
 }
@@ -1990,11 +2002,10 @@ WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder 
     depthStencil.depthLoadOp  = wgpu_load_op_to_dawn(_depthStencil.depthLoadOp);
     depthStencil.depthStoreOp = wgpu_store_op_to_dawn(_depthStencil.depthStoreOp);
     depthStencil.depthReadOnly = _depthStencil.depthReadOnly;
-    depthStencil.clearDepth = _depthStencil.depthClearValue;
     depthStencil.depthClearValue = _depthStencil.depthClearValue;
     depthStencil.stencilLoadOp = wgpu_load_op_to_dawn(_depthStencil.stencilLoadOp);
     depthStencil.stencilStoreOp = wgpu_store_op_to_dawn(_depthStencil.stencilStoreOp);
-    depthStencil.clearStencil = _depthStencil.stencilClearValue;
+    depthStencil.stencilClearValue = _depthStencil.stencilClearValue;
     depthStencil.stencilReadOnly = _depthStencil.stencilReadOnly;
     _desc.depthStencilAttachment = &depthStencil;
   }
@@ -2011,8 +2022,8 @@ WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder 
   }
   _desc.timestampWrites = timestampWrites.data();
 
+  WGPURenderPassDescriptorMaxDrawCount chainedDesc;
   if (renderPassDesc->maxDrawCount > 0) {
-    WGPURenderPassDescriptorMaxDrawCount chainedDesc;
     chainedDesc.maxDrawCount = renderPassDesc->maxDrawCount;
     chainedDesc.chain = { nullptr, WGPUSType_RenderPassDescriptorMaxDrawCount };
     _desc.nextInChain = reinterpret_cast<WGPUChainedStruct*>(&chainedDesc);
@@ -2527,7 +2538,6 @@ void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCa
   swapDesc.usage = (WGPUTextureUsageFlags)config->usage;
   swapDesc.nextInChain = nullptr;
   swapDesc.label = nullptr;
-  swapDesc.implementation = 0;
   context->swapChain = wgpuDeviceCreateSwapChain(_wgpu_get_dawn<WGPUDevice>(config->device), context->surface, &swapDesc);
 }
 
@@ -2569,6 +2579,10 @@ void wgpu_device_set_lost_callback(WGpuDevice device, WGpuDeviceLostCallback cal
   assert(wgpu_is_device(device));
   assert(callback);
   WGPUDevice _device = _wgpu_get_dawn<WGPUDevice>(device);
+  if (callback == nullptr) {
+    wgpuDeviceSetDeviceLostCallback(_device, nullptr, nullptr);
+    return;
+  }
   struct _Data {
     WGpuDevice device;
     WGpuDeviceLostCallback callback;

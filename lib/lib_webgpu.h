@@ -432,6 +432,12 @@ EM_BOOL wgpu_is_device(WGpuObjectBase object);
 
 WGpuQueue wgpu_device_get_queue(WGpuDevice device);
 
+#ifdef __EMSCRIPTEN__
+void wgpu_device_tick(WGpuDevice device) __attribute__((deprecated("The function wgpu_device_tick() is not available when targeting the web. Presentation always occurs when yielding out from browser event loop.")));
+#else
+void wgpu_device_tick(WGpuDevice device);
+#endif
+
 WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescriptor *bufferDesc NOTNULL);
 WGpuTexture wgpu_device_create_texture(WGpuDevice device, const WGpuTextureDescriptor *textureDesc NOTNULL);
 WGpuSampler wgpu_device_create_sampler(WGpuDevice device, const WGpuSamplerDescriptor *samplerDesc NOTNULL);
