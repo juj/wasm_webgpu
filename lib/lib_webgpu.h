@@ -272,6 +272,11 @@ interface GPU {
 // be to try to request and adapter and then a device.
 EM_BOOL navigator_gpu_available(void);
 
+// This function can be used to remove access to WebGPU API on the current JS page. This can be useful for debugging or sandboxing purposes. Note that
+// if the page has already initialized a WebGPU context, then the context is not affected. Amounts to a 'delete navigator.gpu' operation.
+// After calling this function navigator_gpu_available() will return false.
+void navigator_delete_webgpu_api_access(void);
+
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // Requests an adapter from the user agent. The user agent chooses whether to return an adapter, and, if so, chooses according to the provided options.
 // If WebGPU is not supported by the browser, returns EM_FALSE.
