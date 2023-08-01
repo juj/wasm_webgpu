@@ -377,6 +377,12 @@ const defaultSubCharEnd = 91; // '['
 console.log('////////////////////////////////////////////////////////////');
 console.log('// Automatically generated with scripts/compress_strings.js:');
 console.log(`
+#if !global.WEBGPU_NO_BW_COMPAT
+  $replaceAll_polyfill: ";if (!String.prototype.replaceAll) String.prototype.replaceAll = function(str, newStr) { return this.replace(str instanceof RegExp ? str : new RegExp(str, 'g'), newStr); }",
+  $wgpuDecodeStrings__deps: ['$replaceAll_polyfill'],
+#endif
+
+  $wgpuDecodeStrings__docs: '/** @param {number=} ch */',
   $wgpuDecodeStrings: function(s, c, ch) {
     ch = ch || 65;
     for(c = c.split('|'); c[0];) s = s['replaceAll'](String.fromCharCode(ch++), c.pop());

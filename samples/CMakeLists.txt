@@ -95,6 +95,7 @@ target_link_options(clear_screen_sync PRIVATE "-sASYNCIFY_IMPORTS=['navigator_gp
 # Currently ASYNCIFY does not support MINIMAL_RUNTIME, so have to disable it for this example.
 target_link_options(clear_screen_sync PRIVATE "-sMINIMAL_RUNTIME=0")
 target_link_options(clear_screen_sync PRIVATE "--shell-file=${EMSCRIPTEN_ROOT_PATH}/src/shell.html")
+target_link_options(clear_screen_sync PRIVATE "-jsDWEBGPU_NO_BW_COMPAT=1") # Test that no backwards compatibility variant builds ok.
 
 add_executable(hello_triangle_minimal hello_triangle/hello_triangle_minimal.c)
 target_link_libraries(hello_triangle_minimal webgpu)
