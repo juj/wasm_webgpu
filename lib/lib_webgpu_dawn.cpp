@@ -2013,13 +2013,9 @@ WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder 
   _desc.label = nullptr;
 
   _desc.timestampWriteCount = renderPassDesc->numTimestampWrites;
-  std::vector<WGPURenderPassTimestampWrite> timestampWrites(renderPassDesc->numTimestampWrites);
-  for (int i = 0; i < renderPassDesc->numTimestampWrites; ++i) {
-    timestampWrites[i].querySet = _wgpu_get_dawn<WGPUQuerySet>(renderPassDesc->timestampWrites[i].querySet);
-    timestampWrites[i].queryIndex = renderPassDesc->timestampWrites[i].queryIndex;
-    timestampWrites[i].location = wgpu_render_pass_timestamp_location_to_dawn(renderPassDesc->timestampWrites[i].location);
-  }
-  _desc.timestampWrites = timestampWrites.data();
+  _desc.timestampWrites.querySet = _wgpu_get_dawn<WGPUQuerySet>(renderPassDesc->timestampWrites.querySet);
+  _desc.timestampWrites.queryIndex = renderPassDesc->timestampWrites.queryIndex;
+  _desc.timestampWrites.location = wgpu_render_pass_timestamp_location_to_dawn(renderPassDesc->timestampWrites.location);
 
   WGPURenderPassDescriptorMaxDrawCount chainedDesc;
   if (renderPassDesc->maxDrawCount > 0) {

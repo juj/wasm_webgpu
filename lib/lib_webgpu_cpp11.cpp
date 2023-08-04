@@ -84,6 +84,30 @@ const WGpuCommandEncoderDescriptor WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITI
 
 const WGpuImageCopyBuffer WGPU_IMAGE_COPY_BUFFER_DEFAULT_INITIALIZER = {};
 
+const WGpuComputePassTimestampWrites WGPU_COMPUTE_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER = {
+  0, /* querySet */
+  -1, /* beginningOfPassWriteIndex */
+  -1 /* endOfPassWriteIndex */
+};
+
+const WGpuComputePassDescriptor WGPU_COMPUTE_PASS_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  WGPU_COMPUTE_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER /* timestampWrites */
+};
+
+const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER = {
+  0, /* view */
+
+  WGPU_LOAD_OP_LOAD, /* depthLoadOp */
+  WGPU_NAN, /* depthClearValue */
+  WGPU_STORE_OP_UNDEFINED, /* depthStoreOp */
+  false, /* depthReadOnly */
+
+  WGPU_LOAD_OP_LOAD, /* stencilLoadOp */
+  0, /* stencilClearValue */
+  WGPU_STORE_OP_UNDEFINED, /* stencilStoreOp */
+  false, /* stencilReadOnly */
+};
+
 const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
   WGPU_STORAGE_TEXTURE_ACCESS_WRITE_ONLY, /* access */
   WGPU_TEXTURE_FORMAT_INVALID, /* format */
@@ -98,6 +122,21 @@ const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER = {
   nullptr, /* viewFormats */
   HTML_PREDEFINED_COLOR_SPACE_SRGB, /* colorSpace */
   WGPU_CANVAS_ALPHA_MODE_OPAQUE, /* alphaMode */
+};
+
+const WGpuRenderPassTimestampWrites WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER = {
+  0, /* querySet */
+  -1, /* beginningOfPassWriteIndex */
+  -1 /* endOfPassWriteIndex */
+};
+
+const WGpuRenderPassDescriptor WGPU_RENDER_PASS_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  0, /* numColorAttachments */
+  0, /* colorAttachments */
+  WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER, /* depthStencilAttachment */
+  0, /* occlusionQuerySet */
+  0, /* maxDrawCount */
+  WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER /* timestampWrites */
 };
 
 const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {

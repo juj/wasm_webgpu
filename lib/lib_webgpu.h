@@ -32,9 +32,11 @@
 #endif
 
 #ifdef __GNUC__
+#define WGPU_NAN __builtin_nan("")
 #define WGPU_INFINITY __builtin_inf()
 #else
 #include <math.h>
+#define WGPU_NAN ((double)NAN)
 #define WGPU_INFINITY ((double)INFINITY)
 #endif
 
@@ -2167,41 +2169,31 @@ void wgpu_compute_pass_encoder_dispatch_workgroups_indirect(WGpuComputePassEncod
 #define wgpu_compute_pass_encoder_set_bind_group wgpu_encoder_set_bind_group
 
 /*
- enum GPUComputePassTimestampLocation {
-    "beginning",
-    "end",
-};
-*/
-typedef int WGPU_COMPUTE_PASS_TIMESTAMP_LOCATION;
-#define WGPU_COMPUTE_PASS_TIMESTAMP_LOCATION_BEGINNING 0
-#define WGPU_COMPUTE_PASS_TIMESTAMP_LOCATION_END       1
-
-/*
-dictionary GPUComputePassTimestampWrite {
+dictionary GPUComputePassTimestampWrites {
     required GPUQuerySet querySet;
-    required GPUSize32 queryIndex;
-    required GPUComputePassTimestampLocation location;
+    GPUSize32 beginningOfPassWriteIndex;
+    GPUSize32 endOfPassWriteIndex;
 };
 */
-typedef struct WGpuComputePassTimestampWrite
+typedef struct WGpuComputePassTimestampWrites
 {
   WGpuQuerySet querySet;
-  uint32_t queryIndex;
-  WGPU_COMPUTE_PASS_TIMESTAMP_LOCATION location;
-} WGpuComputePassTimestampWrite;
+  int32_t beginningOfPassWriteIndex; // Important! Specify -1 to not perform a write at beginning of pass. Setting 0 will write to index 0. Ignored if querySet == 0.
+  int32_t endOfPassWriteIndex;       // Important! Specify -1 to not perform a write at end of pass. Setting 0 will write to index 0. Ignored if querySet == 0.
+} WGpuComputePassTimestampWrites;
+extern const WGpuComputePassTimestampWrites WGPU_COMPUTE_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER;
 
 /*
-typedef sequence<GPUComputePassTimestampWrite> GPUComputePassTimestampWrites;
-
-dictionary GPUComputePassDescriptor : GPUObjectDescriptorBase {
-  GPUComputePassTimestampWrites timestampWrites = [];
+dictionary GPUComputePassDescriptor
+         : GPUObjectDescriptorBase {
+    GPUComputePassTimestampWrites timestampWrites;
 };
 */
 typedef struct WGpuComputePassDescriptor
 {
-  uint32_t numTimestampWrites;
-  WGpuComputePassTimestampWrite *timestampWrites;
+  WGpuComputePassTimestampWrites timestampWrites;
 } WGpuComputePassDescriptor;
+extern const WGpuComputePassDescriptor WGPU_COMPUTE_PASS_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 /*
 interface mixin GPURenderCommandsMixin {
@@ -2333,6 +2325,7 @@ typedef struct WGpuRenderPassDepthStencilAttachment
   WGPU_STORE_OP stencilStoreOp;
   EM_BOOL stencilReadOnly;
 } WGpuRenderPassDepthStencilAttachment;
+extern const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER;
 
 /*
 enum GPULoadOp {
@@ -2785,28 +2778,19 @@ typedef struct WGpuCanvasConfiguration
 extern const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
 
 /*
-enum GPURenderPassTimestampLocation {
-    "beginning",
-    "end",
-};
-*/
-typedef int WGPU_RENDER_PASS_TIMESTAMP_LOCATION;
-#define WGPU_RENDER_PASS_TIMESTAMP_LOCATION_BEGINNING 0
-#define WGPU_RENDER_PASS_TIMESTAMP_LOCATION_END       1
-
-/*
-dictionary GPURenderPassTimestampWrite {
+dictionary GPURenderPassTimestampWrites {
     required GPUQuerySet querySet;
-    required GPUSize32 queryIndex;
-    required GPURenderPassTimestampLocation location;
+    GPUSize32 beginningOfPassWriteIndex;
+    GPUSize32 endOfPassWriteIndex;
 };
 */
-typedef struct WGpuRenderPassTimestampWrite
+typedef struct WGpuRenderPassTimestampWrites
 {
   WGpuQuerySet querySet;
-  uint32_t queryIndex;
-  WGPU_RENDER_PASS_TIMESTAMP_LOCATION location;
-} WGpuRenderPassTimestampWrite;
+  int32_t beginningOfPassWriteIndex; // Important! Specify -1 to not perform a write at beginning of pass. Setting 0 will write to index 0. Ignored if querySet == 0.
+  int32_t endOfPassWriteIndex;       // Important! Specify -1 to not perform a write at end of pass. Setting 0 will write to index 0. Ignored if querySet == 0.
+} WGpuRenderPassTimestampWrites;
+extern const WGpuRenderPassTimestampWrites WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER;
 
 /*
 typedef sequence<GPURenderPassTimestampWrite> GPURenderPassTimestampWrites;
@@ -2826,9 +2810,10 @@ typedef struct WGpuRenderPassDescriptor
   WGpuRenderPassDepthStencilAttachment depthStencilAttachment;
   WGpuQuerySet occlusionQuerySet;
   double_int53_t maxDrawCount; // If set to zero, the default value (50000000) will be used.
-  uint32_t numTimestampWrites;
-  WGpuRenderPassTimestampWrite *timestampWrites;
+  WGpuRenderPassTimestampWrites timestampWrites;
+  uint32_t unused_padding;
 } WGpuRenderPassDescriptor;
+extern const WGpuRenderPassDescriptor WGPU_RENDER_PASS_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 typedef struct WGpuRenderPassColorAttachment
 {

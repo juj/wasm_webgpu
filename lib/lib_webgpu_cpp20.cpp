@@ -73,6 +73,30 @@ const WGpuCommandEncoderDescriptor WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITI
 
 const WGpuImageCopyBuffer WGPU_IMAGE_COPY_BUFFER_DEFAULT_INITIALIZER = {};
 
+const WGpuComputePassTimestampWrites WGPU_COMPUTE_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER = {
+  .querySet = 0,
+  .beginningOfPassWriteIndex = -1,
+  .endOfPassWriteIndex = -1
+};
+
+const WGpuComputePassDescriptor WGPU_COMPUTE_PASS_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  .timestampWrites = WGPU_COMPUTE_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER
+};
+
+const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER = {
+  .view = 0,
+
+  .depthLoadOp = WGPU_LOAD_OP_LOAD,
+  .depthClearValue = WGPU_NAN,
+  .depthStoreOp = WGPU_STORE_OP_UNDEFINED,
+  .depthReadOnly = false,
+
+  .stencilLoadOp = WGPU_LOAD_OP_LOAD,
+  .stencilClearValue = 0,
+  .stencilStoreOp = WGPU_STORE_OP_UNDEFINED,
+  .stencilReadOnly = false
+};
+
 const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
   .access = WGPU_STORAGE_TEXTURE_ACCESS_WRITE_ONLY,
   .viewDimension = WGPU_TEXTURE_VIEW_DIMENSION_2D
@@ -82,6 +106,21 @@ const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER = {
   .usage = WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT,
   .colorSpace = HTML_PREDEFINED_COLOR_SPACE_SRGB,
   .alphaMode = WGPU_CANVAS_ALPHA_MODE_OPAQUE,
+};
+
+const WGpuRenderPassTimestampWrites WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER = {
+  .querySet = 0,
+  .beginningOfPassWriteIndex = -1,
+  .endOfPassWriteIndex = -1
+};
+
+const WGpuRenderPassDescriptor WGPU_RENDER_PASS_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  .numColorAttachments = 0,
+  .colorAttachments = 0,
+  .depthStencilAttachment = WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER,
+  .occlusionQuerySet = 0,
+  .maxDrawCount = 0,
+  .timestampWrites = WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER
 };
 
 const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {
