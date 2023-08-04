@@ -1032,6 +1032,7 @@ void wgpu_adapter_or_device_get_limits(WGpuAdapter adapterOrDevice, WGpuSupporte
   limits->maxTextureDimension3D = _limits.limits.maxTextureDimension3D;
   limits->maxTextureArrayLayers = _limits.limits.maxTextureArrayLayers;
   limits->maxBindGroups = _limits.limits.maxBindGroups;
+  limits->maxBindGroupsPlusVertexBuffers = _limits.limits.maxBindGroupsPlusVertexBuffers;
   limits->maxBindingsPerBindGroup = _limits.limits.maxBindingsPerBindGroup;
   limits->maxDynamicUniformBuffersPerPipelineLayout = _limits.limits.maxDynamicUniformBuffersPerPipelineLayout;
   limits->maxDynamicStorageBuffersPerPipelineLayout = _limits.limits.maxDynamicStorageBuffersPerPipelineLayout;

@@ -125,6 +125,7 @@ interface GPUSupportedLimits {
     readonly attribute unsigned long maxTextureDimension3D;
     readonly attribute unsigned long maxTextureArrayLayers;
     readonly attribute unsigned long maxBindGroups;
+    readonly attribute unsigned long maxBindGroupsPlusVertexBuffers;
     readonly attribute unsigned long maxBindingsPerBindGroup;
     readonly attribute unsigned long maxDynamicUniformBuffersPerPipelineLayout;
     readonly attribute unsigned long maxDynamicStorageBuffersPerPipelineLayout;
@@ -168,6 +169,7 @@ typedef struct WGpuSupportedLimits
   uint32_t maxTextureDimension3D; // required >= 2048
   uint32_t maxTextureArrayLayers; // required >= 2048
   uint32_t maxBindGroups; // required >= 4
+  uint32_t maxBindGroupsPlusVertexBuffers; // required >= 24
   uint32_t maxBindingsPerBindGroup; // required >= 640
   uint32_t maxDynamicUniformBuffersPerPipelineLayout; // required >= 8
   uint32_t maxDynamicStorageBuffersPerPipelineLayout; // required >= 4
@@ -190,7 +192,6 @@ typedef struct WGpuSupportedLimits
   uint32_t maxComputeWorkgroupSizeX; // required >= 256
   uint32_t maxComputeWorkgroupSizeY; // required >= 256
   uint32_t maxComputeWorkgroupSizeZ; // required >= 64
-  uint32_t _explicitPaddingFor8BytesAlignedSize;
 } WGpuSupportedLimits;
 
 /*
