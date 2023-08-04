@@ -491,7 +491,32 @@ WGpuBindGroup wgpu_device_create_bind_group(WGpuDevice device, WGpuBindGroupLayo
 
 WGpuShaderModule wgpu_device_create_shader_module(WGpuDevice device, const WGpuShaderModuleDescriptor *shaderModuleDesc NOTNULL);
 
-typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineBase pipeline, void *userData);
+/*
+[Exposed=(Window, DedicatedWorker), SecureContext, Serializable]
+interface GPUPipelineError : DOMException {
+    constructor(optional DOMString message = "", GPUPipelineErrorInit options);
+    readonly attribute GPUPipelineErrorReason reason;
+};
+
+dictionary GPUPipelineErrorInit {
+    required GPUPipelineErrorReason reason;
+};
+
+enum GPUPipelineErrorReason {
+    "validation",
+    "internal",
+};
+*/
+typedef struct WGpuPipelineError
+{
+  const char *name; // The name of the DOMException type that represents this error.
+  const char *message; // A possibly human-readable message or description of the error.
+  const char *reason; // One of GPUPipelineErrorReason values.
+} WGpuPipelineError;
+
+// When this callback fires, on success the 'pipeline' parameter is nonzero.
+// On failure, pipeline is 0, and in WEBGPU_DEBUG builds 'error' parameter identifies details about the failure. (in release builds the error parameter will be null)
+typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineError *error, WGpuPipelineBase pipeline, void *userData);
 
 // N.b. not currently using signature WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, const WGpuComputePipelineDescriptor *computePipelineDesc);
 // since WGpuComputePipelineDescriptor is a such a light struct. (if it is expanded in the future, switch to using that signature)

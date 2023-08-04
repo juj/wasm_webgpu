@@ -164,13 +164,14 @@ typedef struct WGpuOrigin3D WGpuOrigin3D;
 typedef struct WGpuExtent3D WGpuExtent3D;
 typedef struct WGpuBindGroupLayoutEntry WGpuBindGroupLayoutEntry;
 typedef WGpuObjectBase WGpuImageBitmap;
+typedef struct WGpuPipelineError WGpuPipelineError;
 
 // Callbacks in the order of appearance in the WebIDL:
 
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 typedef void (*WGpuRequestAdapterInfoCallback)(WGpuAdapter adapter, const WGpuAdapterInfo *adapterInfo NOTNULL, void *userData);
-typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineBase pipeline, void *userData);
+typedef void (*WGpuCreatePipelineCallback)(WGpuDevice device, WGpuPipelineError *error, WGpuPipelineBase pipeline, void *userData);
 typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset, double_int53_t size);
 typedef void (*WGpuGetCompilationInfoCallback)(WGpuShaderModule shaderModule, WGpuCompilationInfo *compilationInfo NOTNULL, void *userData);
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
