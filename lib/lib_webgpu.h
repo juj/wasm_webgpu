@@ -496,8 +496,8 @@ WGpuQuerySet wgpu_device_create_query_set(WGpuDevice device, const WGpuQuerySetD
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUBuffer {
-    readonly attribute GPUSize64 size;
-    readonly attribute GPUBufferUsageFlags usage;
+    readonly attribute GPUSize64Out size;
+    readonly attribute GPUFlagsConstant usage;
 
     readonly attribute GPUBufferMapState mapState;
 
@@ -616,7 +616,7 @@ interface GPUTexture {
     readonly attribute GPUSize32 sampleCount;
     readonly attribute GPUTextureDimension dimension;
     readonly attribute GPUTextureFormat format;
-    readonly attribute GPUTextureUsageFlags usage;
+    readonly attribute GPUFlagsConstant usage;
 };
 GPUTexture includes GPUObjectBase;
 */

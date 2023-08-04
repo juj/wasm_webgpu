@@ -141,8 +141,8 @@ GPUDevice includes GPUObjectBase;
 
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUBuffer {
-    readonly attribute GPUBufferUsageFlags usage;
     readonly attribute GPUSize64Out size;
+    readonly attribute GPUFlagsConstant usage;
 
     readonly attribute GPUBufferMapState mapState;
 
@@ -202,7 +202,7 @@ interface GPUTexture {
     readonly attribute GPUSize32Out sampleCount;
     readonly attribute GPUTextureDimension dimension;
     readonly attribute GPUTextureFormat format;
-    readonly attribute GPUTextureUsageFlags usage;
+    readonly attribute GPUFlagsConstant usage;
 };
 GPUTexture includes GPUObjectBase;
 
