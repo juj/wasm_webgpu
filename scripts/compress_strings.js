@@ -328,7 +328,8 @@ const stringArrays = {
     'timestamp-query',
     'indirect-first-instance',
     'shader-f16',
-    'rg11b10ufloat-renderable'],
+    'rg11b10ufloat-renderable',
+    'bgra8unorm-storage'],
 
   '$GPUBlendFactors': [/*undefined*/,
     'zero',

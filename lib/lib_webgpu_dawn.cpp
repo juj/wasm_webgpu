@@ -107,8 +107,8 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_TimestampQuery,
   WGPUFeatureName_IndirectFirstInstance,
   WGPUFeatureName_ShaderF16,
-  WGPUFeatureName_Undefined, /* WGPU_FEATURE_BGRA8UNORM_STORAGE */
   WGPUFeatureName_RG11B10UfloatRenderable,
+  WGPUFeatureName_BGRA8UnormStorage,
 };
 const int _wgpu_num_features = 10;
 
