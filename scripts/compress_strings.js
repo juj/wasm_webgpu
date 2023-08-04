@@ -329,7 +329,8 @@ const stringArrays = {
     'indirect-first-instance',
     'shader-f16',
     'rg11b10ufloat-renderable',
-    'bgra8unorm-storage'],
+    'bgra8unorm-storage',
+    'float32-filterable'],
 
   '$GPUBlendFactors': [/*undefined*/,
     'zero',
