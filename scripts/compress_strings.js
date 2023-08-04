@@ -358,12 +358,12 @@ const stringArrays = {
   '$GPUBufferBindingTypes': [/*undefined*/, 'uniform', 'storage', 'read-only-storage'],
   '$GPUSamplerBindingTypes': [/*undefined*/, 'filtering', 'non-filtering', 'comparison'],
   '$GPUTextureSampleTypes': [/*undefined*/, 'float', 'unfilterable-float', 'depth', 'sint', 'uint'],
-  '$GPUQueryTypes': [/*undefined*/, 'occlusion'],
+  '$GPUQueryTypes': [/*undefined*/, 'occlusion', 'timestamp'],
   '$HTMLPredefinedColorSpaces': [/*undefined*/, 'srgb', 'display-p3'],
   '$GPUFilterModes': [/*undefined*/, 'nearest', 'linear'],
   '$GPUMipmapFilterModes': [/*undefined*/, 'nearest', 'linear'],
-  '$GPULoadOps': ['load', 'clear'],
-  '$GPUStoreOps': ['store', 'discard'],
+  '$GPULoadOps': [, 'load', 'clear'],
+  '$GPUStoreOps': [, 'store', 'discard'],
   '$GPUAutoLayoutMode': '="auto"',
 };
 
