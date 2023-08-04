@@ -269,9 +269,15 @@ Navigator includes NavigatorGPU;
 WorkerNavigator includes NavigatorGPU;
 
 [Exposed=(Window, DedicatedWorker), SecureContext]
+interface WGSLLanguageFeatures {
+    readonly setlike<DOMString>;
+};
+
+[Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPU {
     Promise<GPUAdapter?> requestAdapter(optional GPURequestAdapterOptions options = {});
     GPUTextureFormat getPreferredCanvasFormat();
+    [SameObject] readonly attribute WGSLLanguageFeatures wgslLanguageFeatures;
 };
 */
 // Returns true if the browser is advertising to be WebGPU-aware. This means that the browser in question is shipping with WebGPU available, but does not
@@ -305,6 +311,14 @@ WGpuAdapter navigator_gpu_request_adapter_sync_simple(void);
 
 WGPU_TEXTURE_FORMAT navigator_gpu_get_preferred_canvas_format(void);
 
+// Returns an array of strings representing supported WGSL language features. The array of strings is terminated by a null string.
+// If you do not need to enumerate though all supported language features, you can use the simpler navigator_gpu_is_wgsl_language_feature_supported()
+// function.
+const char * const * navigator_gpu_get_wgsl_language_features(void);
+// Tests if the given WGSL language feature is supported. (the given feature string exists in navigator.gpu.wgslLanguageFeatures set).
+// If this information is needed often (e.g. in an inner loop of a shader cross-compiler), then it is recommended to cache the return value,
+// since the supported WGSL language features will not change during page lifetime.
+EM_BOOL navigator_gpu_is_wgsl_language_feature_supported(const char *feature);
 /*
 dictionary GPURequestAdapterOptions {
     GPUPowerPreference powerPreference;
