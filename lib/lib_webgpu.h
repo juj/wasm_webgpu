@@ -1357,7 +1357,7 @@ dictionary GPUPipelineLayoutDescriptor : GPUObjectDescriptorBase {
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUShaderModule {
-    Promise<GPUCompilationInfo> compilationInfo();
+    Promise<GPUCompilationInfo> getCompilationInfo();
 };
 GPUShaderModule includes GPUObjectBase;
 */
