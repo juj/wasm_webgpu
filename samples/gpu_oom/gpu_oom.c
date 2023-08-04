@@ -14,7 +14,7 @@ WGpuDevice device;
 uint64_t gpuAllocatedBytes = 0;
 uint64_t largestSuccessfulAllocation = 0;
 
-uint64_t allocSize = 128ULL*1024*1024*1024;
+uint64_t allocSize = 1ULL*1024*1024*1024;
 
 uint32_t initialData[1024*1024];
 
