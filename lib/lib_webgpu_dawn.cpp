@@ -1878,11 +1878,6 @@ EM_BOOL wgpu_is_external_texture(WGpuObjectBase object) {
   return obj && obj->type == kWebGPUExternalTexture;
 }
 
-EM_BOOL wgpu_external_texture_is_expired(WGpuExternalTexture externalTexture) {
-  assert(false); /* TODO */
-  return false;
-}
-
 EM_BOOL wgpu_is_sampler(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUSampler;
