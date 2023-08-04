@@ -2590,17 +2590,18 @@ typedef int WGPU_CANVAS_ALPHA_MODE;
 
 /*
 enum GPUDeviceLostReason {
+    "unknown",
     "destroyed",
 };
 */
 typedef int WGPU_DEVICE_LOST_REASON;
-#define WGPU_DEVICE_LOST_REASON_INVALID 0
+#define WGPU_DEVICE_LOST_REASON_UNKNOWN 0
 #define WGPU_DEVICE_LOST_REASON_DESTROYED 1
 
 /*
 [Exposed=(Window, DedicatedWorker)]
 interface GPUDeviceLostInfo {
-    readonly attribute (GPUDeviceLostReason or undefined) reason;
+    readonly attribute GPUDeviceLostReason reason;
     readonly attribute DOMString message;
 };
 
