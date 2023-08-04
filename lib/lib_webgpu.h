@@ -1753,8 +1753,8 @@ typedef int WGPU_BLEND_OPERATION;
 dictionary GPUDepthStencilState {
     required GPUTextureFormat format;
 
-    boolean depthWriteEnabled = false;
-    GPUCompareFunction depthCompare = "always";
+    required boolean depthWriteEnabled;
+    required GPUCompareFunction depthCompare;
 
     GPUStencilFaceState stencilFront = {};
     GPUStencilFaceState stencilBack = {};
@@ -2310,7 +2310,7 @@ dictionary GPURenderPassColorAttachment {
 dictionary GPURenderPassDepthStencilAttachment {
     required GPUTextureView view;
 
-    float depthClearValue = 0;
+    float depthClearValue;
     GPULoadOp depthLoadOp;
     GPUStoreOp depthStoreOp;
     boolean depthReadOnly = false;

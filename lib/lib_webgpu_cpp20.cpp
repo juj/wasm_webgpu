@@ -107,7 +107,7 @@ const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITI
     .cullMode = WGPU_CULL_MODE_NONE
   },
   .depthStencil = (WGpuDepthStencilState) {
-    .depthCompare = WGPU_COMPARE_FUNCTION_ALWAYS,
+    .depthCompare = WGPU_COMPARE_FUNCTION_INVALID,
     .stencilReadMask = 0xFFFFFFFFu,
     .stencilWriteMask = 0xFFFFFFFFu,
     .stencilFront = (WGpuStencilFaceState) {

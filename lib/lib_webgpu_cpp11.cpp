@@ -136,7 +136,7 @@ const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITI
   { /* depthStencil */
     0, /* format */
     false, /* depthWriteEnabled */
-    WGPU_COMPARE_FUNCTION_ALWAYS, /* depthCompare */
+    WGPU_COMPARE_FUNCTION_INVALID, /* depthCompare */
     0xFFFFFFFFu, /* stencilReadMask */
     0xFFFFFFFFu, /* stencilWriteMask */
     0, /* depthBias */
