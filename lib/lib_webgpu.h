@@ -2,6 +2,7 @@
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/html5.h>
+#include <emscripten/val.h>
 #endif
 
 #ifdef __clang__
@@ -71,6 +72,12 @@ WGpuCanvasContext wgpu_canvas_get_webgpu_context(const char *canvasSelector NOTN
 WGpuCanvasContext wgpu_canvas_get_webgpu_context(HWND hwnd);
 #else
 #error Targeting currently unsupported platform! (no declaration for wgpu_canvas_get_webgpu_context())
+#endif
+
+// Imports a canvas context previously created by calling canvas.getContext().
+#ifdef __EMSCRIPTEN__
+WGpuCanvasContext wgpu_import_canvas_context(emscripten::EM_VAL canvasContext);
+WGpuDevice wgpu_import_device(emscripten::EM_VAL device);
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
