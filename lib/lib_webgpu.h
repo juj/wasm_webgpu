@@ -2494,18 +2494,14 @@ typedef WGpuObjectBase WGpuQueue;
 // Returns true if the given handle references a valid GPUQueue.
 EM_BOOL wgpu_is_queue(WGpuObjectBase object);
 
-// Submits one command buffer to the given queue for rendering. The command buffer is held alive for later resubmission to another queue.
-void wgpu_queue_submit_one(WGpuQueue queue, WGpuCommandBuffer commandBuffer);
-// Submits one command buffer to the given queue for rendering. The command buffer is destroyed after rendering by calling wgpu_object_destroy() on it.
-// (this is a helper function to help remind that wasm side references to WebGPU JS objects need to be destroyed or a reference leak occurs. See
-// function wgpu_get_num_live_objects() to help debug the number of live references)
+// Submits one command buffer to the given queue for rendering. Then, the command buffer is destroyed. (as if calling wgpu_object_destroy() on it)
+// N.b. if you start recording a command buffer and choose not to submit it, then you must manually call wgpu_object_destroy() on it to avoid
+// a memory leak. (see function wgpu_get_num_live_objects() to help debug the number of live references)
 void wgpu_queue_submit_one_and_destroy(WGpuQueue queue, WGpuCommandBuffer commandBuffer);
 
-// Submits multiple command buffers to the given queue for rendering. The command buffers are held alive for later resubmission to another queue.
-void wgpu_queue_submit_multiple(WGpuQueue queue, const WGpuCommandBuffer *commandBuffers, int numCommandBuffers);
-// Submits multiple command buffers to the given queue for rendering. The command buffers are destroyed after rendering by calling wgpu_object_destroy() on them.
-// (this is a helper function to help remind that wasm side references to WebGPU JS objects need to be destroyed or a reference leak occurs. See
-// function wgpu_get_num_live_objects() to help debug the number of live references)
+// Submits multiple command buffers to the given queue for rendering. Then, the command buffers are destroyed. (as if calling wgpu_object_destroy() on them)
+// N.b. if you start recording a command buffer and choose not to submit it, then you must manually call wgpu_object_destroy() on it to avoid
+// a memory leak. (see function wgpu_get_num_live_objects() to help debug the number of live references)
 void wgpu_queue_submit_multiple_and_destroy(WGpuQueue queue, const WGpuCommandBuffer *commandBuffers, int numCommandBuffers);
 
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);

@@ -2403,22 +2403,16 @@ EM_BOOL wgpu_is_queue(WGpuObjectBase object) {
   return obj && obj->type == kWebGPUQueue;
 }
 
-void wgpu_queue_submit_one(WGpuQueue queue, WGpuCommandBuffer commandBuffer) {
+void wgpu_queue_submit_one_and_destroy(WGpuQueue queue, WGpuCommandBuffer commandBuffer) {
   assert(wgpu_is_queue(queue));
   assert(wgpu_is_command_buffer(commandBuffer));
   WGPUQueue _queue = _wgpu_get_dawn<WGPUQueue>(queue);
   WGPUCommandBuffer _commandBuffer = _wgpu_get_dawn<WGPUCommandBuffer>(commandBuffer);
   wgpuQueueSubmit(_queue, 1, &_commandBuffer);
-}
-
-void wgpu_queue_submit_one_and_destroy(WGpuQueue queue, WGpuCommandBuffer commandBuffer) {
-  assert(wgpu_is_queue(queue));
-  assert(wgpu_is_command_buffer(commandBuffer));
-  wgpu_queue_submit_one(queue, commandBuffer);
   wgpu_object_destroy(commandBuffer);
 }
 
-void wgpu_queue_submit_multiple(WGpuQueue queue, const WGpuCommandBuffer* commandBuffers, int numCommandBuffers) {
+void wgpu_queue_submit_multiple_and_destroy(WGpuQueue queue, const WGpuCommandBuffer *commandBuffers, int numCommandBuffers) {
   assert(wgpu_is_queue(queue));
 
   WGPUQueue _queue = _wgpu_get_dawn<WGPUQueue>(queue);
@@ -2433,12 +2427,6 @@ void wgpu_queue_submit_multiple(WGpuQueue queue, const WGpuCommandBuffer* comman
     _commandBuffer[i] = _wgpu_get_dawn<WGPUCommandBuffer>(commandBuffers[i]);
 
   wgpuQueueSubmit(_queue, (uint32_t)numCommandBuffers, _commandBuffer.data());
-}
-
-void wgpu_queue_submit_multiple_and_destroy(WGpuQueue queue, const WGpuCommandBuffer *commandBuffers, int numCommandBuffers) {
-  assert(wgpu_is_queue(queue));
-
-  wgpu_queue_submit_multiple(queue, commandBuffers, numCommandBuffers);
   for (int i = 0; i < numCommandBuffers; ++i) 
     wgpu_object_destroy(commandBuffers[i]);
 }
