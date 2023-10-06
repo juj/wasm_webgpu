@@ -98,7 +98,7 @@ const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACH
   0, /* view */
 
   WGPU_LOAD_OP_LOAD, /* depthLoadOp */
-  WGPU_NAN, /* depthClearValue */
+  (float)WGPU_NAN, /* depthClearValue */
   WGPU_STORE_OP_UNDEFINED, /* depthStoreOp */
   false, /* depthReadOnly */
 
@@ -136,7 +136,8 @@ const WGpuRenderPassDescriptor WGPU_RENDER_PASS_DESCRIPTOR_DEFAULT_INITIALIZER =
   WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER, /* depthStencilAttachment */
   0, /* occlusionQuerySet */
   0, /* maxDrawCount */
-  WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER /* timestampWrites */
+  WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER, /* timestampWrites */
+  0 /* unusedPadding */
 };
 
 const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {
