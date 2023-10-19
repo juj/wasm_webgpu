@@ -23,7 +23,7 @@ EM_BOOL raf(double time, void *userData)
 
   wgpu_buffer_map_sync(stagingBuffer, WGPU_MAP_MODE_WRITE, 0, WGPU_MAX_SIZE);
 
-  float scale = (emscripten_math_sin(time) + 1.f) / 2.f + 0.5f;
+  float scale = (emscripten_math_sin(time * 0.005f) + 1.f) / 2.f + 0.5f;
   float triangle[2*3] = {
     //   x,      y
       0.0f,  scale,
