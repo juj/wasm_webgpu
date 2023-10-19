@@ -290,6 +290,12 @@ EM_BOOL navigator_gpu_available(void);
 // After calling this function navigator_gpu_available() will return false.
 void navigator_delete_webgpu_api_access(void);
 
+// Returns the number of currently asyncified synchronous operations that are pending.
+// Call this function in requestAnimationFrame() handlers to detect whether a previous asyncified operation is pending, to detect
+// if e.g. a previous call to wgpu_buffer_map_sync() has not yet resolved, and skip rendering until the previous call resolves.
+// See buffer_map_sync.c for an example.
+int wgpu_sync_operations_pending(void);
+
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // Requests an adapter from the user agent. The user agent chooses whether to return an adapter, and, if so, chooses according to the provided options.
 // If WebGPU is not supported by the browser, returns EM_FALSE.

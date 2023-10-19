@@ -89,13 +89,20 @@ target_link_libraries(clear_screen_sync webgpu)
 
 # Enable ASYNCIFY for clear_screen_sync example.
 target_link_options(clear_screen_sync PRIVATE "-sASYNCIFY=1")
-# Register the functions that need asyncifying. (see https://github.com/emscripten-core/emscripten/issues/15746)
-target_link_options(clear_screen_sync PRIVATE "-sASYNCIFY_IMPORTS=['navigator_gpu_request_adapter_sync','navigator_gpu_request_adapter_sync_simple','wgpu_adapter_request_device_sync','wgpu_adapter_request_device_sync_simple','wgpu_buffer_map_sync']")
+
+add_executable(buffer_map_sync buffer_map_sync/buffer_map_sync.c)
+target_link_libraries(buffer_map_sync webgpu)
+
+# Enable JSPI (ASYNCIFY=2) for buffer_map_sync example
+target_link_options(buffer_map_sync PRIVATE "-sASYNCIFY=2")
 
 # Currently ASYNCIFY does not support MINIMAL_RUNTIME, so have to disable it for this example.
 target_link_options(clear_screen_sync PRIVATE "-sMINIMAL_RUNTIME=0")
 target_link_options(clear_screen_sync PRIVATE "--shell-file=${EMSCRIPTEN_ROOT_PATH}/src/shell.html")
 target_link_options(clear_screen_sync PRIVATE "-jsDWEBGPU_NO_BW_COMPAT=1") # Test that no backwards compatibility variant builds ok.
+
+target_link_options(buffer_map_sync PRIVATE "-sMINIMAL_RUNTIME=0")
+target_link_options(buffer_map_sync PRIVATE "--shell-file=${EMSCRIPTEN_ROOT_PATH}/src/shell.html")
 
 add_executable(hello_triangle_minimal hello_triangle/hello_triangle_minimal.c)
 target_link_libraries(hello_triangle_minimal webgpu)
