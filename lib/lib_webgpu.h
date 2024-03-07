@@ -1421,12 +1421,13 @@ void wgpu_shader_module_get_compilation_info_async(WGpuShaderModule shaderModule
 
 /*
 dictionary GPUShaderModuleCompilationHint {
+    required USVString entryPoint;
     (GPUPipelineLayout or GPUAutoLayoutMode) layout;
 };
 */
 typedef struct WGpuShaderModuleCompilationHint
 {
-  const char *entryPointName;
+  const char *entryPoint;
   // WGPU_AUTO_LAYOUT_MODE
   WGpuPipelineLayout layout;  // Assign the special value WGPU_AUTO_LAYOUT_MODE_AUTO (default) to hint an automatically created pipeline object.
 } WGpuShaderModuleCompilationHint;
@@ -1436,7 +1437,7 @@ extern const WGpuShaderModuleCompilationHint WGPU_SHADER_MODULE_COMPILATION_HINT
 dictionary GPUShaderModuleDescriptor : GPUObjectDescriptorBase {
     required USVString code;
     object sourceMap;
-    record<USVString, GPUShaderModuleCompilationHint> hints;
+    sequence<GPUShaderModuleCompilationHint> compilationHints = [];
 };
 */
 typedef struct WGpuShaderModuleDescriptor
