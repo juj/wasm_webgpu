@@ -1119,7 +1119,7 @@ WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter) {
   return wgpu_adapter_request_device_sync(adapter, nullptr);
 }
 
-void wgpu_adapter_request_adapter_info_async(WGpuAdapter adapter, const char** unmaskHints,
+void wgpu_adapter_request_adapter_info_async(WGpuAdapter adapter,
     WGpuRequestAdapterInfoCallback callback, void* userData) {
   assert(wgpu_is_adapter(adapter));
   assert(false); /* TODO */

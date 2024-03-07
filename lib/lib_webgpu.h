@@ -364,7 +364,7 @@ interface GPUAdapter {
     readonly attribute boolean isFallbackAdapter;
 
     Promise<GPUDevice> requestDevice(optional GPUDeviceDescriptor descriptor = {});
-    Promise<GPUAdapterInfo> requestAdapterInfo(optional sequence<DOMString> unmaskHints = []);
+    Promise<GPUAdapterInfo> requestAdapterInfo();
 };
 */
 typedef WGpuObjectBase WGpuAdapter;
@@ -399,9 +399,8 @@ WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter);
 // type WGpuAdapterInfo. Do not hold on to this struct pointer after the duration of this call (but make a copy of the contents if desirable)
 typedef void (*WGpuRequestAdapterInfoCallback)(WGpuAdapter adapter, const WGpuAdapterInfo *adapterInfo NOTNULL, void *userData);
 
-// Begins a process to asynchronously request GPUAdapter information. 'unmaskHints' should be a null-terminated array of null-terminated strings
-// of which information to retrieve, e.g. { "vendor", "architecture", "device", "description", 0 }.
-void wgpu_adapter_request_adapter_info_async(WGpuAdapter adapter, const char **unmaskHints, WGpuRequestAdapterInfoCallback callback, void *userData);
+// Begins a process to asynchronously request GPUAdapter information.
+void wgpu_adapter_request_adapter_info_async(WGpuAdapter adapter, WGpuRequestAdapterInfoCallback callback, void *userData);
 // TODO: Create asyncified wgpu_adapter_request_adapter_info_sync() function.
 
 /*
