@@ -2333,6 +2333,7 @@ void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, con
 /*
 dictionary GPURenderPassColorAttachment {
     required GPUTextureView view;
+    GPUIntegerCoordinate depthSlice;
     GPUTextureView resolveTarget;
 
     GPUColor clearValue;
@@ -2861,10 +2862,12 @@ extern const WGpuRenderPassDescriptor WGPU_RENDER_PASS_DESCRIPTOR_DEFAULT_INITIA
 typedef struct WGpuRenderPassColorAttachment
 {
   WGpuTextureView view;
+  int depthSlice;
   WGpuTextureView resolveTarget;
 
   WGPU_STORE_OP storeOp; // Required, be sure to set to WGPU_STORE_OP_STORE (default) or WGPU_STORE_OP_DISCARD
   WGPU_LOAD_OP loadOp; // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR.
+  int dummyDoublePadding; // unused, added to pad the doubles in clearValue to 8-byte multiples.
   WGpuColor clearValue; // Used if loadOp == WGPU_LOAD_OP_CLEAR. Default value = { r = 0.0, g = 0.0, b = 0.0, a = 1.0 }
 } WGpuRenderPassColorAttachment;
 extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;

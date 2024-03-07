@@ -1992,11 +1992,11 @@ static WGPURenderPassColorAttachment getColorAttachInfo(const WGpuRenderPassColo
 
   WGPURenderPassColorAttachment _attachment = {};
   _attachment.view = _wgpu_get_dawn<WGPUTextureView>(colorAttachment.view);
+  _attachment.depthSlice = colorAttachment.depthSlice < 0 ? wgpu::kDepthSliceUndefined : colorAttachment.depthSlice;
   _attachment.resolveTarget = _wgpu_get_dawn<WGPUTextureView>(colorAttachment.resolveTarget);
   _attachment.loadOp = wgpu_load_op_to_dawn(colorAttachment.loadOp);
   _attachment.storeOp = wgpu_store_op_to_dawn(colorAttachment.storeOp);
   _attachment.clearValue = WGPUColor{ colorAttachment.clearValue.r, colorAttachment.clearValue.g, colorAttachment.clearValue.b, colorAttachment.clearValue.a };
-  _attachment.depthSlice = wgpu::kDepthSliceUndefined;
   return _attachment;
 }
 

@@ -220,9 +220,11 @@ extern const WGpuExtent3D WGPU_EXTENT_3D_DEFAULT_INITIALIZER = {
 
 extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER = {
   0, /* view */
+  -1, /* depthSlice */
   0, /* resolveTarget */
   WGPU_STORE_OP_STORE, /* storeOp */
   WGPU_LOAD_OP_LOAD, /* loadOp */
+  0, /* dummyDoublePadding */
   { /* clearValue */
     0.0f,
     0.0f,

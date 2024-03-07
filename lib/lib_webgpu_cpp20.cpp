@@ -174,6 +174,7 @@ extern const WGpuExtent3D WGPU_EXTENT_3D_DEFAULT_INITIALIZER = {
 };
 
 extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER = {
+  .depthSlice = -1,
   .storeOp = WGPU_STORE_OP_STORE,
   .loadOp = WGPU_LOAD_OP_LOAD,
   .clearValue = (WGpuColor) {
