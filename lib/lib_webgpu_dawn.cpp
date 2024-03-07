@@ -2164,14 +2164,6 @@ void wgpu_command_encoder_clear_buffer(WGpuCommandEncoder commandEncoder, WGpuBu
       (uint64_t)offset, (uint64_t)size);
 }
 
-void wgpu_command_encoder_write_timestamp(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t queryIndex) {
-  assert(wgpu_is_command_encoder(commandEncoder));
-  assert(wgpu_is_query_set(querySet));
-
-  wgpuCommandEncoderWriteTimestamp(_wgpu_get_dawn<WGPUCommandEncoder>(commandEncoder),
-      _wgpu_get_dawn<WGPUQuerySet>(querySet), queryIndex);
-}
-
 void wgpu_command_encoder_resolve_query_set(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t firstQuery, uint32_t queryCount,
     WGpuBuffer destination, double_int53_t destinationOffset) {
   assert(wgpu_is_command_encoder(commandEncoder));
