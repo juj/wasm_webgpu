@@ -1341,7 +1341,7 @@ WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, WGpuS
   assert(wgpu_is_shader_module(computeModule));
   assert(wgpu_is_pipeline_layout(layout));
   assert(numConstants == 0 || constants != nullptr);
-  assert(entryPoint != nullptr);
+  assert(entryPoint == nullptr || strlen(entryPoint) > 0);
 
   WGPUComputePipelineDescriptor _desc = {};
   _desc.layout = _wgpu_get_dawn<WGPUPipelineLayout>(layout);
@@ -1362,7 +1362,7 @@ void wgpu_device_create_compute_pipeline_async(WGpuDevice device, WGpuShaderModu
   assert(wgpu_is_shader_module(computeModule));
   assert(wgpu_is_pipeline_layout(layout));
   assert(numConstants == 0 || constants != nullptr);
-  assert(entryPoint != nullptr);
+  assert(entryPoint == nullptr || strlen(entryPoint) > 0);
   assert(callback != nullptr);
 
   WGPUComputePipelineDescriptor _desc = {};
