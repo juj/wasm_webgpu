@@ -593,13 +593,11 @@ const WGPUQueryType WGPU_QUERY_TYPE_to_Dawn[] = {
   WGPUQueryType_Force32,
   WGPUQueryType_Occlusion,
   WGPUQueryType_Timestamp,
-  WGPUQueryType_PipelineStatistics,
 };
 #define wgpu_query_type_to_dawn(type) WGPU_QUERY_TYPE_to_Dawn[type]
 
 const WGPU_QUERY_TYPE Dawn_to_WGPU_QUERY_TYPE[] = {
   WGPU_QUERY_TYPE_OCCLUSION,
-  WGPU_QUERY_TYPE_INVALID, // WGPUQueryType_PipelineStatistics,
   WGPU_QUERY_TYPE_TIMESTAMP,
 };
 #define dawn_to_wgpu_query_type(type) Dawn_to_WGPU_QUERY_TYPE[type]
@@ -617,18 +615,6 @@ WGPU_DEVICE_LOST_REASON Dawn_to_WGPU_DEVICE_LOST_REASON[] = {
   WGPU_DEVICE_LOST_REASON_DESTROYED
 };
 #define dawn_to_wgpu_device_lost_reason(reason) Dawn_to_WGPU_DEVICE_LOST_REASON[reason]
-
-const WGPUComputePassTimestampLocation WGPU_COMPUTE_PASS_TIMESTAMP_LOCATION_to_Dawn[] = {
-  WGPUComputePassTimestampLocation_Beginning,
-  WGPUComputePassTimestampLocation_End,
-};
-#define wgpu_compute_pass_timestamp_location_to_dawn(location) WGPU_COMPUTE_PASS_TIMESTAMP_LOCATION_to_Dawn[location]
-
-const WGPURenderPassTimestampLocation WGPU_RENDER_PASS_TIMESTAMP_LOCATION_to_Dawn[] = {
-  WGPURenderPassTimestampLocation_Beginning,
-  WGPURenderPassTimestampLocation_End
-};
-#define wgpu_render_pass_timestamp_location_to_dawn(location) WGPU_RENDER_PASS_TIMESTAMP_LOCATION_to_Dawn[location]
 
 //////////////////////////////////////////////////////////////////////
 
@@ -1725,8 +1711,6 @@ WGpuQuerySet wgpu_device_create_query_set(WGpuDevice device, const WGpuQuerySetD
   WGPUQuerySetDescriptor _desc = {};
   _desc.type = wgpu_query_type_to_dawn(querySetDesc->type);
   _desc.count = (uint32_t)querySetDesc->count;
-  _desc.pipelineStatistics = nullptr;
-  _desc.pipelineStatisticCount = 0;
 
   WGPUQuerySet query = wgpuDeviceCreateQuerySet(_wgpu_get_dawn<WGPUDevice>(device), &_desc);
   return _wgpu_store_and_set_parent(kWebGPUQuerySet, query, device);
@@ -1956,8 +1940,14 @@ EM_BOOL wgpu_is_command_buffer(WGpuObjectBase object) {
   return obj && obj->type == kWebGPUCommandBuffer;
 }
 
+EM_BOOL wgpu_is_debug_commands_mixin(WGpuObjectBase object) {
+  _WGpuObject* obj = _wgpu_get(object);
+  return obj && (obj->type == kWebGPUComputePassEncoder || obj->type == kWebGPURenderPassEncoder ||
+      obj->type == kWebGPURenderBundleEncoder || obj->type == kWebGPUCommandEncoder);
+}
+
 void wgpu_encoder_push_debug_group(WGpuDebugCommandsMixin encoder, const char *groupLabel) {
-  assert(wgpu_is_binding_commands_mixin(encoder));
+  assert(wgpu_is_debug_commands_mixin(encoder));
 
   if (wgpu_is_render_pass_encoder(encoder))
     wgpuRenderPassEncoderPushDebugGroup(_wgpu_get_dawn<WGPURenderPassEncoder>(encoder), groupLabel);
@@ -1968,7 +1958,7 @@ void wgpu_encoder_push_debug_group(WGpuDebugCommandsMixin encoder, const char *g
 }
 
 void wgpu_encoder_pop_debug_group(WGpuDebugCommandsMixin encoder) {
-  assert(wgpu_is_binding_commands_mixin(encoder));
+  assert(wgpu_is_debug_commands_mixin(encoder));
 
   if (wgpu_is_render_pass_encoder(encoder))
     wgpuRenderPassEncoderPopDebugGroup(_wgpu_get_dawn<WGPURenderPassEncoder>(encoder));
@@ -1979,7 +1969,7 @@ void wgpu_encoder_pop_debug_group(WGpuDebugCommandsMixin encoder) {
 }
 
 void wgpu_encoder_insert_debug_marker(WGpuDebugCommandsMixin encoder, const char *markerLabel) {
-  assert(wgpu_is_binding_commands_mixin(encoder));
+  assert(wgpu_is_debug_commands_mixin(encoder));
 
   if (wgpu_is_render_pass_encoder(encoder))
     wgpuRenderPassEncoderInsertDebugMarker(_wgpu_get_dawn<WGPURenderPassEncoder>(encoder), markerLabel);
@@ -2003,6 +1993,7 @@ static WGPURenderPassColorAttachment getColorAttachInfo(const WGpuRenderPassColo
   _attachment.loadOp = wgpu_load_op_to_dawn(colorAttachment.loadOp);
   _attachment.storeOp = wgpu_store_op_to_dawn(colorAttachment.storeOp);
   _attachment.clearValue = WGPUColor{ colorAttachment.clearValue.r, colorAttachment.clearValue.g, colorAttachment.clearValue.b, colorAttachment.clearValue.a };
+  _attachment.depthSlice = wgpu::kDepthSliceUndefined;
   return _attachment;
 }
 
@@ -2040,7 +2031,6 @@ WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder 
   _desc.label = nullptr;
 
   /* TODO add timestampWrite support*/
-  _desc.timestampWriteCount = 0;
   _desc.timestampWrites = nullptr;
   
   WGPURenderPassDescriptorMaxDrawCount chainedDesc;
@@ -2065,7 +2055,6 @@ WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass_1color_0depth(WGpuC
   _desc.colorAttachments = &_attachment;
   _desc.depthStencilAttachment = nullptr;
   _desc.occlusionQuerySet = _wgpu_get_dawn<WGPUQuerySet>(renderPassDesc->occlusionQuerySet);
-  _desc.timestampWriteCount = 0;
   _desc.timestampWrites = nullptr;
   _desc.label = nullptr;
   _desc.nextInChain = nullptr;
@@ -2078,8 +2067,6 @@ WGpuComputePassEncoder wgpu_command_encoder_begin_compute_pass(WGpuCommandEncode
   assert(wgpu_is_command_encoder(commandEncoder));
 
   WGPUComputePassDescriptor _desc = {};
-  /* TODO add timestampWrite support */
-  std::vector<WGPUComputePassTimestampWrite> timestampWrites(0);
 
   WGPUComputePassEncoder encoder = wgpuCommandEncoderBeginComputePass(_wgpu_get_dawn<WGPUCommandEncoder>(commandEncoder), &_desc);
 
@@ -2452,14 +2439,13 @@ void wgpu_queue_submit_multiple_and_destroy(WGpuQueue queue, const WGpuCommandBu
 void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmittedWorkDoneCallback callback, void* userData) {
   assert(wgpu_is_queue(queue));
 
-  uint64_t signalValue = 0; /* TODO */
   struct _Data {
     WGpuQueue queue;
     WGpuOnSubmittedWorkDoneCallback callback;
     void* userData;
   };
   _Data* data = new _Data{queue, callback, userData};
-  wgpuQueueOnSubmittedWorkDone(_wgpu_get_dawn<WGPUQueue>(queue), signalValue, [](WGPUQueueWorkDoneStatus status, void* userdata) {
+  wgpuQueueOnSubmittedWorkDone(_wgpu_get_dawn<WGPUQueue>(queue), [](WGPUQueueWorkDoneStatus status, void* userdata) {
     _Data* data = (_Data*)userdata;
     if (data->callback)
       data->callback(data->queue, data->userData);
