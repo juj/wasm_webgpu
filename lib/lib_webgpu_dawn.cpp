@@ -454,7 +454,9 @@ const WGPUTextureSampleType WGPU_TEXTURE_SAMPLE_TYPE_to_Dawn[] = {
 
 const WGPUStorageTextureAccess WGPU_STORAGE_TEXTURE_ACCESS_to_Dawn[] = {
   WGPUStorageTextureAccess_Undefined,
-  WGPUStorageTextureAccess_WriteOnly
+  WGPUStorageTextureAccess_WriteOnly,
+  WGPUStorageTextureAccess_ReadOnly,
+  WGPUStorageTextureAccess_ReadWrite
 };
 #define wgpu_storage_texture_access_to_dawn(access) WGPU_STORAGE_TEXTURE_ACCESS_to_Dawn[access]
 

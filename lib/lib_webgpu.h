@@ -1304,11 +1304,15 @@ extern const WGpuTextureBindingLayout WGPU_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIA
 /*
 enum GPUStorageTextureAccess {
     "write-only",
+    "read-only",
+    "read-write",
 };
 */
 typedef int WGPU_STORAGE_TEXTURE_ACCESS;
 #define WGPU_STORAGE_TEXTURE_ACCESS_INVALID 0
 #define WGPU_STORAGE_TEXTURE_ACCESS_WRITE_ONLY 1
+#define WGPU_STORAGE_TEXTURE_ACCESS_READ_ONLY 2
+#define WGPU_STORAGE_TEXTURE_ACCESS_READ_WRITE 3
 
 /*
 dictionary GPUStorageTextureBindingLayout {
