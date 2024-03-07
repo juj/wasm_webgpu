@@ -383,7 +383,7 @@ console.log('////////////////////////////////////////////////////////////');
 console.log('// Automatically generated with scripts/compress_strings.js:');
 console.log(`
 #if !global.WEBGPU_NO_BW_COMPAT
-  $replaceAll_polyfill: ";if (!String.prototype.replaceAll) String.prototype.replaceAll = function(str, newStr) { return this.replace(str instanceof RegExp ? str : new RegExp(str, 'g'), newStr); }",
+  $replaceAll_polyfill: ";if (!String.prototype.replaceAll) String.prototype.replaceAll = function(str, newStr) { if (str === '?') str = '\\\\?'; return this.replace(str instanceof RegExp ? str : new RegExp(str, 'g'), newStr); }",
   $wgpuDecodeStrings__deps: ['$replaceAll_polyfill'],
 #endif
 
