@@ -281,7 +281,8 @@ const stringArrays = {
     "sint32",
     "sint32x2",
     "sint32x3",
-    "sint32x4"
+    "sint32x4",
+    "unorm10-10-10-2"
     ],
 
   'wgpu32BitLimitNames': [

@@ -567,6 +567,7 @@ const WGPUVertexFormat WGPU_VERTEX_FORMAT_to_Dawn[] = {
   WGPUVertexFormat_Sint32x2,
   WGPUVertexFormat_Sint32x3,
   WGPUVertexFormat_Sint32x4,
+  WGPUVertexFormat_Unorm10_10_10_2
 };
 #define wgpu_vertex_format_to_dawn(format) (format == 0 ? WGPUVertexFormat_Undefined : WGPU_VERTEX_FORMAT_to_Dawn[format - (WGPU_VERTEX_FORMAT_UINT8X2 - 1)])
 
