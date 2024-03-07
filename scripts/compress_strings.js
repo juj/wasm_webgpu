@@ -355,6 +355,7 @@ const stringArrays = {
   '$GPUBufferMapStates': [/*undefined*/, 'unmapped', 'pending', 'mapped'],
   '$GPUTextureDimensions': [/*undefined*/, '1d', '2d', '3d'],
   '$GPUTextureViewDimensions': [/*undefined*/, '1d', '2d', '2d-array', 'cube', 'cube-array', '3d'],
+  '$GPUStorageTextureSampleTypes': [, 'write-only', 'read-only', 'read-write'],
   '$GPUAddressModes': [/*undefined*/, 'clamp-to-edge', 'repeat', 'mirror-repeat'],
   '$GPUTextureAspects': [/*undefined*/, 'all', 'stencil-only', 'depth-only'],
   '$GPUPipelineStatisticNames': [/*undefined*/, 'timestamp'],
