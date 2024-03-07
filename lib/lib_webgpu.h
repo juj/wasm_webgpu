@@ -1796,8 +1796,8 @@ typedef int WGPU_BLEND_OPERATION;
 dictionary GPUDepthStencilState {
     required GPUTextureFormat format;
 
-    required boolean depthWriteEnabled;
-    required GPUCompareFunction depthCompare;
+    boolean depthWriteEnabled;
+    GPUCompareFunction depthCompare;
 
     GPUStencilFaceState stencilFront = {};
     GPUStencilFaceState stencilBack = {};
