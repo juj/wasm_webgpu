@@ -68,7 +68,7 @@ void wgpu_destroy_all_objects(void);
 #ifdef __EMSCRIPTEN__
 WGpuCanvasContext wgpu_canvas_get_webgpu_context(const char *canvasSelector NOTNULL);
 #elif defined (_WIN32)
-WGpuCanvasContext wgpu_canvas_get_webgpu_context(HWND hwnd);
+WGpuCanvasContext wgpu_canvas_get_webgpu_context(void *hwnd);
 #else
 #error Targeting currently unsupported platform! (no declaration for wgpu_canvas_get_webgpu_context())
 #endif

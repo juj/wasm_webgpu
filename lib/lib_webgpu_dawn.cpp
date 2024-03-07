@@ -830,13 +830,13 @@ void wgpu_destroy_all_objects() {
   _dawn_to_webgpu->clear();
 }
 
-WGpuCanvasContext wgpu_canvas_get_webgpu_context(HWND hwnd) {
+WGpuCanvasContext wgpu_canvas_get_webgpu_context(void *hwnd) {
   WGPUSurfaceDescriptor surfaceDesc;
 
 #ifdef _WIN32
   WGPUSurfaceDescriptorFromWindowsHWND chainedDesc;
   chainedDesc.hinstance = GetModuleHandle(NULL);
-  chainedDesc.hwnd = (void*)hwnd;
+  chainedDesc.hwnd = hwnd;
   chainedDesc.chain = { nullptr, WGPUSType_SurfaceDescriptorFromWindowsHWND };
   surfaceDesc.nextInChain = reinterpret_cast<WGPUChainedStruct*>(&chainedDesc);
 #endif
