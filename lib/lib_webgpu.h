@@ -361,10 +361,10 @@ typedef int WGPU_POWER_PREFERENCE;
 interface GPUAdapter {
     [SameObject] readonly attribute GPUSupportedFeatures features;
     [SameObject] readonly attribute WGpuSupportedLimits limits;
+    [SameObject] readonly attribute GPUAdapterInfo info;
     readonly attribute boolean isFallbackAdapter;
 
     Promise<GPUDevice> requestDevice(optional GPUDeviceDescriptor descriptor = {});
-    Promise<GPUAdapterInfo> requestAdapterInfo();
 };
 */
 typedef WGpuObjectBase WGpuAdapter;
@@ -383,6 +383,9 @@ EM_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapter, WGPU_FEATUR
 void wgpu_adapter_or_device_get_limits(WGpuAdapter adapter, WGpuSupportedLimits *limits NOTNULL);
 #define wgpu_adapter_get_limits wgpu_adapter_or_device_get_limits
 
+// Returns the WebGPU adapter 'info' field.
+void wgpu_adapter_get_info(WGpuAdapter adapter, WGpuAdapterInfo *adapterInfo NOTNULL);
+
 EM_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter);
 
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
@@ -394,14 +397,6 @@ WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDevic
 // Like above, but tiny code size without options.
 void wgpu_adapter_request_device_async_simple(WGpuAdapter adapter, WGpuRequestDeviceCallback deviceCallback);
 WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter);
-
-// Callback function type that is called when GPUAdapter information has been obtained. The information will be reported in a struct of
-// type WGpuAdapterInfo. Do not hold on to this struct pointer after the duration of this call (but make a copy of the contents if desirable)
-typedef void (*WGpuRequestAdapterInfoCallback)(WGpuAdapter adapter, const WGpuAdapterInfo *adapterInfo NOTNULL, void *userData);
-
-// Begins a process to asynchronously request GPUAdapter information.
-void wgpu_adapter_request_adapter_info_async(WGpuAdapter adapter, WGpuRequestAdapterInfoCallback callback, void *userData);
-// TODO: Create asyncified wgpu_adapter_request_adapter_info_sync() function.
 
 /*
 dictionary GPUQueueDescriptor : GPUObjectDescriptorBase {

@@ -1038,6 +1038,12 @@ void wgpu_adapter_or_device_get_limits(WGpuAdapter adapterOrDevice, WGpuSupporte
   limits->maxComputeWorkgroupSizeZ = _limits.limits.maxComputeWorkgroupSizeZ;
 }
 
+void wgpu_adapter_get_info(WGpuAdapter adapter, WGpuAdapterInfo *adapterInfo)
+{
+  assert(wgpu_is_adapter(adapter));
+  assert(false); /* TODO */
+}
+
 EM_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter) {
   assert(wgpu_is_adapter(adapter));
   return false; /* TODO */
@@ -1120,12 +1126,6 @@ void wgpu_adapter_request_device_async_simple(WGpuAdapter adapter, WGpuRequestDe
 WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter) {
   assert(wgpu_is_adapter(adapter));
   return wgpu_adapter_request_device_sync(adapter, nullptr);
-}
-
-void wgpu_adapter_request_adapter_info_async(WGpuAdapter adapter,
-    WGpuRequestAdapterInfoCallback callback, void* userData) {
-  assert(wgpu_is_adapter(adapter));
-  assert(false); /* TODO */
 }
 
 EM_BOOL wgpu_is_device(WGpuObjectBase object) {
