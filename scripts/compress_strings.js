@@ -331,7 +331,8 @@ const stringArrays = {
     'shader-f16',
     'rg11b10ufloat-renderable',
     'bgra8unorm-storage',
-    'float32-filterable'],
+    'float32-filterable',
+    'clip-distances'],
 
   '$GPUBlendFactors': [/*undefined*/,
     'zero',
