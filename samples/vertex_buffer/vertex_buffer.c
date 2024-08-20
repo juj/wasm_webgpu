@@ -137,7 +137,7 @@ void CreateGeometryAndRender()
   WGpuBufferDescriptor bufferDesc = {};
   bufferDesc.size = MAX_VERTICES * sizeof(vertex);
   bufferDesc.usage = WGPU_BUFFER_USAGE_VERTEX;
-  bufferDesc.mappedAtCreation = EM_TRUE;
+  bufferDesc.mappedAtCreation = WGPU_TRUE;
 
   wgpu_object_destroy(buffer);
   buffer = wgpu_device_create_buffer(device, &bufferDesc);

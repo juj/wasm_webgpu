@@ -43,7 +43,7 @@ void alloc_gpu_buffer()
   WGpuBufferDescriptor bufferDesc = {};
   bufferDesc.size = (allocSize + 3) & -4; // "size must be aligned to 4 when mappedAtCreation is true"
   bufferDesc.usage = WGPU_BUFFER_USAGE_VERTEX;
-  bufferDesc.mappedAtCreation = EM_TRUE;
+  bufferDesc.mappedAtCreation = WGPU_TRUE;
   wgpu_device_push_error_scope(device, WGPU_ERROR_FILTER_OUT_OF_MEMORY);
   WGpuBuffer buffer = wgpu_device_create_buffer(device, &bufferDesc);
   wgpu_device_pop_error_scope_async(device, oom, 0);

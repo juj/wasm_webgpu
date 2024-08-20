@@ -30,7 +30,7 @@ void CreateGeometryAndRender()
   WGpuBufferDescriptor bufferDesc = {};
   bufferDesc.size = sizeof(v);
   bufferDesc.usage = WGPU_BUFFER_USAGE_VERTEX;
-  bufferDesc.mappedAtCreation = EM_TRUE;
+  bufferDesc.mappedAtCreation = WGPU_TRUE;
 
   int canvasWidth, canvasHeight;
   emscripten_get_canvas_element_size("canvas", &canvasWidth, &canvasHeight);
@@ -190,7 +190,7 @@ void DownloadedImage(WGpuImageBitmap bitmap, int width, int height, void *userDa
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 {
   device = result;
-  wgpu_load_image_bitmap_from_url_async("fish.png", EM_TRUE, DownloadedImage, 0);
+  wgpu_load_image_bitmap_from_url_async("fish.png", WGPU_TRUE, DownloadedImage, 0);
 }
 
 void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)

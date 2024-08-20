@@ -49,7 +49,7 @@ const WGpuBindGroupLayoutEntry WGPU_BUFFER_BINDING_LAYOUT_ENTRY_DEFAULT_INITIALI
 
 const WGpuBufferBindingLayout WGPU_BUFFER_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
   .type = WGPU_BUFFER_BINDING_TYPE_UNIFORM,
-  .hasDynamicOffset = EM_FALSE,
+  .hasDynamicOffset = WGPU_FALSE,
   .minBindingSize = 0
 };
 
@@ -211,7 +211,7 @@ extern const WGpuImageCopyTextureTagged WGPU_IMAGE_COPY_TEXTURE_TAGGED_DEFAULT_I
   },
   .aspect = WGPU_TEXTURE_ASPECT_ALL,
   .colorSpace = HTML_PREDEFINED_COLOR_SPACE_SRGB,
-  .premultipliedAlpha = EM_FALSE
+  .premultipliedAlpha = WGPU_FALSE
 };
 
 #ifdef __cplusplus

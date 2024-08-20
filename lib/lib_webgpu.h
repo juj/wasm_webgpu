@@ -40,11 +40,12 @@
 #define WGPU_INFINITY ((double)INFINITY)
 #endif
 
-#ifndef __EMSCRIPTEN__
-#define EM_BOOL int
-#define EM_TRUE 1
-#define EM_FALSE 0
-#endif
+// The EM_BOOL type defined by Emscripten is set to be 1 byte in size, so define
+// a custom WGPU_BOOL type that has a size of 4 bytes to ensure a fixed struct
+// padding.
+#define WGPU_BOOL int
+#define WGPU_TRUE 1
+#define WGPU_FALSE 0
 
 #ifdef __cplusplus
 extern "C" {
@@ -83,7 +84,7 @@ interface mixin GPUObjectBase {
 };
 */
 // Returns true if the given handle references a valid WebGPU object
-EM_BOOL wgpu_is_valid_object(WGpuObjectBase obj);
+WGPU_BOOL wgpu_is_valid_object(WGpuObjectBase obj);
 // Set a human-readable label for the given WebGPU object. Pass an empty string "" to clear a label.
 void wgpu_object_set_label(WGpuObjectBase obj, const char *label NOTNULL);
 // Gets the human-readable label of a WebGPU object. If dstLabelSize is too short to
@@ -285,7 +286,7 @@ interface GPU {
 // Returns true if the browser is advertising to be WebGPU-aware. This means that the browser in question is shipping with WebGPU available, but does not
 // necessarily mean that there would exist any WebGPU adapters or devices that are supported. The only way to know if WebGPU is actually possible will
 // be to try to request and adapter and then a device.
-EM_BOOL navigator_gpu_available(void);
+WGPU_BOOL navigator_gpu_available(void);
 
 // This function can be used to remove access to WebGPU API on the current JS page. This can be useful for debugging or sandboxing purposes. Note that
 // if the page has already initialized a WebGPU context, then the context is not affected. Amounts to a 'delete navigator.gpu' operation.
@@ -300,15 +301,15 @@ int wgpu_sync_operations_pending(void);
 
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // Requests an adapter from the user agent. The user agent chooses whether to return an adapter, and, if so, chooses according to the provided options.
-// If WebGPU is not supported by the browser, returns EM_FALSE.
-// Otherwise returns EM_TRUE, and the callback will resolve later with an ID handle to the adapter.
+// If WebGPU is not supported by the browser, returns false.
+// Otherwise returns true, and the callback will resolve later with an ID handle to the adapter.
 // The callback will also be resolved in the event of an initialization failure, but the ID handle
 // passed to the callback will then be zero.
 // options: may be null to request an adapter without specific options.
 // Note: If the current browser is not aware of the WebGPU API, then this function will by design abort execution
 // (fail on assert, and throw a JS exception in release builds). To gracefully detect whether the current browser is new enough to be WebGPU API aware,
 // call the function navigator_gpu_available() to check.
-EM_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions *options NOTNULL, WGpuRequestAdapterCallback adapterCallback, void *userData);
+WGPU_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions *options NOTNULL, WGpuRequestAdapterCallback adapterCallback, void *userData);
 // Requests a WebGPU adapter synchronously. Requires building with -sASYNCIFY=1 linker flag to work.
 // options: may be null to request an adapter without specific options.
 WGpuAdapter navigator_gpu_request_adapter_sync(const WGpuRequestAdapterOptions *options NOTNULL);
@@ -326,7 +327,7 @@ const char * const * navigator_gpu_get_wgsl_language_features(void);
 // Tests if the given WGSL language feature is supported. (the given feature string exists in navigator.gpu.wgslLanguageFeatures set).
 // If this information is needed often (e.g. in an inner loop of a shader cross-compiler), then it is recommended to cache the return value,
 // since the supported WGSL language features will not change during page lifetime.
-EM_BOOL navigator_gpu_is_wgsl_language_feature_supported(const char *feature);
+WGPU_BOOL navigator_gpu_is_wgsl_language_feature_supported(const char *feature);
 /*
 dictionary GPURequestAdapterOptions {
     GPUPowerPreference powerPreference;
@@ -343,7 +344,7 @@ typedef struct WGpuRequestAdapterOptions
   //       agent may select different adapters given the same power preference. Typically, given the same hardware configuration and
   //       state and powerPreference, the user agent is likely to select the same adapter.
   WGPU_POWER_PREFERENCE powerPreference;
-  EM_BOOL forceFallbackAdapter;
+  WGPU_BOOL forceFallbackAdapter;
 } WGpuRequestAdapterOptions;
 extern const WGpuRequestAdapterOptions WGPU_REQUEST_ADAPTER_OPTIONS_DEFAULT_INITIALIZER;
 
@@ -371,14 +372,14 @@ interface GPUAdapter {
 */
 typedef WGpuObjectBase WGpuAdapter;
 // Returns true if the given handle references a valid GPUAdapter.
-EM_BOOL wgpu_is_adapter(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_adapter(WGpuObjectBase object);
 
 // Returns a bitfield of all the supported features on this adapter.
 WGPU_FEATURES_BITFIELD wgpu_adapter_or_device_get_features(WGpuAdapter adapter);
 #define wgpu_adapter_get_features wgpu_adapter_or_device_get_features
 
 // Returns true if the given feature is supported by this adapter.
-EM_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapter, WGPU_FEATURES_BITFIELD feature);
+WGPU_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapter, WGPU_FEATURES_BITFIELD feature);
 #define wgpu_adapter_supports_feature wgpu_adapter_or_device_supports_feature
 
 // Populates the adapter.limits field of the given adapter to the provided structure.
@@ -388,7 +389,7 @@ void wgpu_adapter_or_device_get_limits(WGpuAdapter adapter, WGpuSupportedLimits 
 // Returns the WebGPU adapter 'info' field.
 void wgpu_adapter_get_info(WGpuAdapter adapter, WGpuAdapterInfo *adapterInfo NOTNULL);
 
-EM_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter);
+WGPU_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter);
 
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 
@@ -460,7 +461,7 @@ GPUDevice includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuDevice;
 // Returns true if the given handle references a valid GPUDevice.
-EM_BOOL wgpu_is_device(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_device(WGpuObjectBase object);
 
 #define wgpu_device_get_features wgpu_adapter_or_device_get_features
 #define wgpu_device_supports_feature wgpu_adapter_or_device_supports_feature
@@ -554,7 +555,7 @@ GPUBuffer includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuBuffer;
 // Returns true if the given handle references a valid GPUBuffer.
-EM_BOOL wgpu_is_buffer(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_buffer(WGpuObjectBase object);
 
 // TODO: Add error status to map callback for when mapAsync() promise rejects.
 typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset, double_int53_t size);
@@ -602,7 +603,7 @@ typedef struct WGpuBufferDescriptor
 {
   uint64_t size;
   WGPU_BUFFER_USAGE_FLAGS usage;
-  EM_BOOL mappedAtCreation; // Note: it is valid to set mappedAtCreation to true without MAP_READ or MAP_WRITE in usage. This can be used to set the buffer’s initial data.
+  WGPU_BOOL mappedAtCreation; // Note: it is valid to set mappedAtCreation to true without MAP_READ or MAP_WRITE in usage. This can be used to set the buffer’s initial data.
 } WGpuBufferDescriptor;
 
 /*
@@ -665,7 +666,7 @@ GPUTexture includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuTexture;
 // Returns true if the given handle references a valid GPUTexture.
-EM_BOOL wgpu_is_texture(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_texture(WGpuObjectBase object);
 // textureViewDesc: Can be null, in which case a default view is created.
 WGpuTextureView wgpu_texture_create_view(WGpuTexture texture, const WGpuTextureViewDescriptor *textureViewDesc _WGPU_DEFAULT_VALUE(0));
 // Same as above, but does not take any descriptor args.
@@ -745,7 +746,7 @@ GPUTextureView includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuTextureView;
 // Returns true if the given handle references a valid GPUTextureView.
-EM_BOOL wgpu_is_texture_view(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_texture_view(WGpuObjectBase object);
 
 
 /*
@@ -1046,7 +1047,7 @@ GPUExternalTexture includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuExternalTexture;
 // Returns true if the given handle references a valid GPUExternalTexture.
-EM_BOOL wgpu_is_external_texture(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_external_texture(WGpuObjectBase object);
 
 /*
 dictionary GPUExternalTextureDescriptor : GPUObjectDescriptorBase {
@@ -1072,7 +1073,7 @@ GPUSampler includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuSampler;
 // Returns true if the given handle references a valid GPUSampler.
-EM_BOOL wgpu_is_sampler(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_sampler(WGpuObjectBase object);
 
 /*
 dictionary GPUSamplerDescriptor : GPUObjectDescriptorBase {
@@ -1169,7 +1170,7 @@ GPUBindGroupLayout includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuBindGroupLayout;
 // Returns true if the given handle references a valid GPUBindGroupLayout.
-EM_BOOL wgpu_is_bind_group_layout(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_bind_group_layout(WGpuObjectBase object);
 
 /*
 dictionary GPUBindGroupLayoutDescriptor : GPUObjectDescriptorBase {
@@ -1237,7 +1238,7 @@ dictionary GPUBufferBindingLayout {
 typedef struct WGpuBufferBindingLayout
 {
   WGPU_BUFFER_BINDING_TYPE type;
-  EM_BOOL hasDynamicOffset;
+  int hasDynamicOffset;
   uint64_t minBindingSize;
 } WGpuBufferBindingLayout;
 extern const WGpuBufferBindingLayout WGPU_BUFFER_BINDING_LAYOUT_DEFAULT_INITIALIZER;
@@ -1294,7 +1295,7 @@ typedef struct WGpuTextureBindingLayout
 {
   WGPU_TEXTURE_SAMPLE_TYPE sampleType;
   WGPU_TEXTURE_VIEW_DIMENSION viewDimension;
-  EM_BOOL multisampled;
+  WGPU_BOOL multisampled;
 } WGpuTextureBindingLayout;
 extern const WGpuTextureBindingLayout WGPU_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER;
 
@@ -1343,7 +1344,7 @@ GPUBindGroup includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuBindGroup;
 // Returns true if the given handle references a valid GPUBindGroup.
-EM_BOOL wgpu_is_bind_group(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_bind_group(WGpuObjectBase object);
 
 /*
 dictionary GPUBindGroupDescriptor : GPUObjectDescriptorBase {
@@ -1390,7 +1391,7 @@ GPUPipelineLayout includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuPipelineLayout;
 // Returns true if the given handle references a valid GPUPipelineLayout.
-EM_BOOL wgpu_is_pipeline_layout(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_pipeline_layout(WGpuObjectBase object);
 
 /*
 dictionary GPUPipelineLayoutDescriptor : GPUObjectDescriptorBase {
@@ -1408,7 +1409,7 @@ GPUShaderModule includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuShaderModule;
 // Returns true if the given handle references a valid GPUShaderModule.
-EM_BOOL wgpu_is_shader_module(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_shader_module(WGpuObjectBase object);
 
 typedef void (*WGpuGetCompilationInfoCallback)(WGpuShaderModule shaderModule, WGpuCompilationInfo *compilationInfo NOTNULL, void *userData);
 
@@ -1570,7 +1571,7 @@ GPUComputePipeline includes GPUPipelineBase;
 */
 typedef WGpuObjectBase WGpuComputePipeline;
 // Returns true if the given handle references a valid GPUComputePipeline.
-EM_BOOL wgpu_is_compute_pipeline(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_compute_pipeline(WGpuObjectBase object);
 
 /*
 dictionary GPUComputePipelineDescriptor : GPUPipelineDescriptorBase {
@@ -1589,7 +1590,7 @@ GPURenderPipeline includes GPUPipelineBase;
 typedef WGpuObjectBase WGpuRenderPipeline;
 typedef WGpuObjectBase WGpuPipelineBase;
 // Returns true if the given handle references a valid GPURenderPipeline.
-EM_BOOL wgpu_is_render_pipeline(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_render_pipeline(WGpuObjectBase object);
 
 /*
 dictionary GPURenderPipelineDescriptor : GPUPipelineDescriptorBase {
@@ -1637,7 +1638,7 @@ typedef struct WGpuPrimitiveState
   WGPU_FRONT_FACE frontFace; // Defaults to WGPU_FRONT_FACE_CCW ('ccw')
   WGPU_CULL_MODE cullMode; // Defaults to WGPU_CULL_MODE_NONE ('none')
 
-  EM_BOOL unclippedDepth; // defaults to EM_FALSE.
+  WGPU_BOOL unclippedDepth; // defaults to false.
 } WGpuPrimitiveState;
 
 /*
@@ -1675,7 +1676,7 @@ typedef struct WGpuMultisampleState
 {
   uint32_t count;
   uint32_t mask;
-  EM_BOOL alphaToCoverageEnabled;
+  WGPU_BOOL alphaToCoverageEnabled;
 } WGpuMultisampleState;
 
 /*
@@ -2005,7 +2006,7 @@ GPUCommandBuffer includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuCommandBuffer;
 // Returns true if the given handle references a valid GPUCommandBuffer.
-EM_BOOL wgpu_is_command_buffer(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_command_buffer(WGpuObjectBase object);
 
 /*
 dictionary GPUCommandBufferDescriptor : GPUObjectDescriptorBase {
@@ -2078,7 +2079,7 @@ GPUCommandEncoder includes GPUDebugCommandsMixin;
 */
 typedef WGpuObjectBase WGpuCommandEncoder;
 // Returns true if the given handle references a valid GPUCommandEncoder.
-EM_BOOL wgpu_is_command_encoder(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_command_encoder(WGpuObjectBase object);
 
 WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder commandEncoder, const WGpuRenderPassDescriptor *renderPassDesc NOTNULL);
 // Like above, but tiny code size path for the case when there is exactly one color and zero depth-stencil targets and no occlusion query set specified for the render pass.
@@ -2174,7 +2175,7 @@ interface mixin GPUBindingCommandsMixin {
 */
 typedef WGpuObjectBase WGpuBindingCommandsMixin;
 // Returns true if the given handle references a valid GPUBindingCommandsMixin. (one of: GPUComputePassEncoder, GPURenderPassEncoder, or GPURenderBundleEncoder)
-EM_BOOL wgpu_is_binding_commands_mixin(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_binding_commands_mixin(WGpuObjectBase object);
 void wgpu_encoder_set_bind_group(WGpuBindingCommandsMixin encoder, uint32_t index, WGpuBindGroup bindGroup, const uint32_t *dynamicOffsets _WGPU_DEFAULT_VALUE(0), uint32_t numDynamicOffsets _WGPU_DEFAULT_VALUE(0));
 
 // Some of the functions in GPURenderBundleEncoder, GPURenderPassEncoder and GPUComputePassEncoder are identical in implementation,
@@ -2198,7 +2199,7 @@ GPUComputePassEncoder includes GPUBindingCommandsMixin;
 */
 typedef WGpuObjectBase WGpuComputePassEncoder;
 // Returns true if the given handle references a valid GPUComputePassEncoder.
-EM_BOOL wgpu_is_compute_pass_encoder(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_compute_pass_encoder(WGpuObjectBase object);
 
 #define wgpu_compute_pass_encoder_set_pipeline wgpu_encoder_set_pipeline
 void wgpu_compute_pass_encoder_dispatch_workgroups(WGpuComputePassEncoder encoder, uint32_t workgroupCountX, uint32_t workgroupCountY _WGPU_DEFAULT_VALUE(1), uint32_t workgroupCountZ _WGPU_DEFAULT_VALUE(1));
@@ -2261,7 +2262,7 @@ interface mixin GPURenderCommandsMixin {
 // Deliberate API naming divergence: in upstream WebGPU API, there are base "mixin" classes
 typedef WGpuObjectBase WGpuRenderCommandsMixin;
 // Returns true if the given handle references a valid GPURenderCommandsMixin.
-EM_BOOL wgpu_is_render_commands_mixin(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_render_commands_mixin(WGpuObjectBase object);
 
 #define wgpu_render_commands_mixin_set_pipeline wgpu_encoder_set_pipeline
 void wgpu_render_commands_mixin_set_index_buffer(WGpuRenderCommandsMixin renderCommandsMixin, WGpuBuffer buffer, WGPU_INDEX_FORMAT indexFormat, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAX_SIZE));
@@ -2300,7 +2301,7 @@ GPURenderPassEncoder includes GPURenderCommandsMixin;
 */
 typedef WGpuObjectBase WGpuRenderPassEncoder;
 // Returns true if the given handle references a valid GPURenderPassEncoder.
-EM_BOOL wgpu_is_render_pass_encoder(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_render_pass_encoder(WGpuObjectBase object);
 
 void wgpu_render_pass_encoder_set_viewport(WGpuRenderPassEncoder encoder, float x, float y, float width, float height, float minDepth, float maxDepth);
 void wgpu_render_pass_encoder_set_scissor_rect(WGpuRenderPassEncoder encoder, uint32_t x, uint32_t y, uint32_t width, uint32_t height);
@@ -2364,12 +2365,12 @@ typedef struct WGpuRenderPassDepthStencilAttachment
   float depthClearValue;
 
   WGPU_STORE_OP depthStoreOp;
-  EM_BOOL depthReadOnly;
+  WGPU_BOOL depthReadOnly;
 
   WGPU_LOAD_OP stencilLoadOp;  // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR
   uint32_t stencilClearValue;
   WGPU_STORE_OP stencilStoreOp;
-  EM_BOOL stencilReadOnly;
+  WGPU_BOOL stencilReadOnly;
 } WGpuRenderPassDepthStencilAttachment;
 extern const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER;
 
@@ -2412,7 +2413,7 @@ GPURenderBundle includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuRenderBundle;
 // Returns true if the given handle references a valid GPURenderBundle.
-EM_BOOL wgpu_is_render_bundle(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_render_bundle(WGpuObjectBase object);
 
 /*
 dictionary GPURenderBundleDescriptor : GPUObjectDescriptorBase {
@@ -2437,7 +2438,7 @@ GPURenderBundleEncoder includes GPURenderCommandsMixin;
 */
 typedef WGpuObjectBase WGpuRenderBundleEncoder;
 // Returns true if the given handle references a valid GPURenderBundleEncoder.
-EM_BOOL wgpu_is_render_bundle_encoder(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_render_bundle_encoder(WGpuObjectBase object);
 #define wgpu_render_bundle_encoder_finish wgpu_encoder_finish
 
 #define wgpu_render_bundle_encoder_set_bind_group wgpu_encoder_set_bind_group
@@ -2466,8 +2467,8 @@ typedef struct WGpuRenderBundleEncoderDescriptor
   const WGPU_TEXTURE_FORMAT *colorFormats;
   WGPU_TEXTURE_FORMAT depthStencilFormat;
   uint32_t sampleCount;
-  EM_BOOL depthReadOnly;
-  EM_BOOL stencilReadOnly;
+  WGPU_BOOL depthReadOnly;
+  WGPU_BOOL stencilReadOnly;
 } WGpuRenderBundleEncoderDescriptor;
 
 /*
@@ -2499,7 +2500,7 @@ GPUQueue includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuQueue;
 // Returns true if the given handle references a valid GPUQueue.
-EM_BOOL wgpu_is_queue(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_queue(WGpuObjectBase object);
 
 // Submits one command buffer to the given queue for rendering. Then, the command buffer is destroyed. (as if calling wgpu_object_destroy() on it)
 // N.b. if you start recording a command buffer and choose not to submit it, then you must manually call wgpu_object_destroy() on it to avoid
@@ -2532,7 +2533,7 @@ GPUQuerySet includes GPUObjectBase;
 */
 typedef WGpuObjectBase WGpuQuerySet;
 // Returns true if the given handle references a valid GPUQuerySet.
-EM_BOOL wgpu_is_query_set(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_query_set(WGpuObjectBase object);
 // Getters for retrieving query set properties:
 WGPU_QUERY_TYPE wgpu_query_set_type(WGpuQuerySet querySet);
 uint32_t wgpu_query_set_count(WGpuQuerySet querySet);
@@ -2582,7 +2583,7 @@ interface GPUCanvasContext {
 */
 typedef WGpuObjectBase WGpuCanvasContext;
 // Returns true if the given handle references a valid GPUCanvasContext.
-EM_BOOL wgpu_is_canvas_context(WGpuObjectBase object);
+WGPU_BOOL wgpu_is_canvas_context(WGpuObjectBase object);
 
 // TODO: Add char *wgpu_canvas_context_get_canvas_selector_id() for 'canvas' member property, as both CSS ID selector and object ID.
 
@@ -2874,7 +2875,7 @@ typedef struct WGpuImageCopyExternalImage
 {
   WGpuObjectBase source; // must point to a WGpuImageBitmap (could also point to a HTMLVideoElement, HTMLCanvasElement or OffscreenCanvas, but those are currently unimplemented)
   WGpuOrigin2D origin;
-  EM_BOOL flipY; // defaults to EM_FALSE.
+  WGPU_BOOL flipY; // defaults to false.
 } WGpuImageCopyExternalImage;
 extern const WGpuImageCopyExternalImage WGPU_IMAGE_COPY_EXTERNAL_IMAGE_DEFAULT_INITIALIZER;
 
@@ -2896,7 +2897,7 @@ typedef struct WGpuImageCopyTextureTagged
   WGPU_TEXTURE_ASPECT aspect;
 
   HTML_PREDEFINED_COLOR_SPACE colorSpace; // = "srgb";
-  EM_BOOL premultipliedAlpha; // = false;
+  WGPU_BOOL premultipliedAlpha; // = false;
 } WGpuImageCopyTextureTagged;
 extern const WGpuImageCopyTextureTagged WGPU_IMAGE_COPY_TEXTURE_TAGGED_DEFAULT_INITIALIZER;
 
@@ -2906,7 +2907,7 @@ typedef struct WGpuDepthStencilState
   // to disable depth+stenciling altogether.
   WGPU_TEXTURE_FORMAT format;
 
-  EM_BOOL depthWriteEnabled;
+  WGPU_BOOL depthWriteEnabled;
   WGPU_COMPARE_FUNCTION depthCompare;
 
   uint32_t stencilReadMask;
@@ -2920,7 +2921,7 @@ typedef struct WGpuDepthStencilState
   WGpuStencilFaceState stencilBack;
 
   // Enable depth clamping (requires "depth-clamping" feature)
-  EM_BOOL clampDepth;
+  WGPU_BOOL clampDepth;
 } WGpuDepthStencilState;
 
 typedef struct WGpuBlendState
@@ -2978,7 +2979,7 @@ typedef WGpuObjectBase WGpuImageBitmap;
 // Called when the ImageBitmap finishes loading. If loading fails, this callback will be called with width==height==0.
 typedef void (*WGpuLoadImageBitmapCallback)(WGpuImageBitmap bitmap, int width, int height, void *userData);
 
-void wgpu_load_image_bitmap_from_url_async(const char *url NOTNULL, EM_BOOL flipY, WGpuLoadImageBitmapCallback callback, void *userData);
+void wgpu_load_image_bitmap_from_url_async(const char *url NOTNULL, WGPU_BOOL flipY, WGpuLoadImageBitmapCallback callback, void *userData);
 
 
 #ifdef __cplusplus

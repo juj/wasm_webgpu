@@ -837,7 +837,7 @@ WGpuCanvasContext wgpu_canvas_get_webgpu_context(void *hwnd) {
   return _wgpu_store(kWebGPUCanvasContext, context);
 }
 
-EM_BOOL wgpu_is_valid_object(WGpuObjectBase obj) {
+WGPU_BOOL wgpu_is_valid_object(WGpuObjectBase obj) {
   return obj != 0 && _dawn_to_webgpu->find(((_WGpuObject*)obj)->dawnObject) != _dawn_to_webgpu->end();
 }
 
@@ -907,7 +907,7 @@ int wgpu_object_get_label(WGpuObjectBase obj, char* dstLabel, uint32_t dstLabelS
   return 0;
 }
 
-EM_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions* options, WGpuRequestAdapterCallback adapterCallback, void* userData) {
+WGPU_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions* options, WGpuRequestAdapterCallback adapterCallback, void* userData) {
   WGpuAdapter adapter = navigator_gpu_request_adapter_sync(options);
   if (adapterCallback)
     adapterCallback(adapter, userData);
@@ -958,7 +958,7 @@ WGPU_TEXTURE_FORMAT navigator_gpu_get_preferred_canvas_format() {
   return WGPUTextureFormat_BGRA8Unorm; /* TODO Figure out how to get the preferred format from Dawn */
 }
 
-EM_BOOL wgpu_is_adapter(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_adapter(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUAdapter;
 }
@@ -981,7 +981,7 @@ WGPU_FEATURES_BITFIELD wgpu_adapter_or_device_get_features(WGpuAdapter adapterOr
   return featuresBitMask;
 }
 
-EM_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapterOrDevice, WGPU_FEATURES_BITFIELD feature) {
+WGPU_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapterOrDevice, WGPU_FEATURES_BITFIELD feature) {
   _WGpuObject* obj = _wgpu_get(adapterOrDevice);
   assert(obj && (obj->type != kWebGPUDevice || obj->type != kWebGPUAdapter));
 
@@ -1045,7 +1045,7 @@ void wgpu_adapter_get_info(WGpuAdapter adapter, WGpuAdapterInfo *adapterInfo)
   assert(false); /* TODO */
 }
 
-EM_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter) {
+WGPU_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter) {
   assert(wgpu_is_adapter(adapter));
   return false; /* TODO */
 }
@@ -1129,7 +1129,7 @@ WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter) {
   return wgpu_adapter_request_device_sync(adapter, nullptr);
 }
 
-EM_BOOL wgpu_is_device(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_device(WGpuObjectBase object) {
   _WGpuObject* obj = !object ? nullptr : _wgpu_get(object);
   return obj && obj->type == kWebGPUDevice;
 }
@@ -1720,7 +1720,7 @@ WGpuQuerySet wgpu_device_create_query_set(WGpuDevice device, const WGpuQuerySetD
   return _wgpu_store_and_set_parent(kWebGPUQuerySet, query, device);
 }
 
-EM_BOOL wgpu_is_buffer(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_buffer(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj != nullptr && obj->type == kWebGPUBuffer;
 }
@@ -1811,7 +1811,7 @@ WGPU_BUFFER_MAP_STATE wgpu_buffer_map_state(WGpuBuffer buffer) {
   return Dawn_to_WGPU_BUFFER_MAP_STATE[obj->state];
 }
 
-EM_BOOL wgpu_is_texture(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_texture(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUTexture;
 }
@@ -1883,37 +1883,37 @@ WGPU_TEXTURE_USAGE_FLAGS wgpu_texture_usage(WGpuTexture texture) {
   return (WGPU_TEXTURE_USAGE_FLAGS)usage;
 }
 
-EM_BOOL wgpu_is_texture_view(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_texture_view(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUTextureView;
 }
 
-EM_BOOL wgpu_is_external_texture(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_external_texture(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUExternalTexture;
 }
 
-EM_BOOL wgpu_is_sampler(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_sampler(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUSampler;
 }
 
-EM_BOOL wgpu_is_bind_group_layout(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_bind_group_layout(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUBindGroupLayout;
 }
 
-EM_BOOL wgpu_is_bind_group(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_bind_group(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUBindGroup;
 }
 
-EM_BOOL wgpu_is_pipeline_layout(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_pipeline_layout(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUPipelineLayout;
 }
 
-EM_BOOL wgpu_is_shader_module(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_shader_module(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUShaderModule;
 }
@@ -1929,22 +1929,22 @@ WGpuBindGroupLayout wgpu_pipeline_get_bind_group_layout(WGpuObjectBase pipelineB
   return _wgpu_store(kWebGPUBindGroupLayout, bindGroupLayout);
 }
 
-EM_BOOL wgpu_is_compute_pipeline(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_compute_pipeline(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUComputePipeline;
 }
 
-EM_BOOL wgpu_is_render_pipeline(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_render_pipeline(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPURenderPipeline;
 }
 
-EM_BOOL wgpu_is_command_buffer(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_command_buffer(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUCommandBuffer;
 }
 
-EM_BOOL wgpu_is_debug_commands_mixin(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_debug_commands_mixin(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && (obj->type == kWebGPUComputePassEncoder || obj->type == kWebGPURenderPassEncoder ||
       obj->type == kWebGPURenderBundleEncoder || obj->type == kWebGPUCommandEncoder);
@@ -1983,7 +1983,7 @@ void wgpu_encoder_insert_debug_marker(WGpuDebugCommandsMixin encoder, const char
     wgpuCommandEncoderInsertDebugMarker(_wgpu_get_dawn<WGPUCommandEncoder>(encoder), markerLabel);
 }
 
-EM_BOOL wgpu_is_command_encoder(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_command_encoder(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUCommandEncoder;
 }
@@ -2201,7 +2201,7 @@ WGpuCommandBuffer wgpu_encoder_finish(WGpuObjectBase commandOrRenderBundleEncode
   return _wgpu_store(kWebGPURenderBundle, bundle);
 }
 
-EM_BOOL wgpu_is_binding_commands_mixin(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_binding_commands_mixin(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && (obj->type == kWebGPUComputePassEncoder || obj->type == kWebGPURenderPassEncoder ||
       obj->type == kWebGPURenderBundleEncoder);
@@ -2237,7 +2237,7 @@ void wgpu_encoder_end(WGpuBindingCommandsMixin encoder) {
   wgpu_object_destroy(encoder);
 }
 
-EM_BOOL wgpu_is_compute_pass_encoder(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_compute_pass_encoder(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUComputePassEncoder;
 }
@@ -2254,17 +2254,17 @@ void wgpu_compute_pass_encoder_dispatch_workgroups_indirect(WGpuComputePassEncod
   wgpuComputePassEncoderDispatchWorkgroupsIndirect(_encoder, _wgpu_get_dawn<WGPUBuffer>(indirectBuffer), indirectOffset);
 }
 
-EM_BOOL wgpu_is_render_commands_mixin(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_render_commands_mixin(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && (obj->type == kWebGPURenderPassEncoder || obj->type == kWebGPURenderBundleEncoder);
 }
 
-EM_BOOL wgpu_is_render_pass_encoder(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_render_pass_encoder(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPURenderPassEncoder;
 }
 
-EM_BOOL wgpu_is_render_bundle_encoder(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_render_bundle_encoder(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj != nullptr && obj->type == kWebGPURenderBundleEncoder;
 }
@@ -2394,12 +2394,12 @@ void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, con
   wgpuRenderPassEncoderExecuteBundles(_encoder, numBundles, _bundles.data());
 }
 
-EM_BOOL wgpu_is_render_bundle(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_render_bundle(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj != nullptr && obj->type == kWebGPURenderBundle;
 }
 
-EM_BOOL wgpu_is_queue(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_queue(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUQueue;
 }
@@ -2481,7 +2481,7 @@ void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuImageC
   assert(false); /* TODO */
 }
 
-EM_BOOL wgpu_is_query_set(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_query_set(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUQuerySet;
 }
@@ -2500,7 +2500,7 @@ uint32_t wgpu_query_set_count(WGpuQuerySet querySet) {
   return wgpuQuerySetGetCount(_querySet);
 }
 
-EM_BOOL wgpu_is_canvas_context(WGpuObjectBase object) {
+WGPU_BOOL wgpu_is_canvas_context(WGpuObjectBase object) {
   _WGpuObject* obj = _wgpu_get(object);
   return obj && obj->type == kWebGPUCanvasContext;
 }
@@ -2620,7 +2620,7 @@ void wgpu_device_set_uncapturederror_callback(WGpuDevice device, WGpuDeviceError
   }, data);
 }
 
-void wgpu_load_image_bitmap_from_url_async(const char *url, EM_BOOL flipY, WGpuLoadImageBitmapCallback callback, void *userData) {
+void wgpu_load_image_bitmap_from_url_async(const char *url, WGPU_BOOL flipY, WGpuLoadImageBitmapCallback callback, void *userData) {
   assert(false); /* TODO */
 }
 
