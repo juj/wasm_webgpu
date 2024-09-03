@@ -45,7 +45,7 @@ EM_BOOL raf(double time, void *userData)
 
   WGpuRenderPassEncoder pass = wgpu_command_encoder_begin_render_pass(encoder, &passDesc);
   wgpu_render_pass_encoder_set_pipeline(pass, renderPipeline);
-  wgpu_render_pass_encoder_set_vertex_buffer(pass, 0, renderBuffer, 0, 6*sizeof(float));
+  wgpu_render_pass_encoder_set_vertex_buffer(pass, 0, renderBuffer, 0, WGPU_MAX_SIZE);
   wgpu_render_pass_encoder_draw(pass, 3, 1, 0, 0);
   wgpu_render_pass_encoder_end(pass);
 
