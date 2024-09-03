@@ -299,9 +299,10 @@ void navigator_delete_webgpu_api_access(void);
 // See buffer_map_sync.c for an example.
 int wgpu_sync_operations_pending(void);
 
-// Performs a requestAnimationFrame() call in a manner that is paused/held whenever there are JSPI-asyncified operations in flight and executing
-// Wasm should be suspended. After the JSPI call is resolved, the given requestAnimationFrame() call will be invoked.
-long wgpu_request_animation_frame(EM_BOOL (*cb)(double time, void *userData), void *userData);
+// Performs a requestAnimationFrame() animation loop in a manner that is paused/held whenever there are JSPI-asyncified operations in
+// flight and execution of Wasm should be suspended. After the JSPI call is resolved, the given requestAnimationFrame() call will continue to run.
+// Semantics of the callback function are as in emscripten_request_animation_frame_loop() API.
+void wgpu_request_animation_frame_loop(EM_BOOL (*callback)(double time, void *userData), void *userData);
 
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // Requests an adapter from the user agent. The user agent chooses whether to return an adapter, and, if so, chooses according to the provided options.

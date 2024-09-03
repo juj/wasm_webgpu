@@ -53,7 +53,6 @@ EM_BOOL raf(double time, void *userData)
   wgpu_queue_submit_one_and_destroy(queue, commandBuffer);
 
   assert(wgpu_get_num_live_objects() < 100); // Check against programming errors from Wasm<->JS WebGPU object leaks
-  wgpu_request_animation_frame(raf, 0);
   return EM_TRUE;
 }
 
@@ -135,5 +134,5 @@ int main()
   bufferDesc.usage = WGPU_BUFFER_USAGE_COPY_DST | WGPU_BUFFER_USAGE_VERTEX;
   renderBuffer = wgpu_device_create_buffer(device, &bufferDesc);
 
-  wgpu_request_animation_frame(raf, 0);
+  wgpu_request_animation_frame_loop(raf, 0);
 }
