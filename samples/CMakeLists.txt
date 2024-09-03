@@ -93,8 +93,8 @@ target_link_options(clear_screen_sync PRIVATE "-sASYNCIFY=1")
 add_executable(buffer_map_sync buffer_map_sync/buffer_map_sync.c)
 target_link_libraries(buffer_map_sync webgpu)
 
-# Enable JSPI (ASYNCIFY=2) for buffer_map_sync example
-target_link_options(buffer_map_sync PRIVATE "-sASYNCIFY=2")
+# Enable JSPI for buffer_map_sync example
+target_link_options(buffer_map_sync PRIVATE "-sJSPI=1")
 
 # Currently ASYNCIFY does not support MINIMAL_RUNTIME, so have to disable it for this example.
 target_link_options(clear_screen_sync PRIVATE "-sMINIMAL_RUNTIME=0")
