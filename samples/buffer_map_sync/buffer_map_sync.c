@@ -16,11 +16,6 @@ WGpuBuffer stagingBuffer, renderBuffer;
 
 EM_BOOL raf(double time, void *userData)
 {
-  // Important gotcha! If there are previous wgpu_buffer_map_sync() calls
-  // still unresolved, we cannot proceed to render at all in this rAF(), but
-  // must skip doing so, until the buffer mapping operation finishes.
-  if (wgpu_sync_operations_pending()) return EM_TRUE;
-
   wgpu_buffer_map_sync(stagingBuffer, WGPU_MAP_MODE_WRITE, 0, WGPU_MAX_SIZE);
 
   float scale = (emscripten_math_sin(time * 0.005f) + 1.f) / 2.f + 0.5f;
@@ -58,6 +53,7 @@ EM_BOOL raf(double time, void *userData)
   wgpu_queue_submit_one_and_destroy(queue, commandBuffer);
 
   assert(wgpu_get_num_live_objects() < 100); // Check against programming errors from Wasm<->JS WebGPU object leaks
+  wgpu_request_animation_frame(raf, 0);
   return EM_TRUE;
 }
 
@@ -139,5 +135,5 @@ int main()
   bufferDesc.usage = WGPU_BUFFER_USAGE_COPY_DST | WGPU_BUFFER_USAGE_VERTEX;
   renderBuffer = wgpu_device_create_buffer(device, &bufferDesc);
 
-  emscripten_request_animation_frame_loop(raf, 0);
+  wgpu_request_animation_frame(raf, 0);
 }
