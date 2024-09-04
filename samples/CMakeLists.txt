@@ -100,7 +100,6 @@ target_link_options(buffer_map_sync PRIVATE "-sSINGLE_FILE=1")
 # Currently ASYNCIFY does not support MINIMAL_RUNTIME, so have to disable it for this example.
 target_link_options(clear_screen_sync PRIVATE "-sMINIMAL_RUNTIME=0")
 target_link_options(clear_screen_sync PRIVATE "--shell-file=${EMSCRIPTEN_ROOT_PATH}/src/shell.html")
-target_link_options(clear_screen_sync PRIVATE "-jsDWEBGPU_NO_BW_COMPAT=1") # Test that no backwards compatibility variant builds ok.
 
 target_link_options(buffer_map_sync PRIVATE "-sMINIMAL_RUNTIME=0")
 target_link_options(buffer_map_sync PRIVATE "--shell-file=${EMSCRIPTEN_ROOT_PATH}/src/shell.html")

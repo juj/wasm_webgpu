@@ -88,8 +88,6 @@ Currently both 2GB and 4GB build modes are supported. Wasm64 is also planned to 
 
 Wasm_Webgpu requires Emscripten 3.1.35 or newer.
 
-By default the JS library provides polyfills for browser backwards compatibility for scenarios where WebGPU library might be included in a build that co-targets both WebGL and WebGPU simultaneously. To opt out from polyfills, pass the Emscripten linker flag -jsDWEBGPU_NO_BW_COMPAT=1.
-
 ## 🧪 Samples
 
 Several test cases are available under the `samples/` subdirectory.
