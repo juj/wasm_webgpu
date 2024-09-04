@@ -143,7 +143,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   renderPipeline = wgpu_device_create_render_pipeline(device, &renderPipelineDesc);
   assert(wgpu_is_render_pipeline(renderPipeline));
 
-  emscripten_request_animation_frame_loop(raf, 0);
+  wgpu_request_animation_frame_loop(raf, 0);
 }
 
 void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)

@@ -86,7 +86,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   for(int i = 0; i < 1024*1024; ++i)
     initialData[i] = i;
 
-  emscripten_request_animation_frame_loop(raf, 0);
+  wgpu_request_animation_frame_loop(raf, 0);
 }
 
 void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
