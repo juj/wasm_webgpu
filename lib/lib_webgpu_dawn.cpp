@@ -11,6 +11,7 @@
 #ifdef _WIN32
 #include <Windows.h>
 #endif
+#define DAWN_UNSAFE_API 1
 
 enum _WgpuObjectType {
   kWebGPUInvalidObject = 0,
@@ -622,8 +623,19 @@ WGPU_DEVICE_LOST_REASON Dawn_to_WGPU_DEVICE_LOST_REASON[] = {
 
 //////////////////////////////////////////////////////////////////////
 
+#ifdef DAWN_UNSAFE_API
+const char* enabledToggles = "allow_unsafe_apis";
+
+WGPUDawnTogglesDescriptor instanceTogglesDesc{ { nullptr, WGPUSType_DawnTogglesDescriptor}, 1, &enabledToggles };
+WGPUInstanceDescriptor instanceDesc{ reinterpret_cast<WGPUChainedStruct*>(&instanceTogglesDesc) };
+
+#endif
 static dawn::native::Instance& GetDawnInstance() {
-  static dawn::native::Instance instance;
+#if DAWN_UNSAFE_API
+	static dawn::native::Instance instance(&instanceDesc);
+#else
+	static dawn::native::Instance instance;
+#endif
   return instance;
 }
 
@@ -777,6 +789,8 @@ void _wgpu_object_destroy(_WGpuObject* obj) {
   case kWebGPUQueue:
     wgpuQueueRelease((WGPUQueue)obj->dawnObject);
     break;
+  case kWebGPUCanvasContext:
+    break;
   case kWebGPUQuerySet:
     wgpuQuerySetDestroy((WGPUQuerySet)obj->dawnObject);
     break;
@@ -821,7 +835,7 @@ void wgpu_destroy_all_objects() {
 }
 
 WGpuCanvasContext wgpu_canvas_get_webgpu_context(void *hwnd) {
-  WGPUSurfaceDescriptor surfaceDesc;
+  WGPUSurfaceDescriptor surfaceDesc{};
 
 #ifdef _WIN32
   WGPUSurfaceDescriptorFromWindowsHWND chainedDesc;
@@ -1159,7 +1173,12 @@ WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescript
   _desc.nextInChain = nullptr;
 
   WGPUBuffer buffer = wgpuDeviceCreateBuffer(_wgpu_get_dawn<WGPUDevice>(device), &_desc);
-  return _wgpu_store_and_set_parent(kWebGPUBuffer, buffer, device);
+  WGpuBuffer id = _wgpu_store_and_set_parent(kWebGPUBuffer, buffer, device);
+  if (bufferDesc->mappedAtCreation) {
+    _WGpuObjectBuffer* obj = (_WGpuObjectBuffer*)_wgpu_get(id);
+    obj->state = kWebGPUBufferMapStateMappedForWriting;
+  }
+  return id;
 }
 
 WGpuTexture wgpu_device_create_texture(WGpuDevice device, const WGpuTextureDescriptor* textureDesc) {
@@ -1239,7 +1258,7 @@ WGpuBindGroupLayout wgpu_device_create_bind_group_layout(WGpuDevice device, cons
       entries[i].buffer = bufferLayout;
     } else if (layoutEntry.type == WGPU_BIND_GROUP_LAYOUT_TYPE_TEXTURE) {
       WGPUTextureBindingLayout textureLayout = {};
-      textureLayout.multisampled = false; // WGpuTextureBindingLayout doesn't have this field
+      textureLayout.multisampled = layoutEntry.layout.texture.multisampled;
       textureLayout.sampleType = wgpu_texture_sample_type_to_dawn(layoutEntry.layout.texture.sampleType);
       textureLayout.viewDimension = wgpu_texture_view_dimension_to_dawn(layoutEntry.layout.texture.viewDimension);
       entries[i].texture = textureLayout;
@@ -1756,7 +1775,36 @@ void wgpu_buffer_map_async(WGpuBuffer buffer, WGpuBufferMapCallback callback, vo
 }
 
 void wgpu_buffer_map_sync(WGpuBuffer buffer, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset, double_int53_t size) {
-  assert(false);
+  assert(wgpu_is_buffer(buffer));
+  
+  _WGpuObjectBuffer* obj = (_WGpuObjectBuffer*)_wgpu_get(buffer);
+  if (obj->state != kWebGPUBufferMapStateUnmapped)
+  	return;
+  
+  obj->state = kWebGPUBufferMapStatePending;
+  
+  struct _Data {
+  	WGpuBuffer buffer;
+  	WGPU_MAP_MODE_FLAGS mode;
+  	bool done = false;
+  };
+  
+  auto callback = [](WGPUBufferMapAsyncStatus status, void* rawData) {
+  	auto* userdata = static_cast<_Data*>(rawData);
+  	userdata->done = true;
+  	_Data* data = (_Data*)userdata;
+  	_WGpuObjectBuffer* obj = (_WGpuObjectBuffer*)_wgpu_get(data->buffer);
+  	obj->state = (data->mode & WGPUMapMode_Write) ? kWebGPUBufferMapStateMappedForWriting : kWebGPUBufferMapStateMappedForReading;
+  };
+  
+  _Data* data = new _Data{ buffer, mode };
+  wgpuBufferMapAsync(_wgpu_get_dawn<WGPUBuffer>(buffer), (WGPUMapModeFlags)mode, (size_t)offset, (size_t)size, callback, data);
+  
+  while (!data->done) {
+  	wgpuInstanceProcessEvents(GetDawnInstance().Get());
+  }
+  delete data;
+  return;
 }
 
 double_int53_t wgpu_buffer_get_mapped_range(WGpuBuffer buffer, double_int53_t startOffset, double_int53_t size) {
