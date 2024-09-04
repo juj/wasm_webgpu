@@ -87,17 +87,14 @@ target_link_libraries(clear_screen webgpu)
 add_executable(clear_screen_sync clear_screen/clear_screen_sync.c)
 target_link_libraries(clear_screen_sync webgpu)
 
-# Enable ASYNCIFY for clear_screen_sync example.
-target_link_options(clear_screen_sync PRIVATE "-sASYNCIFY=1")
-
 add_executable(buffer_map_sync buffer_map_sync/buffer_map_sync.c)
 target_link_libraries(buffer_map_sync webgpu)
 
-# Enable JSPI for buffer_map_sync example
+# Enable JSPI for clear_screen_sync and buffer_map_sync examples.
+target_link_options(clear_screen_sync PRIVATE "-sJSPI=1")
 target_link_options(buffer_map_sync PRIVATE "-sJSPI=1")
-target_link_options(buffer_map_sync PRIVATE "-sSINGLE_FILE=1")
 
-# Currently ASYNCIFY does not support MINIMAL_RUNTIME, so have to disable it for this example.
+# Currently JSPI does not support MINIMAL_RUNTIME, so have to disable it for this example.
 target_link_options(clear_screen_sync PRIVATE "-sMINIMAL_RUNTIME=0")
 target_link_options(clear_screen_sync PRIVATE "--shell-file=${EMSCRIPTEN_ROOT_PATH}/src/shell.html")
 
