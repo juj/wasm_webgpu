@@ -91,8 +91,9 @@ add_executable(buffer_map_sync buffer_map_sync/buffer_map_sync.c)
 target_link_libraries(buffer_map_sync webgpu)
 
 # Enable JSPI for clear_screen_sync and buffer_map_sync examples.
-target_link_options(clear_screen_sync PRIVATE "-sJSPI=1")
-target_link_options(buffer_map_sync PRIVATE "-sJSPI=1")
+target_link_options(clear_screen_sync PRIVATE "-sASYNCIFY=2")
+target_link_options(buffer_map_sync PRIVATE "-sASYNCIFY=2")
+target_link_options(buffer_map_sync PRIVATE "-sSINGLE_FILE")
 
 # Currently JSPI does not support MINIMAL_RUNTIME, so have to disable it for this example.
 target_link_options(clear_screen_sync PRIVATE "-sMINIMAL_RUNTIME=0")
