@@ -2212,6 +2212,8 @@ void wgpu_command_encoder_clear_buffer(WGpuCommandEncoder commandEncoder, WGpuBu
   assert(wgpu_is_command_encoder(commandEncoder));
   assert(wgpu_is_buffer(buffer));
 
+  if (size < 0) size = wgpu_buffer_size(buffer) - offset;
+
   wgpuCommandEncoderClearBuffer(_wgpu_get_dawn<WGPUCommandEncoder>(commandEncoder), _wgpu_get_dawn<WGPUBuffer>(buffer),
       (uint64_t)offset, (uint64_t)size);
 }
