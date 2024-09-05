@@ -14,7 +14,7 @@ WGpuQueue queue;
 WGpuRenderPipeline renderPipeline;
 WGpuBuffer stagingBuffer, renderBuffer;
 
-EM_BOOL raf(double time, void *userData)
+WGPU_BOOL raf(double time, void *userData)
 {
   wgpu_buffer_map_sync(stagingBuffer, WGPU_MAP_MODE_WRITE, 0, WGPU_MAX_SIZE);
 

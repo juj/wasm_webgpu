@@ -40,9 +40,7 @@
 #define WGPU_INFINITY ((double)INFINITY)
 #endif
 
-// The EM_BOOL type defined by Emscripten is set to be 1 byte in size, so define
-// a custom WGPU_BOOL type that has a size of 4 bytes to ensure a fixed struct
-// padding.
+// WGPU_BOOL is a boolean type that has a defined size of 4 bytes to ensure a fixed struct padding.
 #define WGPU_BOOL int
 #define WGPU_TRUE 1
 #define WGPU_FALSE 0
@@ -302,7 +300,7 @@ int wgpu_sync_operations_pending(void);
 // Performs a requestAnimationFrame() animation loop in a manner that is paused/held whenever there are JSPI-asyncified operations in
 // flight and execution of Wasm should be suspended. After the JSPI call is resolved, the given requestAnimationFrame() call will continue to run.
 // Semantics of the callback function are as in emscripten_request_animation_frame_loop() API.
-void wgpu_request_animation_frame_loop(EM_BOOL (*callback)(double time, void *userData), void *userData);
+void wgpu_request_animation_frame_loop(WGPU_BOOL (*callback)(double time, void *userData), void *userData);
 
 typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // Requests an adapter from the user agent. The user agent chooses whether to return an adapter, and, if so, chooses according to the provided options.

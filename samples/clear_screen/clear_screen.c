@@ -17,7 +17,7 @@ double hue2color(double hue)
   return 0;
 }
 
-EM_BOOL raf(double time, void *userData)
+WGPU_BOOL raf(double time, void *userData)
 {
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder_simple(device);
 

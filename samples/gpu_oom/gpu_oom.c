@@ -65,7 +65,7 @@ void alloc_gpu_buffer()
   gpuAllocatedBytes += allocSize;
 }
 
-EM_BOOL raf(double time, void *userData)
+WGPU_BOOL raf(double time, void *userData)
 {
   alloc_gpu_buffer();
   emscripten_mini_stdio_printf("Total allocated %f bytes. Largest successful allocation size: %f bytes.\n", (double)gpuAllocatedBytes, (double)largestSuccessfulAllocation);

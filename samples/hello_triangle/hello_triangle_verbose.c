@@ -20,7 +20,7 @@ void onSubmittedWorkDone(WGpuQueue queue, void *userData)
   emscripten_mini_stdio_printf("Submitted work done callback fired! (queue=%u, userData=%u)\n", queue, userData);
 }
 
-EM_BOOL raf(double time, void *userData)
+WGPU_BOOL raf(double time, void *userData)
 {
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
   assert(wgpu_is_command_encoder(encoder));

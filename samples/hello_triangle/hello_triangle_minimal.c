@@ -6,7 +6,7 @@ WGpuDevice device;
 WGpuQueue queue;
 WGpuRenderPipeline renderPipeline;
 
-EM_BOOL raf(double time, void *userData)
+WGPU_BOOL raf(double time, void *userData)
 {
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
 
