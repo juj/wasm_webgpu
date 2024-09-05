@@ -624,10 +624,10 @@ WGPU_DEVICE_LOST_REASON Dawn_to_WGPU_DEVICE_LOST_REASON[] = {
 //////////////////////////////////////////////////////////////////////
 
 #ifdef DAWN_UNSAFE_API
-const char* enabledToggles = "allow_unsafe_apis";
+static const char* enabledToggles = "allow_unsafe_apis";
 
-WGPUDawnTogglesDescriptor instanceTogglesDesc{ { nullptr, WGPUSType_DawnTogglesDescriptor}, 1, &enabledToggles };
-WGPUInstanceDescriptor instanceDesc{ reinterpret_cast<WGPUChainedStruct*>(&instanceTogglesDesc) };
+static WGPUDawnTogglesDescriptor instanceTogglesDesc{ { nullptr, WGPUSType_DawnTogglesDescriptor}, 1, &enabledToggles };
+static WGPUInstanceDescriptor instanceDesc{ reinterpret_cast<WGPUChainedStruct*>(&instanceTogglesDesc) };
 
 #endif
 static dawn::native::Instance& GetDawnInstance() {
@@ -647,7 +647,7 @@ struct _WGpuCanvasContext {
 
 // Returns the number of leading zeros.
 // Is there a standard C/C++ function for this?
-int clz32(int x) {
+static int clz32(int x) {
   int r = 0;
   if (!x)
     return 32;
@@ -1775,20 +1775,20 @@ void wgpu_buffer_map_async(WGpuBuffer buffer, WGpuBufferMapCallback callback, vo
 }
 
 void wgpu_buffer_map_sync(WGpuBuffer buffer, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset, double_int53_t size) {
-  assert(wgpu_is_buffer(buffer));
-  
+    assert(wgpu_is_buffer(buffer));
+
   _WGpuObjectBuffer* obj = (_WGpuObjectBuffer*)_wgpu_get(buffer);
   if (obj->state != kWebGPUBufferMapStateUnmapped)
   	return;
-  
+
   obj->state = kWebGPUBufferMapStatePending;
-  
+
   struct _Data {
   	WGpuBuffer buffer;
   	WGPU_MAP_MODE_FLAGS mode;
   	bool done = false;
   };
-  
+
   auto callback = [](WGPUBufferMapAsyncStatus status, void* rawData) {
   	auto* userdata = static_cast<_Data*>(rawData);
   	userdata->done = true;
@@ -1796,14 +1796,14 @@ void wgpu_buffer_map_sync(WGpuBuffer buffer, WGPU_MAP_MODE_FLAGS mode, double_in
   	_WGpuObjectBuffer* obj = (_WGpuObjectBuffer*)_wgpu_get(data->buffer);
   	obj->state = (data->mode & WGPUMapMode_Write) ? kWebGPUBufferMapStateMappedForWriting : kWebGPUBufferMapStateMappedForReading;
   };
-  
-  _Data* data = new _Data{ buffer, mode };
-  wgpuBufferMapAsync(_wgpu_get_dawn<WGPUBuffer>(buffer), (WGPUMapModeFlags)mode, (size_t)offset, (size_t)size, callback, data);
-  
-  while (!data->done) {
+
+  _Data data{ buffer, mode };
+  wgpuBufferMapAsync(_wgpu_get_dawn<WGPUBuffer>(buffer), (WGPUMapModeFlags)mode, (size_t)offset, (size_t)size, callback, &data);
+
+  while (!data.done) {
   	wgpuInstanceProcessEvents(GetDawnInstance().Get());
   }
-  delete data;
+
   return;
 }
 
