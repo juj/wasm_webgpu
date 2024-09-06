@@ -70,7 +70,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   device = result;
   queue = wgpu_device_get_queue(device);
 
-  // 5. Instead of using the usual main thread function
+  // 6. Instead of using the usual main thread function
   //      wgpu_canvas_get_webgpu_context(cssSelector);
   //    to initialize a WebGPU context on the canvas, use the Offscreen Canvas
   //    variant of this function
@@ -78,7 +78,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   //    to initialize the context.
   canvasContext = wgpu_offscreen_canvas_get_webgpu_context(canvasId);
 
-  // 6. The rest of the WebGPU engine usage proceeds as normal for the main
+  // 7. The rest of the WebGPU engine usage proceeds as normal for the main
   //    thread case.
   WGpuCanvasConfiguration config = WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
