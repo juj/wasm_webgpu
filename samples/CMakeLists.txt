@@ -132,6 +132,19 @@ target_link_options(offscreen_canvas_pthread PRIVATE "-pthread")
 target_link_options(offscreen_canvas_pthread PRIVATE "-sENVIRONMENT=web,worker")
 target_link_options(offscreen_canvas_pthread PRIVATE "-sPTHREAD_POOL_SIZE=1")
 target_link_libraries(offscreen_canvas_pthread webgpu)
-# Currently pthread sample does not support MINIMAL_RUNTIME, so have to disable it for this example.
+# Currently offscreen_canvas_pthread sample does not support MINIMAL_RUNTIME, so have to disable it for this example.
 target_link_options(offscreen_canvas_pthread PRIVATE "-sMINIMAL_RUNTIME=0")
 target_link_options(offscreen_canvas_pthread PRIVATE "--shell-file=${EMSCRIPTEN_ROOT_PATH}/src/shell.html")
+
+add_executable(offscreen_canvas_proxy_to_pthread offscreen_canvas/offscreen_canvas_proxy_to_pthread.c)
+target_compile_options(offscreen_canvas_proxy_to_pthread PRIVATE "-pthread")
+target_link_options(offscreen_canvas_proxy_to_pthread PRIVATE "-pthread")
+target_link_options(offscreen_canvas_proxy_to_pthread PRIVATE "-sENVIRONMENT=web,worker")
+target_link_options(offscreen_canvas_proxy_to_pthread PRIVATE "-sOFFSCREENCANVAS_SUPPORT")
+target_link_options(offscreen_canvas_proxy_to_pthread PRIVATE "-sOFFSCREENCANVASES_TO_PTHREAD=#canvas")
+target_link_options(offscreen_canvas_proxy_to_pthread PRIVATE "-lGL")
+target_link_options(offscreen_canvas_proxy_to_pthread PRIVATE "-sPROXY_TO_PTHREAD")
+target_link_libraries(offscreen_canvas_proxy_to_pthread webgpu)
+# Currently offscreen_canvas_proxy_to_pthread sample does not support MINIMAL_RUNTIME, so have to disable it for this example.
+target_link_options(offscreen_canvas_proxy_to_pthread PRIVATE "-sMINIMAL_RUNTIME=0")
+target_link_options(offscreen_canvas_proxy_to_pthread PRIVATE "--shell-file=${EMSCRIPTEN_ROOT_PATH}/src/shell.html")

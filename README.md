@@ -85,7 +85,7 @@ Additionally, note that the web browser will keep pumping web events while WebAs
 
 ### 🧶 OffscreenCanvas support
 
-It is possible to perform WebGPU rendering from a dedicated background Worker thread using the Emscripten Wasm Worker or pthreads abstractions.
+It is possible to perform WebGPU rendering from a dedicated background Worker thread using the Emscripten Wasm Worker, pthreads or proxy-to-pthread abstractions.
 
 The following API functions are provided to manage OffscreenCanvas rendering:
 
@@ -102,9 +102,13 @@ void offscreen_canvas_size(OffscreenCanvasId id, int *outWidth NOTNULL, int *out
 void offscreen_canvas_set_size(OffscreenCanvasId id, int width, int height);
 ```
 
-See [lib_webgpu.h](lib/lib_webgpu.h) header file for detailed documentation.
+See [lib_webgpu.h](lib/lib_webgpu.h) header file for detailed documentation, and the samples/offscreen_canvas/ subdirectory for code snippets.
 
 When targeting OffscreenCanvas with Wasm Workers, pass the Emscripten compiler flag `-sWASM_WORKERS` for each compilation unit, and the linker flags `-sWASM_WORKERS -sENVIRONMENT=web,worker` for the final link.
+
+When targeting OffscreenCanvas with pthreads, pass the Emscripten compiler flag `-pthread` for each compilation unit, and the linker flags `-pthread -sENVIRONMENT=web,worker` for the final link.
+
+Finally, when targeting OffscreenCanvas with the proxy-to-pthread option, pass the Emscripten compiler flag `-pthread` for each compilation unit, and the linker flags `-pthread -sENVIRONMENT=web,worker -sOFFSCREENCANVAS_SUPPORT -sOFFSCREENCANVASES_TO_PTHREAD=#canvas -lGL -sPROXY_TO_PTHREAD` for the final link. Note that the linkage to the WebGL support library is needed here for historical reasons. This might change in the future.
 
 ### 🖥 2GB + 4GB + Wasm64 support
 
@@ -164,6 +168,8 @@ The demo [offscreen_canvas/offscreen_canvas.c](samples/offscreen_canvas/offscree
 
 If you are using pthreads, the variant [offscreen_canvas/offscreen_canvas_pthread.c](samples/offscreen_canvas/offscreen_canvas_pthread.c) illustrates OffscreenCanvas rendering by using a pthread instead.
 
+Finally, if you are using pthreads with the Emscripten `-sPROXY_TO_PTHREAD` build option, then check out the [offscreen_canvas/offscreen_canvas_proxy_to_pthread.c](samples/offscreen_canvas/offscreen_canvas_proxy_to_pthread.c) code sample.
+
 ### texture
 
 ![texture](./screenshots/texture.png)
@@ -179,7 +185,6 @@ The test [vertex_buffer/vertex_buffer.c](samples/vertex_buffer/vertex_buffer.c) 
 ## 🚧 TODOs
 
 The following features are planned:
- - Also write an example of how to achieve the same from an Emscripten pthread and -sPROXY_TO_PTHREAD modes in addition to rendering from a Wasm Worker.
  - Multithreading support when WebGPU spec and browsers enable WebGPU multithreaded rendering
  - When more test cases become available, examine how to reduce generated garbage further by e.g. pooling arrays and descriptors.
  - Wasm64 build mode support
