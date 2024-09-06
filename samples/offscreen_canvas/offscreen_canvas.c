@@ -44,8 +44,8 @@ int main(int argc, char **argv)
   offscreen_canvas_post_to_worker(canvasId, worker);
 
   // 4. Now the OffscreenCanvas is available for the Worker, so make it start
-  //    executing its main function to start rendering.
-  //    initialize WebGPU in the Worker and start rendering.
+  //    executing its main function to initialize WebGPU in the Worker and
+  //    start rendering.
   emscripten_wasm_worker_post_function_v(worker, worker_main);
 
   // 5. One particular gotcha with rendering with OffscreenCanvas is that resizing the canvas
