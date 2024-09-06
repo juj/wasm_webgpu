@@ -332,7 +332,8 @@ const stringArrays = {
     'rg11b10ufloat-renderable',
     'bgra8unorm-storage',
     'float32-filterable',
-    'clip-distances'],
+    'clip-distances',
+    'dual-source-blending'],
 
   '$GPUBlendFactors': [/*undefined*/,
     'zero',
@@ -347,7 +348,11 @@ const stringArrays = {
     'one-minus-dst-alpha',
     'src-alpha-saturated',
     'constant',
-    'one-minus-constant'],
+    'one-minus-constant',
+    'src1',
+    'one-minus-src1',
+    'src1-alpha',
+    'one-minus-src1-alpha'],
 
   '$GPUStencilOperations': [/*undefined*/, 'keep', 'zero', 'replace', 'invert', 'increment-clamp', 'decrement-clamp', 'increment-wrap', 'decrement-wrap'],
   '$GPUCompareFunctions': [/*undefined*/, 'never', 'less', 'equal', 'less-equal', 'greater', 'not-equal', 'greater-equal', 'always'],

@@ -218,6 +218,7 @@ enum GPUFeatureName {
     "bgra8unorm-storage",
     "float32-filterable",
     "clip-distances",
+    "dual-source-blending",
 };
 */
 typedef int WGPU_FEATURES_BITFIELD;
@@ -234,6 +235,7 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_BGRA8UNORM_STORAGE                  0x400
 #define WGPU_FEATURE_FLOAT32_FILTERABLE                  0x800
 #define WGPU_FEATURE_CLIP_DISTANCES                     0x1000
+#define WGPU_FEATURE_DUAL_SOURCE_BLENDING               0x2000
 
 /*
 // WebGPU reuses the color space enum from the HTML Canvas specification:
@@ -1766,23 +1768,31 @@ enum GPUBlendFactor {
     "src-alpha-saturated",
     "constant",
     "one-minus-constant"
+    "src1",
+    "one-minus-src1",
+    "src1-alpha",
+    "one-minus-src1-alpha",
 };
 */
 typedef int WGPU_BLEND_FACTOR;
-#define WGPU_BLEND_FACTOR_INVALID 0
-#define WGPU_BLEND_FACTOR_ZERO 1
-#define WGPU_BLEND_FACTOR_ONE 2
-#define WGPU_BLEND_FACTOR_SRC 3
-#define WGPU_BLEND_FACTOR_ONE_MINUS_SRC 4
-#define WGPU_BLEND_FACTOR_SRC_ALPHA 5
-#define WGPU_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA 6
-#define WGPU_BLEND_FACTOR_DST 7
-#define WGPU_BLEND_FACTOR_ONE_MINUS_DST 8
-#define WGPU_BLEND_FACTOR_DST_ALPHA 9
-#define WGPU_BLEND_FACTOR_ONE_MINUS_DST_ALPHA 10
-#define WGPU_BLEND_FACTOR_SRC_ALPHA_SATURATED 11
-#define WGPU_BLEND_FACTOR_CONSTANT 12
-#define WGPU_BLEND_FACTOR_ONE_MINUS_CONSTANT 13
+#define WGPU_BLEND_FACTOR_INVALID               0
+#define WGPU_BLEND_FACTOR_ZERO                  1
+#define WGPU_BLEND_FACTOR_ONE                   2
+#define WGPU_BLEND_FACTOR_SRC                   3
+#define WGPU_BLEND_FACTOR_ONE_MINUS_SRC         4
+#define WGPU_BLEND_FACTOR_SRC_ALPHA             5
+#define WGPU_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA   6
+#define WGPU_BLEND_FACTOR_DST                   7
+#define WGPU_BLEND_FACTOR_ONE_MINUS_DST         8
+#define WGPU_BLEND_FACTOR_DST_ALPHA             9
+#define WGPU_BLEND_FACTOR_ONE_MINUS_DST_ALPHA  10
+#define WGPU_BLEND_FACTOR_SRC_ALPHA_SATURATED  11
+#define WGPU_BLEND_FACTOR_CONSTANT             12
+#define WGPU_BLEND_FACTOR_ONE_MINUS_CONSTANT   13
+#define WGPU_BLEND_FACTOR_SRC1                 14
+#define WGPU_BLEND_FACTOR_ONE_MINUS_SRC1       15
+#define WGPU_BLEND_FACTOR_SRC1_ALPHA           16
+#define WGPU_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA 17
 
 /*
 enum GPUBlendOperation {

@@ -113,6 +113,7 @@ enum GPUFeatureName {
     "bgra8unorm-storage",
     "float32-filterable",
     "clip-distances",
+    "dual-source-blending",
 };
 
 [Exposed=(Window, Worker), SecureContext]
@@ -746,6 +747,10 @@ enum GPUBlendFactor {
     "src-alpha-saturated",
     "constant",
     "one-minus-constant",
+    "src1",
+    "one-minus-src1",
+    "src1-alpha",
+    "one-minus-src1-alpha",
 };
 
 enum GPUBlendOperation {
