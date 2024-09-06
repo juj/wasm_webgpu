@@ -14,7 +14,7 @@ OffscreenCanvasId canvasId;
 pthread_t thread;
 em_proxying_queue* pthread_queue;
 
-void *thread_main(void *arg);
+void *dummy_thread_main(void *arg);
 void actual_thread_main(void *arg);
 void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData);
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData);
@@ -25,10 +25,12 @@ int main(int argc, char **argv) // runs in main thread
 {
   // To render to an existing HTML Canvas element from a Wasm Worker using WebGPU:
 
-  // 1. Let's first create a Wasm Worker to do the rendering.
+  // 1. Let's first create a Wasm Worker to do the rendering. It will start with
+  //    a dummy main function, since it needs to wait to receive the WebGPU
+  //    canvas via a postMessage.
   pthread_attr_t attr;
   pthread_attr_init(&attr);
-  pthread_create(&thread, &attr, &thread_main, 0);
+  pthread_create(&thread, &attr, &dummy_thread_main, 0);
 
   // 2. convert the HTML Canvas element to be renderable from a Worker
   //    by transferring its control to an OffscreenCanvas:
@@ -63,7 +65,7 @@ int main(int argc, char **argv) // runs in main thread
   emscripten_set_resize_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, 0, 0, window_resize);
 }
 
-void *thread_main(void *arg) // runs in pthread
+void *dummy_thread_main(void *arg) // runs in pthread
 {
   // Do not quit the pthread when falling out of main, but lie dormant for async
   // events to be processed in this pthread context.
