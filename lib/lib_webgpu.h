@@ -2985,7 +2985,7 @@ typedef void (*WGpuLoadImageBitmapCallback)(WGpuImageBitmap bitmap, int width, i
 void wgpu_load_image_bitmap_from_url_async(const char *url NOTNULL, WGPU_BOOL flipY, WGpuLoadImageBitmapCallback callback, void *userData);
 
 // This function is available when building with JSPI enabled. It performs three things:
-// 1) present all canvases that have been rendered to from the current scope of execution.
+// 1) presents all canvases that have been rendered to from the current scope of execution.
 // 2) yields back to browser's event loop with JSPI, so processes all pending browser events (keyboard, mouse, etc.)
 // 3) sleeps the calling thread until the next requestAnimationFrame event.
 void wgpu_present_all_rendering_and_wait_for_next_animation_frame(void);

@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stdio.h>
 #include <emscripten/em_math.h>
 #include "lib_webgpu.h"
