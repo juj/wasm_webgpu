@@ -2815,14 +2815,36 @@ typedef struct WGpuOrigin3D
 // Sorted struct definitions for proper C parsing order:
 
 /*
+enum GPUCanvasToneMappingMode {
+    "standard",
+    "extended",
+};
+*/
+typedef int WGPU_CANVAS_TONE_MAPPING_MODE;
+#define WGPU_CANVAS_TONE_MAPPING_MODE_INVALID  0
+#define WGPU_CANVAS_TONE_MAPPING_MODE_STANDARD 1
+#define WGPU_CANVAS_TONE_MAPPING_MODE_EXTENDED 2
+
+/*
+dictionary GPUCanvasToneMapping {
+  GPUCanvasToneMappingMode mode = "standard";
+};
+*/
+typedef struct WGpuCanvasToneMapping
+{
+  WGPU_CANVAS_TONE_MAPPING_MODE mode; // = 'standard';
+} WGpuCanvasToneMapping;
+extern const WGpuCanvasToneMapping WGPU_CANVAS_TONE_MAPPING_DEFAULT_INITIALIZER;
+
+/*
 dictionary GPUCanvasConfiguration : GPUObjectDescriptorBase {
     required GPUDevice device;
     required GPUTextureFormat format;
     GPUTextureUsageFlags usage = 0x10;  // GPUTextureUsage.RENDER_ATTACHMENT
     sequence<GPUTextureFormat> viewFormats = [];
     PredefinedColorSpace colorSpace = "srgb";
+    GPUCanvasToneMapping toneMapping = {};
     GPUCanvasAlphaMode alphaMode = "opaque";
-    GPUExtent3D size;
 };
 */
 typedef struct WGpuCanvasConfiguration
@@ -2833,6 +2855,7 @@ typedef struct WGpuCanvasConfiguration
   int numViewFormats;
   WGPU_TEXTURE_FORMAT *viewFormats;
   HTML_PREDEFINED_COLOR_SPACE colorSpace;
+  WGpuCanvasToneMapping toneMapping;
   WGPU_CANVAS_ALPHA_MODE alphaMode;
 } WGpuCanvasConfiguration;
 extern const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;

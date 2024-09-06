@@ -114,6 +114,10 @@ const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAUL
   WGPU_TEXTURE_VIEW_DIMENSION_2D /* viewDimension */
 };
 
+const WGpuCanvasToneMapping WGPU_CANVAS_TONE_MAPPING_DEFAULT_INITIALIZER = {
+  WGPU_CANVAS_TONE_MAPPING_MODE_STANDARD /* mode */
+};
+
 const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER = {
   0, /* device */
   0, /* format */
@@ -121,6 +125,7 @@ const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER = {
   0, /* numViewFormats */
   nullptr, /* viewFormats */
   HTML_PREDEFINED_COLOR_SPACE_SRGB, /* colorSpace */
+  WGPU_CANVAS_TONE_MAPPING_DEFAULT_INITIALIZER, /* toneMapping */
   WGPU_CANVAS_ALPHA_MODE_OPAQUE, /* alphaMode */
 };
 
