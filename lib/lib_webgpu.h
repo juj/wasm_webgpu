@@ -143,7 +143,6 @@ interface GPUSupportedLimits {
     readonly attribute unsigned long long maxBufferSize;
     readonly attribute unsigned long maxVertexAttributes;
     readonly attribute unsigned long maxVertexBufferArrayStride;
-    readonly attribute unsigned long maxInterStageShaderComponents;
     readonly attribute unsigned long maxInterStageShaderVariables;
     readonly attribute unsigned long maxColorAttachments;
     readonly attribute unsigned long maxColorAttachmentBytesPerSample;
@@ -187,7 +186,6 @@ typedef struct WGpuSupportedLimits
   uint32_t maxVertexBuffers; // required >= 8
   uint32_t maxVertexAttributes; // required >= 16
   uint32_t maxVertexBufferArrayStride; // required >= 2048
-  uint32_t maxInterStageShaderComponents; // required >= 60
   uint32_t maxInterStageShaderVariables; // required >= 16
   uint32_t maxColorAttachments; // required >= 8
   uint32_t maxColorAttachmentBytesPerSample; // required >= 32
@@ -196,6 +194,7 @@ typedef struct WGpuSupportedLimits
   uint32_t maxComputeWorkgroupSizeX; // required >= 256
   uint32_t maxComputeWorkgroupSizeY; // required >= 256
   uint32_t maxComputeWorkgroupSizeZ; // required >= 64
+  uint32_t dummyPadding;
 } WGpuSupportedLimits;
 
 /*

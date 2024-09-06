@@ -1042,7 +1042,6 @@ void wgpu_adapter_or_device_get_limits(WGpuAdapter adapterOrDevice, WGpuSupporte
   limits->maxVertexBuffers = _limits.limits.maxVertexBuffers;
   limits->maxVertexAttributes = _limits.limits.maxVertexAttributes;
   limits->maxVertexBufferArrayStride = _limits.limits.maxVertexBufferArrayStride;
-  limits->maxInterStageShaderComponents = _limits.limits.maxInterStageShaderComponents;
   limits->maxInterStageShaderVariables = _limits.limits.maxInterStageShaderVariables;
   limits->maxColorAttachments = _limits.limits.maxColorAttachments;
   limits->maxColorAttachmentBytesPerSample = _limits.limits.maxColorAttachmentBytesPerSample;
@@ -1107,7 +1106,6 @@ WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDevic
   limits.maxVertexBuffers = descriptor->requiredLimits.maxVertexBuffers;
   limits.maxVertexAttributes = descriptor->requiredLimits.maxVertexAttributes;
   limits.maxVertexBufferArrayStride = descriptor->requiredLimits.maxVertexBufferArrayStride;
-  limits.maxInterStageShaderComponents = descriptor->requiredLimits.maxInterStageShaderComponents;
   limits.maxInterStageShaderVariables = descriptor->requiredLimits.maxInterStageShaderVariables;
   limits.maxColorAttachments = descriptor->requiredLimits.maxColorAttachments;
   limits.maxColorAttachmentBytesPerSample = descriptor->requiredLimits.maxColorAttachmentBytesPerSample;

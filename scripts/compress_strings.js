@@ -305,7 +305,6 @@ const stringArrays = {
     'maxVertexBuffers',
     'maxVertexAttributes',
     'maxVertexBufferArrayStride',
-    'maxInterStageShaderComponents',
     'maxInterStageShaderVariables',
     'maxColorAttachments',
     'maxColorAttachmentBytesPerSample',
