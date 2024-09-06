@@ -1443,14 +1443,12 @@ extern const WGpuShaderModuleCompilationHint WGPU_SHADER_MODULE_COMPILATION_HINT
 /*
 dictionary GPUShaderModuleDescriptor : GPUObjectDescriptorBase {
     required USVString code;
-    object sourceMap;
     sequence<GPUShaderModuleCompilationHint> compilationHints = [];
 };
 */
 typedef struct WGpuShaderModuleDescriptor
 {
   const char *code;
-  // TODO: add sourceMap support
   int numHints;
   const WGpuShaderModuleCompilationHint *hints;
 } WGpuShaderModuleDescriptor;
