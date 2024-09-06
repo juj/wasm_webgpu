@@ -162,8 +162,6 @@ The variant [hello_triangle/hello_triangle_verbose.c](samples/hello_triangle/hel
 
 ### offscreen_canvas
 
-![offscreen_canvas](./screenshots/clear_screen.png)
-
 The demo [offscreen_canvas/offscreen_canvas.c](samples/offscreen_canvas/offscreen_canvas.c) shows how to perform WebGPU rendering using OffscreenCanvas from a Wasm Worker.
 
 If you are using pthreads, the variant [offscreen_canvas/offscreen_canvas_pthread.c](samples/offscreen_canvas/offscreen_canvas_pthread.c) illustrates OffscreenCanvas rendering by using a pthread instead.
