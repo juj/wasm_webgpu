@@ -29,6 +29,7 @@ const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {
 const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER = {
   0, /* format */
   0, /* dimension */
+  0, /* usage */
   WGPU_TEXTURE_ASPECT_ALL, /* aspect */
   0, /* baseMipLevel */
   0, /* mipLevelCount */

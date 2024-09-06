@@ -762,6 +762,7 @@ WGPU_BOOL wgpu_is_texture_view(WGpuObjectBase object);
 dictionary GPUTextureViewDescriptor : GPUObjectDescriptorBase {
     GPUTextureFormat format;
     GPUTextureViewDimension dimension;
+    GPUTextureUsageFlags usage = 0;
     GPUTextureAspect aspect = "all";
     GPUIntegerCoordinate baseMipLevel = 0;
     GPUIntegerCoordinate mipLevelCount;
@@ -773,6 +774,10 @@ typedef struct WGpuTextureViewDescriptor
 {
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_VIEW_DIMENSION dimension;
+  // The allowed usages for the texture view. Must be a subset of the
+  // usage flags of the texture. If 0, defaults to the full set of
+  // usage flags of the texture.
+  WGPU_TEXTURE_USAGE_FLAGS usage; // default = 0
   WGPU_TEXTURE_ASPECT aspect; // default = WGPU_TEXTURE_ASPECT_ALL
   uint32_t baseMipLevel; // default = 0
   uint32_t mipLevelCount;
