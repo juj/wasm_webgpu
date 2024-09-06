@@ -54,7 +54,6 @@ int main(int argc, char **argv) // runs in main thread
   // 4. Now the OffscreenCanvas is available for the Worker, so make it start
   //    executing its main function to initialize WebGPU in the Worker and
   //    start rendering.
-  //emscripten_wasm_worker_post_function_v(worker, worker_main);
   pthread_queue = em_proxying_queue_create();
   emscripten_proxy_async(pthread_queue, thread, actual_thread_main, 0);
 
