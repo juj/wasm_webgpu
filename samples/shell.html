@@ -15,8 +15,10 @@ var canvas = document.querySelector('canvas');
 function resizeCanvas() {
   canvas.style.width = window.innerWidth + 'px';
   canvas.style.height = window.innerHeight + 'px';
-  canvas.width = Math.round(window.innerWidth * window.devicePixelRatio);
-  canvas.height = Math.round(window.innerHeight * window.devicePixelRatio);
+  if (!canvas.isOffscreen) {
+    canvas.width = Math.round(window.innerWidth * window.devicePixelRatio);
+    canvas.height = Math.round(window.innerHeight * window.devicePixelRatio);
+  }
   if (window.resizeCallback) {
     getWasmTableEntry(window.resizeCallback)();
   }

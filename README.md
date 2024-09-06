@@ -83,11 +83,32 @@ These functions enable a synchronous variant of the `_async` functions offered i
 
 Additionally, note that the web browser will keep pumping web events while WebAssembly execution is suspended via JSPI. Therefore you may see your web event callbacks being fired at odd times. This can break ordering and re-entrancy semantics of your expected code execution. To remedy this problem, you can try guarding/queueing your event callbacks whenever a JSPI suspend is currently in effect. See the function `wgpu_sync_operations_pending()` for this.
 
+### 🧶 OffscreenCanvas support
+
+It is possible to perform WebGPU rendering from a dedicated background Worker thread using the Emscripten Wasm Worker abstraction. See the sample [offscreen_canvas/offscreen_canvas.c](samples/offscreen_canvas/offscreen_canvas.c) for an example.
+
+The following API functions are provided to manage OffscreenCanvas rendering:
+
+```h
+void canvas_transfer_control_to_offscreen(const char *canvasSelector NOTNULL, OffscreenCanvasId id);
+void offscreen_canvas_post_to_worker(OffscreenCanvasId id, emscripten_wasm_worker_t worker);
+WGPU_BOOL offscreen_canvas_is_valid(OffscreenCanvasId id);
+void offscreen_canvas_destroy(OffscreenCanvasId id);
+int offscreen_canvas_width(OffscreenCanvasId id);
+int offscreen_canvas_height(OffscreenCanvasId id);
+void offscreen_canvas_size(OffscreenCanvasId id, int *outWidth NOTNULL, int *outHeight NOTNULL);
+void offscreen_canvas_set_size(OffscreenCanvasId id, int width, int height);
+```
+
+See [lib_webgpu.h](lib/lib_webgpu.h) header file for detailed documentation.
+
+When targeting OffscreenCanvas with Wasm Workers, pass the Emscripten compiler flag `-sWASM_WORKERS` for each compilation unit, and the linker flags `-sWASM_WORKERS -sENVIRONMENT=web,worker` for the final link.
+
 ### 🖥 2GB + 4GB + Wasm64 support
 
 Currently both 2GB and 4GB build modes are supported. Wasm64 is also planned to be supported as soon as it becomes available in web browsers.
 
-## 🚦 Requirements
+## 🚥 Requirements
 
 Wasm_Webgpu requires Emscripten 3.1.35 or newer.
 
@@ -148,7 +169,7 @@ The test [vertex_buffer/vertex_buffer.c](samples/vertex_buffer/vertex_buffer.c) 
 ## 🚧 TODOs
 
 The following features are planned:
- - Rendering from a Web Worker support (e.g. Emscripten's `-pthread` and `-sPROXY_TO_PTHREAD=1` linker flags)
+ - Also write an example of how to achieve the same from an Emscripten pthread and -sPROXY_TO_PTHREAD modes in addition to rendering from a Wasm Worker.
  - Multithreading support when WebGPU spec and browsers enable WebGPU multithreaded rendering
  - When more test cases become available, examine how to reduce generated garbage further by e.g. pooling arrays and descriptors.
  - Wasm64 build mode support

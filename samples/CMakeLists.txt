@@ -119,3 +119,9 @@ target_link_libraries(texture webgpu)
 
 add_executable(failing_shader_compilation failing_shader_compilation/failing_shader_compilation.c)
 target_link_libraries(failing_shader_compilation webgpu)
+
+add_executable(offscreen_canvas offscreen_canvas/offscreen_canvas.c)
+target_compile_options(offscreen_canvas PRIVATE "-sWASM_WORKERS")
+target_link_options(offscreen_canvas PRIVATE "-sWASM_WORKERS")
+target_link_options(offscreen_canvas PRIVATE "-sENVIRONMENT=web,worker")
+target_link_libraries(offscreen_canvas webgpu)

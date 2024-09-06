@@ -178,6 +178,10 @@ typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASO
 typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage, void *userData);
 typedef void (*WGpuLoadImageBitmapCallback)(WGpuImageBitmap bitmap, int width, int height, void *userData);
 
+#ifdef __EMSCRIPTEN__
+typedef int OffscreenCanvasId;
+#endif
+
 #ifdef __cplusplus
 } // ~extern "C"
 #endif

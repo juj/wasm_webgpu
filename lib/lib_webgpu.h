@@ -2,6 +2,7 @@
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/html5.h>
+#include <emscripten/wasm_worker.h>
 #endif
 
 #ifdef __clang__
@@ -63,9 +64,12 @@ void wgpu_object_destroy(WGpuObjectBase wgpuObject);
 // Deinitializes all initialized WebGPU objects.
 void wgpu_destroy_all_objects(void);
 
-// Acquires a canvas context from a canvas by calling canvas.getCanvasContext().
 #ifdef __EMSCRIPTEN__
+// Initializes a WebGPU rendering context to a canvas by calling canvas.getCanvasContext('webgpu').
 WGpuCanvasContext wgpu_canvas_get_webgpu_context(const char *canvasSelector NOTNULL);
+
+// Initializes a WebGPU rendering context to the given Offscreen Canvas.
+WGpuCanvasContext wgpu_offscreen_canvas_get_webgpu_context(OffscreenCanvasId id);
 #elif defined (_WIN32)
 WGpuCanvasContext wgpu_canvas_get_webgpu_context(void *hwnd);
 #else
@@ -3029,6 +3033,51 @@ void wgpu_load_image_bitmap_from_url_async(const char *url NOTNULL, WGPU_BOOL fl
 // 2) yields back to browser's event loop with JSPI, so processes all pending browser events (keyboard, mouse, etc.)
 // 3) sleeps the calling thread until the next requestAnimationFrame event.
 void wgpu_present_all_rendering_and_wait_for_next_animation_frame(void);
+
+#ifdef __EMSCRIPTEN__
+// Converts the given Canvas in HTML DOM (located via a given CSS selector) to be rendered via an OffscreenCanvas,
+// by calling .transferControlToOffscreen() on it.
+// Call this function at most once for any given HTML Canvas element.
+// There is no browser API to undo the effects of this call (except to delete and recreate a new Canvas element)
+// id: A custom ID number that you will use in other functions to refer to this Offscreen Canvas. You can
+//     choose this ID any way you want, i.e. up to you to make it unique across multiple OffscreenCanvases you might create.
+//     Value 0 is not a valid ID to assign.
+void canvas_transfer_control_to_offscreen(const char *canvasSelector NOTNULL, OffscreenCanvasId id);
+
+// Transfers the ownership of the given OffscreenCanvas to the given Wasm Worker.
+// id: The ID of an OffscreenCanvas created via canvas_transfer_control_to_offscreen().
+// worker: The ID of a Wasm Worker created e.g. via emscripten_malloc_wasm_worker().
+//         Pass special ID worker=EMSCRIPTEN_WASM_WORKER_ID_PARENT her to transfer ownership
+//         of an OffscreenCanvas back from the current Worker thread its parent thread (the main thread).
+// Note: After calling this function, the Offscreen Canvas no longer exists in the current thread, the effect being
+//       as if offscreen_canvas_destroy(id) had been called in this thread.
+void offscreen_canvas_post_to_worker(OffscreenCanvasId id, emscripten_wasm_worker_t worker);
+
+// Returns true if the given Offscreen Canvas ID is valid and is owned by the calling thread.
+// If an Offscreen Canvas with the given ID exists in the ownership of another thread, this function will return
+// false.
+WGPU_BOOL offscreen_canvas_is_valid(OffscreenCanvasId id);
+
+// Releases reference to the given Offscreen Canvas in the calling thread, if one exists. A no-op if no canvas
+// with given ID exists.
+void offscreen_canvas_destroy(OffscreenCanvasId id);
+
+// These functions return the width/height of render surface the given OffscreenCanvas element.
+// The OffscreenCanvas must be owned by the calling thread.
+// Note that this size does not refer to the visible size of the Canvas. The visible size is governed by a CSS
+// style on the HTML page (i.e. canvas.style.width and canvas.style.height JS properties). To adjust the visible
+// size on the HTML page, see the Emscripten function emscripten_get_element_css_size(). (which must be called
+// on the main thread, and not on the Worker thread)
+int offscreen_canvas_width(OffscreenCanvasId id);
+int offscreen_canvas_height(OffscreenCanvasId id);
+void offscreen_canvas_size(OffscreenCanvasId id, int *outWidth NOTNULL, int *outHeight NOTNULL);
+
+// Sets the render surface size of the given OffscreenCanvas element.
+// The OffscreenCanvas must be owned by the calling thread. Note this is not the visible CSS size, see above.
+// Use the function emscripten_set_element_css_size() on the main thread to set the visible size.
+void offscreen_canvas_set_size(OffscreenCanvasId id, int width, int height);
+
+#endif
 
 #ifdef __cplusplus
 } // ~extern "C"
