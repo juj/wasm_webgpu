@@ -183,6 +183,4 @@ The test [vertex_buffer/vertex_buffer.c](samples/vertex_buffer/vertex_buffer.c) 
 ## 🚧 TODOs
 
 The following features are planned:
- - Multithreading support when WebGPU spec and browsers enable WebGPU multithreaded rendering
- - When more test cases become available, examine how to reduce generated garbage further by e.g. pooling arrays and descriptors.
  - Wasm64 build mode support
