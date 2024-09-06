@@ -3035,13 +3035,24 @@ void wgpu_load_image_bitmap_from_url_async(const char *url NOTNULL, WGPU_BOOL fl
 void wgpu_present_all_rendering_and_wait_for_next_animation_frame(void);
 
 #ifdef __EMSCRIPTEN__
-// Converts the given Canvas in HTML DOM (located via a given CSS selector) to be rendered via an OffscreenCanvas,
-// by calling .transferControlToOffscreen() on it.
-// Call this function at most once for any given HTML Canvas element.
-// There is no browser API to undo the effects of this call (except to delete and recreate a new Canvas element)
+// Creates a new OffscreenCanvas object that is not associated with any HTML Canvas element on the web page.
+// Use this function to perform offline background rendering.
+// This function can be called directly in a Wasm Worker/pthread. (i.e. one does not need to call it in a main
+// thread and then post it to a Worker, although that is also possible)
 // id: A custom ID number that you will use in other functions to refer to this Offscreen Canvas. You can
 //     choose this ID any way you want, i.e. up to you to make it unique across multiple OffscreenCanvases you might create.
 //     Value 0 is not a valid ID to assign.
+// Call wgpuOffscreenCanvases[offscreenCanvasId].convertToBlob() or wgpuOffscreenCanvases[offscreenCanvasId].transferToImageBitmap()
+// in hand-written JavaScript code to access the result of the rendering.
+// Note that if you want to render to a visible Canvas on a web page from a background Worker, do not call this function,
+// but instead call canvas_transfer_control_to_offscreen(). See samples/offscreen_canvas/offscreen_canvas.c for a full example.
+void offscreen_canvas_create(OffscreenCanvasId id, int width, int height);
+
+// Converts the given Canvas in HTML DOM (located via a given CSS selector) to be rendered via an OffscreenCanvas,
+// by calling .transferControlToOffscreen() on it. Calling this function creates a new OffscreenCanvas object.
+// Call this function at most once for any given HTML Canvas element.
+// There is no browser API to undo the effects of this call (except to delete and recreate a new Canvas element)
+// id: A custom ID to assign to the newly created OffscreenCanvas object, like with offscreen_canvas_create().
 void canvas_transfer_control_to_offscreen(const char *canvasSelector NOTNULL, OffscreenCanvasId id);
 
 // Transfers the ownership of the given OffscreenCanvas to the given Wasm Worker.
