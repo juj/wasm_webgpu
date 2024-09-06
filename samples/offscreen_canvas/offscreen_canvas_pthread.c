@@ -1,8 +1,9 @@
-// This sample shows how to perform OffscreenCanvas rendering with WebGPU
-// using Wasm Workers.
+// This sample is like offscreen_canvas.c, but instead shows how to perform OffscreenCanvas
+// rendering with WebGPU from a pthread.
 
 #include <stdio.h>
 #include <emscripten/em_math.h>
+#include <emscripten/proxying.h>
 #include "lib_webgpu.h"
 
 WGpuAdapter adapter;
@@ -10,9 +11,11 @@ WGpuDevice device;
 WGpuQueue queue;
 WGpuCanvasContext canvasContext;
 OffscreenCanvasId canvasId;
-emscripten_wasm_worker_t worker;
+pthread_t thread;
+em_proxying_queue* pthread_queue;
 
-void worker_main(void);
+void *thread_main(void *arg);
+void actual_thread_main(void *arg);
 void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData);
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData);
 WGPU_BOOL raf(double time, void *userData);
@@ -23,7 +26,9 @@ int main(int argc, char **argv) // runs in main thread
   // To render to an existing HTML Canvas element from a Wasm Worker using WebGPU:
 
   // 1. Let's first create a Wasm Worker to do the rendering.
-  worker = emscripten_malloc_wasm_worker(1024);
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);
+  pthread_create(&thread, &attr, &thread_main, 0);
 
   // 2. convert the HTML Canvas element to be renderable from a Worker
   //    by transferring its control to an OffscreenCanvas:
@@ -44,12 +49,14 @@ int main(int argc, char **argv) // runs in main thread
   //    the ownership. Here we pass the ID of the OffscreenCanvas we created
   //    above. After this line, our main thread cannot access this
   //    OffscreenCanvas anymore.
-  offscreen_canvas_post_to_worker(canvasId, worker);
+  offscreen_canvas_post_to_pthread(canvasId, thread);
 
   // 4. Now the OffscreenCanvas is available for the Worker, so make it start
   //    executing its main function to initialize WebGPU in the Worker and
   //    start rendering.
-  emscripten_wasm_worker_post_function_v(worker, worker_main);
+  //emscripten_wasm_worker_post_function_v(worker, worker_main);
+  pthread_queue = em_proxying_queue_create();
+  emscripten_proxy_async(pthread_queue, thread, actual_thread_main, 0);
 
   // 5. One particular gotcha with rendering with OffscreenCanvas is that resizing the canvas
   //    becomes more complicated. If we want to perform e.g. fullscreen rendering,
@@ -57,18 +64,25 @@ int main(int argc, char **argv) // runs in main thread
   emscripten_set_resize_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, 0, 0, window_resize);
 }
 
-void worker_main() // runs in worker thread
+void *thread_main(void *arg) // runs in pthread
+{
+  // Do not quit the pthread when falling out of main, but lie dormant for async
+  // events to be processed in this pthread context.
+  emscripten_exit_with_live_runtime();
+}
+
+void actual_thread_main(void *arg)
 {
   navigator_gpu_request_adapter_async_simple(ObtainedWebGpuAdapter);
 }
 
-void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData) // runs in worker thread
+void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData) // runs in pthread
 {
   adapter = result;
   wgpu_adapter_request_device_async_simple(adapter, ObtainedWebGpuDevice);
 }
 
-void ObtainedWebGpuDevice(WGpuDevice result, void *userData) // runs in worker thread
+void ObtainedWebGpuDevice(WGpuDevice result, void *userData) // runs in pthread
 {
   device = result;
   queue = wgpu_device_get_queue(device);
@@ -93,7 +107,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData) // runs in worker t
   wgpu_request_animation_frame_loop(raf, 0);
 }
 
-double hue2color(double hue) // runs in worker thread
+double hue2color(double hue) // runs in pthread
 {
   hue = emscripten_math_fmod(hue, 1.0);
   if (hue < 1.0 / 6.0) return 6.0 * hue;
@@ -102,7 +116,7 @@ double hue2color(double hue) // runs in worker thread
   return 0;
 }
 
-WGPU_BOOL raf(double time, void *userData) // runs in worker thread
+WGPU_BOOL raf(double time, void *userData) // runs in pthread
 {
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder_simple(device);
 
@@ -124,6 +138,14 @@ WGPU_BOOL raf(double time, void *userData) // runs in worker thread
   wgpu_queue_submit_one_and_destroy(queue, wgpu_command_encoder_finish(encoder));
 
   return EM_TRUE;
+}
+
+int rttWidth, rttHeight;
+
+void resize_offscreen_canvas(void *arg) // runs in pthread
+{
+  EM_ASM({console.error(`Resized Offscreen Canvas to new size ${$0}x${$1}`)}, rttWidth, rttHeight);
+  offscreen_canvas_set_size(canvasId, rttWidth, rttHeight);
 }
 
 EM_BOOL window_resize(int eventType, const EmscriptenUiEvent *uiEvent, void *userData) // runs in main thread
@@ -151,9 +173,8 @@ EM_BOOL window_resize(int eventType, const EmscriptenUiEvent *uiEvent, void *use
   // ... and update size b) by posting a message to the Worker that owns the OffscreenCanvas
   // so that the render target size is correctly updated in the Worker thread.
 
-  int w = (int)(innerWidth*dpr);
-  int h = (int)(innerHeight*dpr);
-  emscripten_wasm_worker_post_function_viii(worker, offscreen_canvas_set_size, canvasId, w, h);
-  EM_ASM({console.error(`Resized Offscreen Canvas to new size ${$0}x${$1}`)}, w, h);
+  rttWidth = (int)(innerWidth*dpr);
+  rttHeight = (int)(innerHeight*dpr);
+  emscripten_proxy_async(pthread_queue, thread, resize_offscreen_canvas, 0);
   return EM_TRUE;
 }

@@ -3064,6 +3064,9 @@ void canvas_transfer_control_to_offscreen(const char *canvasSelector NOTNULL, Of
 //       as if offscreen_canvas_destroy(id) had been called in this thread.
 void offscreen_canvas_post_to_worker(OffscreenCanvasId id, emscripten_wasm_worker_t worker);
 
+// Same as above, but used when operating with pthreads.
+void offscreen_canvas_post_to_pthread(OffscreenCanvasId id, pthread_t pthread);
+
 // Returns true if the given Offscreen Canvas ID is valid and is owned by the calling thread.
 // If an Offscreen Canvas with the given ID exists in the ownership of another thread, this function will return
 // false.
