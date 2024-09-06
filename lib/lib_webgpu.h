@@ -160,6 +160,9 @@ typedef struct WGpuSupportedLimits
   // See the table in https://www.w3.org/TR/webgpu/#limits for the minimum/maximum
   // default values for these limits.
 
+  // When requesting an adapter with given limits, pass a value of zero to
+  // omit requesting limits for that particular field.
+
   // 64-bit fields must be present first before the 32-bit fields in this struct.
   uint64_t maxUniformBufferBindingSize; // required >= 16384
   uint64_t maxStorageBufferBindingSize; // required >= 128*1024*1024 (128MB)
@@ -416,7 +419,7 @@ typedef struct WGpuQueueDescriptor
 /*
 dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
     sequence<GPUFeatureName> requiredFeatures = [];
-    record<DOMString, GPUSize64> requiredLimits = {};
+    record<DOMString, (GPUSize64 or undefined)> requiredLimits = {};
     GPUQueueDescriptor defaultQueue = {};
 };
 */
