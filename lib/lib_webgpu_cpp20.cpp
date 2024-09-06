@@ -1,6 +1,6 @@
 #include "lib_webgpu.h"
 
-// Default initializers for WebGPU descriptors, using C++11 standard.
+// Default initializers for WebGPU descriptors, using C++20 standard.
 // Only add either this file or lib_webgpu_cpp11.cpp to your project, but not both.
 
 #ifdef __cplusplus
