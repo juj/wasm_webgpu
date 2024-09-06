@@ -70,16 +70,18 @@ For an example of how this works in practice, see the sample [vertex_buffer/vert
 
 To enable easy uploading of image URLs to WebGPU textures, an extension function `wgpu_load_image_bitmap_from_url_async()` is provided. For an example of this, see the sample [texture/texture.c](samples/texture/texture.c)
 
-### 🚦 Asyncify support
+### 🚦 JSPI support
 
-When building with Emscripten linker flag `-sASYNCIFY=1`, the following extra functions are available:
+When building with Emscripten linker flag `-sJSPI` (requires Emscripten 3.1.59 or newer), the following extra functions are available:
 
 - `navigator_gpu_request_adapter_sync` and `navigator_gpu_request_adapter_sync_simple`: Synchronously request a GPUAdapter.
 - `wgpu_adapter_request_device_sync` and `wgpu_adapter_request_device_sync_simple`: Synchronously request a GPUDevice.
 - `wgpu_buffer_map_sync`: Synchronously map a GPUBuffer.
 - `wgpu_present_all_rendering_and_wait_for_next_animation_frame`: Presents current rendered frame, runs browser event loop, and waits until next animation frame. See the sample [clear_screen/clear_screen_sync.c](samples/clear_screen/clear_screen_sync.c) for an example.
 
-These functions enable a synchronous variant of the `_async` functions offered in the WebGPU specification. These can be useful for prototyping and test suites etc., though it is not recommended to try to ship a game that uses Asyncify, because it has a very high latency overhead, and breaks ordering and re-entrancy semantics of traditional code execution.
+These functions enable a synchronous variant of the `_async` functions offered in the WebGPU specification. These can be useful for prototyping and test suites etc., though note that there are some concerns over the runtime performance of JSPI, so be very mindful about profiling the impact on performance when using JSPI.
+
+Additionally, note that the web browser will keep pumping web events while WebAssembly execution is suspended via JSPI. Therefore you may see your web event callbacks being fired at odd times. This can break ordering and re-entrancy semantics of your expected code execution. To remedy this problem, you can try guarding/queueing your event callbacks whenever a JSPI suspend is currently in effect. See the function `wgpu_sync_operations_pending()` for this.
 
 ### 🖥 2GB + 4GB + Wasm64 support
 
