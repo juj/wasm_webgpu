@@ -72,7 +72,7 @@ void *dummy_thread_main(void *arg) // runs in pthread
   emscripten_exit_with_live_runtime();
 }
 
-void actual_thread_main(void *arg)
+void actual_thread_main(void *arg) // runs in pthread
 {
   navigator_gpu_request_adapter_async_simple(ObtainedWebGpuAdapter);
 }
