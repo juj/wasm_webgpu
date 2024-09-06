@@ -15,7 +15,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData);
 WGPU_BOOL raf(double time, void *userData);
 EM_BOOL window_resize(int eventType, const EmscriptenUiEvent *uiEvent, void *userData);
 
-int main(int argc, char **argv)
+int main(int argc, char **argv) // runs in main thread
 {
   // To render to an existing HTML Canvas element from a Wasm Worker using WebGPU:
 
@@ -54,18 +54,18 @@ int main(int argc, char **argv)
   emscripten_set_resize_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, 0, 0, window_resize);
 }
 
-void worker_main()
+void worker_main() // runs in worker thread
 {
   navigator_gpu_request_adapter_async_simple(ObtainedWebGpuAdapter);
 }
 
-void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
+void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData) // runs in worker thread
 {
   adapter = result;
   wgpu_adapter_request_device_async_simple(adapter, ObtainedWebGpuDevice);
 }
 
-void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
+void ObtainedWebGpuDevice(WGpuDevice result, void *userData) // runs in worker thread
 {
   device = result;
   queue = wgpu_device_get_queue(device);
@@ -78,7 +78,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   //    to initialize the context.
   canvasContext = wgpu_offscreen_canvas_get_webgpu_context(canvasId);
 
-  // 7. The rest of the WebGPU engine usage proceeds as normal for the main
+  // 7. The rest of the WebGPU engine usage proceeds as it did in the main
   //    thread case.
   WGpuCanvasConfiguration config = WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
   config.device = device;
@@ -90,7 +90,7 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   wgpu_request_animation_frame_loop(raf, 0);
 }
 
-double hue2color(double hue)
+double hue2color(double hue) // runs in worker thread
 {
   hue = emscripten_math_fmod(hue, 1.0);
   if (hue < 1.0 / 6.0) return 6.0 * hue;
@@ -99,7 +99,7 @@ double hue2color(double hue)
   return 0;
 }
 
-WGPU_BOOL raf(double time, void *userData)
+WGPU_BOOL raf(double time, void *userData) // runs in worker thread
 {
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder_simple(device);
 
@@ -123,7 +123,7 @@ WGPU_BOOL raf(double time, void *userData)
   return EM_TRUE;
 }
 
-EM_BOOL window_resize(int eventType, const EmscriptenUiEvent *uiEvent, void *userData)
+EM_BOOL window_resize(int eventType, const EmscriptenUiEvent *uiEvent, void *userData) // runs in main thread
 {
   double innerWidth = EM_ASM_DOUBLE(return window.innerWidth);
   double innerHeight = EM_ASM_DOUBLE(return window.innerHeight);
