@@ -85,13 +85,15 @@ Additionally, note that the web browser will keep pumping web events while WebAs
 
 ### 🧶 OffscreenCanvas support
 
-It is possible to perform WebGPU rendering from a dedicated background Worker thread using the Emscripten Wasm Worker abstraction. See the sample [offscreen_canvas/offscreen_canvas.c](samples/offscreen_canvas/offscreen_canvas.c) for an example.
+It is possible to perform WebGPU rendering from a dedicated background Worker thread using the Emscripten Wasm Worker or pthreads abstractions.
 
 The following API functions are provided to manage OffscreenCanvas rendering:
 
 ```h
+void offscreen_canvas_create(OffscreenCanvasId id, int width, int height);
 void canvas_transfer_control_to_offscreen(const char *canvasSelector NOTNULL, OffscreenCanvasId id);
 void offscreen_canvas_post_to_worker(OffscreenCanvasId id, emscripten_wasm_worker_t worker);
+void offscreen_canvas_post_to_pthread(OffscreenCanvasId id, pthread_t pthread);
 WGPU_BOOL offscreen_canvas_is_valid(OffscreenCanvasId id);
 void offscreen_canvas_destroy(OffscreenCanvasId id);
 int offscreen_canvas_width(OffscreenCanvasId id);
@@ -153,6 +155,14 @@ The demo [gpu_oom/gpu_oom.c](samples/gpu_oom/gpu_oom.c) exhausts the GPU VRAM, t
 The demo [hello_triangle/hello_triangle_minimal.c](samples/hello_triangle/hello_triangle_minimal.c) contains the smallest triangle rendering demo.
 
 The variant [hello_triangle/hello_triangle_verbose.c](samples/hello_triangle/hello_triangle_verbose.c) offers the same, but with verbose debug logging.
+
+### offscreen_canvas
+
+![offscreen_canvas](./screenshots/clear_screen.png)
+
+The demo [offscreen_canvas/offscreen_canvas.c](samples/offscreen_canvas/offscreen_canvas.c) shows how to perform WebGPU rendering using OffscreenCanvas from a Wasm Worker.
+
+If you are using pthreads, the variant [offscreen_canvas/offscreen_canvas_pthread.c](samples/offscreen_canvas/offscreen_canvas_pthread.c) illustrates OffscreenCanvas rendering by using a pthread instead.
 
 ### texture
 
