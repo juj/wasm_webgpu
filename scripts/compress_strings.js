@@ -323,6 +323,7 @@ const stringArrays = {
     'depth-clip-control',
     'depth32float-stencil8',
     'texture-compression-bc',
+    'texture-compression-bc-sliced-3d',
     'texture-compression-etc2',
     'texture-compression-astc',
     'timestamp-query',

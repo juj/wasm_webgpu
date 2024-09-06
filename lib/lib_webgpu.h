@@ -208,6 +208,7 @@ enum GPUFeatureName {
     "depth-clip-control",
     "depth32float-stencil8",
     "texture-compression-bc",
+    "texture-compression-bc-sliced-3d",
     "texture-compression-etc2",
     "texture-compression-astc",
     "timestamp-query",
@@ -220,18 +221,19 @@ enum GPUFeatureName {
 };
 */
 typedef int WGPU_FEATURES_BITFIELD;
-#define WGPU_FEATURE_DEPTH_CLIP_CONTROL         0x01
-#define WGPU_FEATURE_DEPTH32FLOAT_STENCIL8      0x02
-#define WGPU_FEATURE_TEXTURE_COMPRESSION_BC     0x04
-#define WGPU_FEATURE_TEXTURE_COMPRESSION_ETC2   0x08
-#define WGPU_FEATURE_TEXTURE_COMPRESSION_ASTC   0x10
-#define WGPU_FEATURE_TIMESTAMP_QUERY            0x20
-#define WGPU_FEATURE_INDIRECT_FIRST_INSTANCE    0x40
-#define WGPU_FEATURE_SHADER_F16                 0x80
-#define WGPU_FEATURE_RG11B10UFLOAT_RENDERABLE  0x100
-#define WGPU_FEATURE_BGRA8UNORM_STORAGE        0x200
-#define WGPU_FEATURE_FLOAT32_FILTERABLE        0x400
-#define WGPU_FEATURE_CLIP_DISTANCES            0x800
+#define WGPU_FEATURE_DEPTH_CLIP_CONTROL                   0x01
+#define WGPU_FEATURE_DEPTH32FLOAT_STENCIL8                0x02
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_BC               0x04
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_BC_SLICED_3D     0x08
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_ETC2             0x10
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_ASTC             0x20
+#define WGPU_FEATURE_TIMESTAMP_QUERY                      0x40
+#define WGPU_FEATURE_INDIRECT_FIRST_INSTANCE              0x80
+#define WGPU_FEATURE_SHADER_F16                          0x100
+#define WGPU_FEATURE_RG11B10UFLOAT_RENDERABLE            0x200
+#define WGPU_FEATURE_BGRA8UNORM_STORAGE                  0x400
+#define WGPU_FEATURE_FLOAT32_FILTERABLE                  0x800
+#define WGPU_FEATURE_CLIP_DISTANCES                     0x1000
 
 /*
 // WebGPU reuses the color space enum from the HTML Canvas specification:
