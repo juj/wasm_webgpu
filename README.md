@@ -124,6 +124,16 @@ When building code samples, pass `-DMEMORY64=1` to CMake to test compiling in Wa
 
 Wasm_Webgpu requires Emscripten 3.1.35 or newer.
 
+## 🔬 API Unit Tests
+
+Run `test.py --browser="C:\Users\clb\AppData\Local\Google\Chrome SxS\Application\chrome.exe" <test1> <test2> ... <testN>` to run unit tests.
+
+Replace the cmdline to `--browser=` with location of your own WebGPU supporting browser, or omit to run in system default browser.
+
+In `<testN>` you can pass names of tests to run. Test names are substring matches to filter filenames inside [test/](test/) subdirectory, so for example `test.py adapter device` would run all tests with substring `adapter` or `device` in it. Do not specify any test names to run through all tests in the suite.
+
+To add a new test in the suite, simply create a new .cpp file with the test contents, and run `test.py name_of_cpp_file` to run the test.
+
 ## 🧪 Samples
 
 Several test cases are available under the `samples/` subdirectory.
