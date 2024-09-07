@@ -18,5 +18,6 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 
 int main()
 {
+  assert(wgpu_get_num_live_objects() == 0); // No live objects
   navigator_gpu_request_adapter_async_simple(ObtainedWebGpuAdapter);
 }
