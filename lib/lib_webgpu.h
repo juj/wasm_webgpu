@@ -84,7 +84,7 @@ void wgpu_object_destroy(WGpuObjectBase wgpuObject);
 void wgpu_destroy_all_objects(void);
 
 #ifdef __EMSCRIPTEN__
-// Initializes a WebGPU rendering context to a canvas by calling canvas.getCanvasContext('webgpu').
+// Initializes a WebGPU rendering context to a canvas by calling canvas.getContext('webgpu').
 WGpuCanvasContext wgpu_canvas_get_webgpu_context(const char *canvasSelector NOTNULL);
 
 // Initializes a WebGPU rendering context to the given Offscreen Canvas.
