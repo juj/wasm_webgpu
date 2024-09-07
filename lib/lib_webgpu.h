@@ -2291,6 +2291,8 @@ typedef struct WGpuComputePassTimestampWrites
 } WGpuComputePassTimestampWrites;
 extern const WGpuComputePassTimestampWrites WGPU_COMPUTE_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER;
 
+VERIFY_STRUCT_SIZE(WGpuComputePassTimestampWrites, 3*sizeof(uint32_t));
+
 /*
 dictionary GPUComputePassDescriptor
          : GPUObjectDescriptorBase {
@@ -2435,6 +2437,8 @@ typedef struct WGpuRenderPassDepthStencilAttachment
   WGPU_BOOL stencilReadOnly;
 } WGpuRenderPassDepthStencilAttachment;
 extern const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER;
+
+VERIFY_STRUCT_SIZE(WGpuRenderPassDepthStencilAttachment, 9*sizeof(uint32_t));
 
 /*
 enum GPULoadOp {
@@ -2933,15 +2937,15 @@ dictionary GPURenderPassDescriptor : GPUObjectDescriptorBase {
     GPUSize64 maxDrawCount = 50000000;
 };
 */
-typedef struct WGpuRenderPassDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuRenderPassDescriptor
 {
-  int numColorAttachments;
+  double_int53_t maxDrawCount; // If set to zero, the default value (50000000) will be used.
   const WGpuRenderPassColorAttachment *colorAttachments;
+  _WGPU_PTR_PADDING(0);
+  int numColorAttachments;
   WGpuRenderPassDepthStencilAttachment depthStencilAttachment;
   WGpuQuerySet occlusionQuerySet;
-  double_int53_t maxDrawCount; // If set to zero, the default value (50000000) will be used.
   WGpuRenderPassTimestampWrites timestampWrites;
-  uint32_t unused_padding;
 } WGpuRenderPassDescriptor;
 extern const WGpuRenderPassDescriptor WGPU_RENDER_PASS_DESCRIPTOR_DEFAULT_INITIALIZER;
 
@@ -2957,6 +2961,8 @@ typedef struct WGpuRenderPassColorAttachment
   WGpuColor clearValue; // Used if loadOp == WGPU_LOAD_OP_CLEAR. Default value = { r = 0.0, g = 0.0, b = 0.0, a = 1.0 }
 } WGpuRenderPassColorAttachment;
 extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;
+
+VERIFY_STRUCT_SIZE(WGpuRenderPassColorAttachment, 14*sizeof(uint32_t));
 
 typedef struct WGpuImageCopyExternalImage
 {

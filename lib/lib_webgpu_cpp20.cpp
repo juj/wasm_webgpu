@@ -120,11 +120,11 @@ const WGpuRenderPassTimestampWrites WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_IN
 };
 
 const WGpuRenderPassDescriptor WGPU_RENDER_PASS_DESCRIPTOR_DEFAULT_INITIALIZER = {
-  .numColorAttachments = 0,
+  .maxDrawCount = 0,
   .colorAttachments = 0,
+  .numColorAttachments = 0,
   .depthStencilAttachment = WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER,
   .occlusionQuerySet = 0,
-  .maxDrawCount = 0,
   .timestampWrites = WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER
 };
 
