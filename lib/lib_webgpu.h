@@ -2553,7 +2553,7 @@ dictionary GPURenderBundleEncoderDescriptor : GPURenderPassLayout {
 typedef struct WGpuRenderBundleEncoderDescriptor
 {
   int numColorFormats;
-  const WGPU_TEXTURE_FORMAT *colorFormats;
+  const WGPU_TEXTURE_FORMAT *colorFormats; // TODO: Wasm64
   WGPU_TEXTURE_FORMAT depthStencilFormat;
   uint32_t sampleCount;
   WGPU_BOOL depthReadOnly;
@@ -2650,6 +2650,7 @@ typedef int WGPU_QUERY_TYPE;
 #define WGPU_QUERY_TYPE_OCCLUSION 1
 #define WGPU_QUERY_TYPE_TIMESTAMP 2
 
+// TODO: Remove, GPUPipelineStatisticName no longer exists
 /*
 enum GPUPipelineStatisticName {
     "timestamp"
