@@ -7,6 +7,12 @@
 extern "C" {
 #endif
 
+#ifdef __wasm64__
+#define PTR_PAD_ZERO
+#else
+#define PTR_PAD_ZERO 0,
+#endif
+
 const WGpuRequestAdapterOptions WGPU_REQUEST_ADAPTER_OPTIONS_DEFAULT_INITIALIZER = {
 };
 
@@ -14,6 +20,9 @@ const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER = {
 };
 
 const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  nullptr, /* viewFormats */
+  PTR_PAD_ZERO
+  0, /* numViewFormats */
   0, /* width */
   1, /* height */
   1, /* depthOrArrayLayers */
@@ -22,8 +31,6 @@ const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {
   WGPU_TEXTURE_DIMENSION_2D, /* dimension */
   0, /* format */
   0, /* usage */
-  0, /* numViewFormats */
-  nullptr /* viewFormats */
 };
 
 const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER = {

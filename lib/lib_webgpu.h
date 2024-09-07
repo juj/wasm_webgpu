@@ -728,8 +728,11 @@ dictionary GPUTextureDescriptor : GPUObjectDescriptorBase {
     sequence<GPUTextureFormat> viewFormats = [];
 };
 */
-typedef struct WGpuTextureDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuTextureDescriptor
 {
+  WGPU_TEXTURE_FORMAT *viewFormats;
+  _WGPU_PTR_PADDING(0);
+  int numViewFormats;
   uint32_t width;
   uint32_t height; // default = 1;
   uint32_t depthOrArrayLayers; // default = 1;
@@ -738,8 +741,7 @@ typedef struct WGpuTextureDescriptor
   WGPU_TEXTURE_DIMENSION dimension; // default = WGPU_TEXTURE_DIMENSION_2D
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_USAGE_FLAGS usage;
-  int numViewFormats;
-  WGPU_TEXTURE_FORMAT *viewFormats;
+  uint32_t unused_padding;
 } WGpuTextureDescriptor;
 extern const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
