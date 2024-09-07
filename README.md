@@ -112,7 +112,13 @@ Finally, when targeting OffscreenCanvas with the proxy-to-pthread option, pass t
 
 ### 🖥 2GB + 4GB + Wasm64 support
 
-Currently both 2GB and 4GB build modes are supported. Wasm64 is also planned to be supported as soon as it becomes available in web browsers.
+Wasm_Webgpu supports each of the three main memory models that Emscripten supports:
+
+- 2GB mode: link with `-sMAXIMUM_MEMORY=2GB` or less,
+- 4GB mode: link with `-sMAXIMUM_MEMORY=4GB` or less,
+- Wasm64 mode: link with `-sMEMORY64=1 -sMAXIMUM_MEMORY=16GB` or some other value > 4GB.
+
+When building code samples, pass `-DMEMORY64=1` to CMake to test compiling in Wasm64 build mode.
 
 ## 🚥 Requirements
 
@@ -179,8 +185,3 @@ The sample [texture/texture.c](samples/texture/texture.c) tests the `wgpu_load_i
 ![vertex_buffer](./screenshots/vertex_buffer.png)
 
 The test [vertex_buffer/vertex_buffer.c](samples/vertex_buffer/vertex_buffer.c) shows an example of how to map a GPU buffer and use the function `wgpu_buffer_write_mapped_range()`.
-
-## 🚧 TODOs
-
-The following features are planned:
- - Wasm64 build mode support
