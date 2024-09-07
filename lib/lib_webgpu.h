@@ -2892,16 +2892,18 @@ dictionary GPUCanvasConfiguration : GPUObjectDescriptorBase {
     GPUCanvasAlphaMode alphaMode = "opaque";
 };
 */
-typedef struct WGpuCanvasConfiguration
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuCanvasConfiguration
 {
   WGpuDevice device;
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_USAGE_FLAGS usage;
   int numViewFormats;
   WGPU_TEXTURE_FORMAT *viewFormats;
+  _WGPU_PTR_PADDING(0);
   HTML_PREDEFINED_COLOR_SPACE colorSpace;
   WGpuCanvasToneMapping toneMapping;
   WGPU_CANVAS_ALPHA_MODE alphaMode;
+  uint32_t unused_padding;
 } WGpuCanvasConfiguration;
 extern const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
 
