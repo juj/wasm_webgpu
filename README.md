@@ -32,7 +32,7 @@ It is also possible to target WebGPU outside the browser via Dawn. When doing so
 
 TODO: add more instructions about targeting Dawn natively.
 
-## Implementation Status
+## 🗓 Implementation Status
 
 The repository was last updated to be up to date with the WebGPU specification as of 🗓 **6th of September 2024**.
 
