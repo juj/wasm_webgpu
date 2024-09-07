@@ -198,7 +198,7 @@ typedef struct WGpuSupportedLimits
   uint32_t maxComputeWorkgroupSizeX; // required >= 256
   uint32_t maxComputeWorkgroupSizeY; // required >= 256
   uint32_t maxComputeWorkgroupSizeZ; // required >= 64
-  uint32_t dummyPadding;
+  uint32_t unused_padding;
 } WGpuSupportedLimits;
 
 /*
@@ -433,10 +433,10 @@ dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
 typedef struct WGpuDeviceDescriptor
 {
   WGPU_FEATURES_BITFIELD requiredFeatures;
-  uint32_t _explicitPaddingFor8BytesAlignedSize; // alignof(WGpuSupportedLimits) is 64-bit, hence explicitly show a padding here.
+  uint32_t unused_padding; // alignof(WGpuSupportedLimits) is 64-bit, hence explicitly show a padding here.
   WGpuSupportedLimits requiredLimits;
   WGpuQueueDescriptor defaultQueue;
-  uint32_t _explicitPaddingFor8BytesAlignedSize2;
+  uint32_t unused_padding2;
 } WGpuDeviceDescriptor;
 extern const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
@@ -1351,7 +1351,7 @@ dictionary GPUExternalTextureBindingLayout {
 */
 typedef struct WGpuExternalTextureBindingLayout
 {
-  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size.
+  uint32_t unused_padding; // Appease mixed C and C++ compilation to agree on non-zero struct size.
 } WGpuExternalTextureBindingLayout;
 
 /*
@@ -1573,7 +1573,7 @@ typedef double GPUPipelineConstantValue; // May represent WGSL’s bool, f32, i3
 typedef struct WGpuPipelineConstant
 {
   const char *name;
-  uint32_t _dummyPadding; // (would be automatically inserted by the compiler, but present here for explicity)
+  uint32_t unused_padding; // (would be automatically inserted by the compiler, but present here for explicity)
   double value;
 } WGpuPipelineConstant;
 
@@ -2004,7 +2004,7 @@ typedef struct WGpuVertexBufferLayout
   const WGpuVertexAttribute *attributes;
   uint64_t arrayStride;
   WGPU_VERTEX_STEP_MODE stepMode;
-  uint32_t _unused64BitPadding;
+  uint32_t unused_padding;
 } WGpuVertexBufferLayout;
 
 /*
@@ -2038,7 +2038,7 @@ dictionary GPUCommandBufferDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuCommandBufferDescriptor
 {
-  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size. Remove this once label is added
+  uint32_t unused_padding; // Appease mixed C and C++ compilation to agree on non-zero struct size. Remove this once label is added
   // TODO: add label
 } WGpuCommandBufferDescriptor;
 
@@ -2131,7 +2131,7 @@ dictionary GPUCommandEncoderDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuCommandEncoderDescriptor
 {
-  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size.
+  uint32_t unused_padding; // Appease mixed C and C++ compilation to agree on non-zero struct size.
 } WGpuCommandEncoderDescriptor;
 extern const WGpuCommandEncoderDescriptor WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITIALIZER;
 
@@ -2155,7 +2155,7 @@ typedef struct WGpuImageCopyBuffer
   uint32_t bytesPerRow;
   uint32_t rowsPerImage;
   WGpuBuffer buffer;
-  uint32_t _explicitPaddingFor8BytesAlignedSize;
+  uint32_t unused_padding;
 } WGpuImageCopyBuffer;
 extern const WGpuImageCopyBuffer WGPU_IMAGE_COPY_BUFFER_DEFAULT_INITIALIZER;
 
@@ -2445,7 +2445,7 @@ dictionary GPURenderBundleDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuRenderBundleDescriptor
 {
-  uint32_t _dummyPadding; // Appease mixed C and C++ compilation to agree on non-zero struct size. Remove this once label is added
+  uint32_t unused_padding; // Appease mixed C and C++ compilation to agree on non-zero struct size. Remove this once label is added
   // TODO add label
 } WGpuRenderBundleDescriptor;
 
@@ -2913,7 +2913,7 @@ typedef struct WGpuRenderPassColorAttachment
 
   WGPU_STORE_OP storeOp; // Required, be sure to set to WGPU_STORE_OP_STORE (default) or WGPU_STORE_OP_DISCARD
   WGPU_LOAD_OP loadOp; // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR.
-  int dummyDoublePadding; // unused, added to pad the doubles in clearValue to 8-byte multiples.
+  uint32_t unused_padding; // unused, added to pad the doubles in clearValue to 8-byte multiples.
   WGpuColor clearValue; // Used if loadOp == WGPU_LOAD_OP_CLEAR. Default value = { r = 0.0, g = 0.0, b = 0.0, a = 1.0 }
 } WGpuRenderPassColorAttachment;
 extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;
@@ -3006,7 +3006,7 @@ typedef struct WGpuBindGroupLayoutEntry
   uint32_t binding;
   WGPU_SHADER_STAGE_FLAGS visibility;
   WGPU_BIND_GROUP_LAYOUT_TYPE type;
-  uint32_t _dummyPadding64Bits; // Explicitly present to pad 'buffer' to 64-bit alignment
+  uint32_t unused_padding; // Explicitly present to pad 'buffer' to 64-bit alignment
 
   union {
     WGpuBufferBindingLayout buffer;
