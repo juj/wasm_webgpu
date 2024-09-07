@@ -262,6 +262,8 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_CLIP_DISTANCES                     0x1000
 #define WGPU_FEATURE_DUAL_SOURCE_BLENDING               0x2000
 
+#define WGPU_FEATURE_FIRST_UNUSED_BIT                   0x4000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
+
 /*
 // WebGPU reuses the color space enum from the HTML Canvas specification:
    https://html.spec.whatwg.org/multipage/canvas.html#predefinedcolorspace
