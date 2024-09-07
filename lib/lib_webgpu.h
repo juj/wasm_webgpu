@@ -1741,17 +1741,24 @@ dictionary GPUFragmentState: GPUProgrammableStage {
     required sequence<GPUColorTargetState?> targets;
 };
 */
-typedef struct WGpuFragmentState
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuFragmentState
 {
-  WGpuShaderModule module;
   const char *entryPoint;
-  int numTargets;
+  _WGPU_PTR_PADDING(0);
+
   const WGpuColorTargetState *targets;
-  int numConstants;
+  _WGPU_PTR_PADDING(1);
+
   const WGpuPipelineConstant *constants;
+  _WGPU_PTR_PADDING(2);
+
+  WGpuShaderModule module;
+  int numTargets;
+  int numConstants;
+  uint32_t unused_padding;
 } WGpuFragmentState;
 
-VERIFY_STRUCT_SIZE(WGpuFragmentState, 6*sizeof(uint32_t));
+VERIFY_STRUCT_SIZE(WGpuFragmentState, 10*sizeof(uint32_t));
 /*
 dictionary GPUColorTargetState {
     required GPUTextureFormat format;
@@ -2024,17 +2031,24 @@ dictionary GPUVertexState: GPUProgrammableStage {
     sequence<GPUVertexBufferLayout?> buffers = [];
 };
 */
-typedef struct WGpuVertexState
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuVertexState
 {
-  WGpuShaderModule module;
   const char *entryPoint;
-  int numBuffers;
+  _WGPU_PTR_PADDING(0);
+
   const WGpuVertexBufferLayout *buffers;
-  int numConstants;
+  _WGPU_PTR_PADDING(1);
+
   const WGpuPipelineConstant *constants;
+  _WGPU_PTR_PADDING(2);
+
+  WGpuShaderModule module;
+  int numBuffers;
+  int numConstants;
+  uint32_t unused_padding;
 } WGpuVertexState;
 
-VERIFY_STRUCT_SIZE(WGpuVertexState, 6*sizeof(uint32_t));
+VERIFY_STRUCT_SIZE(WGpuVertexState, 10*sizeof(uint32_t));
 
 /*
 dictionary GPUVertexBufferLayout {
@@ -3047,14 +3061,16 @@ typedef struct WGpuColorTargetState
 } WGpuColorTargetState;
 extern const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER;
 
-typedef struct WGpuRenderPipelineDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuRenderPipelineDescriptor
 {
   WGpuVertexState vertex;
   WGpuPrimitiveState primitive;
   WGpuDepthStencilState depthStencil;
   WGpuMultisampleState multisample;
+  uint32_t unused_padding;
   WGpuFragmentState fragment;
   WGpuPipelineLayout layout; // Set to special value WGPU_AUTO_LAYOUT_MODE_AUTO to specify that automatic layout should be used.
+  uint32_t unused_padding2;
 } WGpuRenderPipelineDescriptor;
 extern const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
