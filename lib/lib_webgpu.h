@@ -59,8 +59,8 @@
 #define _WGPU_PTR_PADDING(x) uint32_t unused_padding_to_make_32bit_ptrs_64bit_##x;
 #endif
 
-#if defined(__EMSCRIPTEN__) && _cplusplus >= 201103L
-#define VERIFY_STRUCT_SIZE(struct_name, size) static_assert(sizeof((struct_name)) == (size), "lib_webgpu.js is hardcoded to expect this size. If this changes, modify lib_webgpu.js accordingly. (search for sizeof(" #struct_name "))");
+#if defined(__EMSCRIPTEN__) && __cplusplus >= 201103L
+#define VERIFY_STRUCT_SIZE(struct_name, size) static_assert(sizeof(struct_name) == (size), "lib_webgpu.js is hardcoded to expect this size. If this changes, modify lib_webgpu.js accordingly. (search for sizeof(..) on struct name)");
 #else
 #define VERIFY_STRUCT_SIZE(struct_name, size)
 #endif
@@ -220,7 +220,7 @@ typedef struct WGpuSupportedLimits
   uint32_t unused_padding;
 } WGpuSupportedLimits;
 
-VERIFY_STRUCT_SIZE(WGpuSupportedLimits, 36*sizeof(uint32_t));
+VERIFY_STRUCT_SIZE(WGpuSupportedLimits, 34*sizeof(uint32_t));
 
 /*
 [Exposed=(Window, DedicatedWorker)]
