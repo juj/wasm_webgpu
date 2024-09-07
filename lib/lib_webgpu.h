@@ -1444,7 +1444,6 @@ dictionary GPUShaderModuleCompilationHint {
 typedef struct WGpuShaderModuleCompilationHint
 {
   const char *entryPoint;
-  // WGPU_AUTO_LAYOUT_MODE
   WGpuPipelineLayout layout;  // Assign the special value WGPU_AUTO_LAYOUT_MODE_AUTO (default) to hint an automatically created pipeline object.
 } WGpuShaderModuleCompilationHint;
 extern const WGpuShaderModuleCompilationHint WGPU_SHADER_MODULE_COMPILATION_HINT_DEFAULT_INITIALIZER;
