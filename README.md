@@ -123,14 +123,14 @@ The following API functions are provided to manage OffscreenCanvas rendering:
 
 ```h
 void offscreen_canvas_create(OffscreenCanvasId id, int width, int height);
-void canvas_transfer_control_to_offscreen(const char *canvasSelector NOTNULL, OffscreenCanvasId id);
+void canvas_transfer_control_to_offscreen(const char *canvasSelector, OffscreenCanvasId id);
 void offscreen_canvas_post_to_worker(OffscreenCanvasId id, emscripten_wasm_worker_t worker);
 void offscreen_canvas_post_to_pthread(OffscreenCanvasId id, pthread_t pthread);
 WGPU_BOOL offscreen_canvas_is_valid(OffscreenCanvasId id);
 void offscreen_canvas_destroy(OffscreenCanvasId id);
 int offscreen_canvas_width(OffscreenCanvasId id);
 int offscreen_canvas_height(OffscreenCanvasId id);
-void offscreen_canvas_size(OffscreenCanvasId id, int *outWidth NOTNULL, int *outHeight NOTNULL);
+void offscreen_canvas_size(OffscreenCanvasId id, int *outWidth, int *outHeight);
 void offscreen_canvas_set_size(OffscreenCanvasId id, int width, int height);
 ```
 
