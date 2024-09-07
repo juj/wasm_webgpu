@@ -132,7 +132,7 @@ Replace the cmdline to `--browser=` with location of your own WebGPU supporting 
 
 In `<testN>` you can pass names of tests to run. Test names are substring matches to filter filenames inside [test/](test/) subdirectory, so for example `test.py adapter device` would run all tests with substring `adapter` or `device` in it. Do not specify any test names to run through all tests in the suite.
 
-To add a new test in the suite, simply create a new .cpp file with the test contents, and run `test.py name_of_cpp_file` to run the test.
+To add a new test in the suite, create a new .cpp file with the test contents in the [test/](test/) subdirectory, and run `test.py name_of_cpp_file` to run the test.
 
 ## 🧪 Samples
 
