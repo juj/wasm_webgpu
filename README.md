@@ -134,7 +134,7 @@ void offscreen_canvas_size(OffscreenCanvasId id, int *outWidth NOTNULL, int *out
 void offscreen_canvas_set_size(OffscreenCanvasId id, int width, int height);
 ```
 
-See [lib_webgpu.h](lib/lib_webgpu.h) header file for detailed documentation, and the samples/offscreen_canvas/ subdirectory for code snippets.
+See [lib_webgpu.h](lib/lib_webgpu.h) header file for detailed documentation, and the [samples/offscreen_canvas/](samples/offscreen_canvas/) subdirectory for code snippets.
 
 When targeting OffscreenCanvas with Wasm Workers, pass the Emscripten compiler flag `-sWASM_WORKERS` for each compilation unit, and the linker flags `-sWASM_WORKERS -sENVIRONMENT=web,worker` for the final link.
 
@@ -168,7 +168,7 @@ To add a new test in the suite, create a new .cpp file with the test contents in
 
 ## 🧪 Samples
 
-Several test cases are available under the `samples/` subdirectory.
+Several test cases are available in the [samples/](samples/) subdirectory.
 
 Don't expect flashy demos. The test cases exercise features relevant to data marshalling between WebAssembly and JavaScript languages, and are not intended to showcase fancy graphical effects.
 
