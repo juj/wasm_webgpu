@@ -9,6 +9,7 @@ int main()
   WGpuCanvasContext ctx = wgpu_canvas_get_webgpu_context("canvas");
   WGpuCanvasContext ctx2 = wgpu_canvas_get_webgpu_context("canvas");
   assert(ctx == ctx2); // Verify that getting context several times will return the same one.
+  assert(wgpu_get_num_live_objects() == 1); // Only one canvas context object should be alive
 
   wgpu_object_destroy(ctx);
   WGpuCanvasContext ctx3 = wgpu_canvas_get_webgpu_context("canvas");
