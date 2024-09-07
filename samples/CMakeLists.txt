@@ -64,9 +64,12 @@ if (EMSCRIPTEN)
 	append_linker_flags("-lmath.js -lhtml5.js -lint53.js")
 	append_linker_flags("--closure-args=--externs=${LIB_DIR}/webgpu-closure-externs.js")
 
-	append_linker_flags("-sINITIAL_MEMORY=16MB -sMALLOC=emmalloc")
-
-	#append_linker_flags("-sMAXIMUM_MEMORY=4GB")
+	if (MEMORY64)
+		append_compiler_flags("-sMEMORY64 -Wno-experimental")
+		append_linker_flags("-sMEMORY64 -sINITIAL_MEMORY=6GB -Wno-experimental")
+	else()
+		append_linker_flags("-sINITIAL_MEMORY=16MB -sMALLOC=emmalloc")
+	endif()
 
 	# Manual debugging:
 	#append_linker_flags("-g2 -sSINGLE_FILE=1")
