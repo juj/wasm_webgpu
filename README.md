@@ -36,6 +36,38 @@ TODO: add more instructions about targeting Dawn natively.
 
 The repository was last updated to be up to date with the WebGPU specification as of 🗓 **6th of September 2024**.
 
+## 🏃‍ Quick Getting Started
+
+If you want to get to building WebGPU content quickly, try the following:
+
+1. As a prerequisite, download Emscripten if you don't have it already:
+```
+> git clone https://github.com/emscripten-core/emsdk
+> cd emsdk
+> emsdk install latest ninja-git-release-64bit
+> emsdk activate latest ninja-git-release-64bit
+> source ./emsdk_env.sh     # This line only on Linux and macOS. Not needed on Windows
+```
+
+2. In the same command prompt, clone and build wasm_webgpu samples:
+
+```
+> git clone https://github.com/juj/wasm_webgpu
+> cd wasm_webgpu
+> mkdir build
+> cd build
+> emcmake cmake -G Ninja ../samples
+> ninja
+```
+
+3. Launch the `emrun` ad hoc web server to host the built .html pages:
+
+```
+> emrun .
+```
+
+An ad hoc web server index will pop up, allowing you to launch the different sample programs in this repository.
+
 ## Features and Design
 
 This bindings library is developed with the following:
