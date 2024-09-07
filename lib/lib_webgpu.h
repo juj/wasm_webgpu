@@ -1466,10 +1466,12 @@ dictionary GPUShaderModuleCompilationHint {
     (GPUPipelineLayout or GPUAutoLayoutMode) layout;
 };
 */
-typedef struct WGpuShaderModuleCompilationHint
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuShaderModuleCompilationHint
 {
   const char *entryPoint;
+  _WGPU_PTR_PADDING(0);
   WGpuPipelineLayout layout;  // Assign the special value WGPU_AUTO_LAYOUT_MODE_AUTO (default) to hint an automatically created pipeline object.
+  uint32_t unused_padding;
 } WGpuShaderModuleCompilationHint;
 extern const WGpuShaderModuleCompilationHint WGPU_SHADER_MODULE_COMPILATION_HINT_DEFAULT_INITIALIZER;
 
@@ -1479,11 +1481,14 @@ dictionary GPUShaderModuleDescriptor : GPUObjectDescriptorBase {
     sequence<GPUShaderModuleCompilationHint> compilationHints = [];
 };
 */
-typedef struct WGpuShaderModuleDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuShaderModuleDescriptor
 {
   const char *code;
-  int numHints;
+  _WGPU_PTR_PADDING(0);
   const WGpuShaderModuleCompilationHint *hints;
+  _WGPU_PTR_PADDING(1);
+  int numHints;
+  uint32_t unused_padding;
 } WGpuShaderModuleDescriptor;
 
 /*
