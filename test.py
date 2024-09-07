@@ -4,6 +4,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--browser',
                     help='Specifies the browser executable to run the tests in.')
+parser.add_argument('tests_to_run',nargs='*')
 
 options = parser.parse_args(sys.argv[1:])
 
@@ -13,15 +14,24 @@ if not os.path.exists(test_dir):
     os.makedirs(test_dir)
 
 modes = [
- ['-O3'],
- ['-Oz', '--closure', '1', '--closure-args=--externs=lib/webgpu-closure-externs.js'],
  ['-O0', '-sASSERTIONS=1', '-jsDWEBGPU_DEBUG=1'],
+# ['-O3'],
+# ['-Oz', '--closure', '1', '--closure-args=--externs=lib/webgpu-closure-externs.js'],
 ]
 
 # Uncomment for quick testing in one mode.
 #modes = [['-O3', '-g2']]
 
+def contains_substring(s, arr):
+  for sub in arr:
+    if sub in s:
+      return True
+
 tests = glob.glob('test/*.cpp')
+if len(sys.argv) > 1:
+  sub = sys.argv[1]
+  tests = filter(lambda t: contains_substring(t, options.tests_to_run), tests)
+
 output_file = os.path.join(test_dir, 'test.html')
 
 cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp20.cpp', '-o', output_file, '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun']
