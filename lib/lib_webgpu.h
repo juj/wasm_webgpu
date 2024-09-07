@@ -2043,14 +2043,16 @@ dictionary GPUVertexBufferLayout {
     required sequence<GPUVertexAttribute> attributes;
 };
 */
-typedef struct WGpuVertexBufferLayout
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuVertexBufferLayout
 {
-  int numAttributes;
   const WGpuVertexAttribute *attributes;
-  uint64_t arrayStride;
+  _WGPU_PTR_PADDING(0);
+  int numAttributes;
   WGPU_VERTEX_STEP_MODE stepMode;
-  uint32_t unused_padding;
+  uint64_t arrayStride;
 } WGpuVertexBufferLayout;
+
+VERIFY_STRUCT_SIZE(WGpuVertexBufferLayout, 6*sizeof(uint32_t));
 
 /*
 dictionary GPUVertexAttribute {
