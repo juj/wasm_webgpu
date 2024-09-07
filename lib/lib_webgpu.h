@@ -1983,7 +1983,7 @@ typedef int WGPU_VERTEX_FORMAT;
 #define WGPU_VERTEX_FORMAT_SINT32X4        125
 #define WGPU_VERTEX_FORMAT_UNORM10_10_10_2 126
 
-#if _cplusplus >= 201103L
+#if __cplusplus >= 201103L
 static_assert(WGPU_VERTEX_FORMAT_FIRST_VALUE == WGPU_TEXTURE_FORMAT_LAST_VALUE + 1, "WGPU_VERTEX_FORMAT enums must have values after WGPU_TEXTURE_FORMAT values!");
 #endif
 
