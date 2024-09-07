@@ -1516,10 +1516,11 @@ interface GPUCompilationMessage {
     readonly attribute unsigned long long length;
 };
 */
-typedef struct WGpuCompilationMessage
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuCompilationMessage
 {
   // A human-readable string containing the message generated during the shader compilation.
   char *message;
+  _WGPU_PTR_PADDING(0);
 
   // The severity level of the message.
   WGPU_COMPILATION_MESSAGE_TYPE type;
@@ -1546,7 +1547,11 @@ typedef struct WGpuCompilationMessage
   // The number of UTF-16 code units in the substring that message corresponds to. If the message
   // does not correspond with a substring then length must be 0.
   uint32_t length;
+
+  uint32_t unused_padding;
 } WGpuCompilationMessage;
+
+VERIFY_STRUCT_SIZE(WGpuCompilationMessage, 8*sizeof(uint32_t));
 
 /*
 [Exposed=(Window, DedicatedWorker), Serializable, SecureContext]
@@ -1557,8 +1562,12 @@ interface GPUCompilationInfo {
 typedef struct WGpuCompilationInfo
 {
   int numMessages;
+  uint32_t unused_padding;
   WGpuCompilationMessage messages[];
 } WGpuCompilationInfo;
+
+VERIFY_STRUCT_SIZE(WGpuCompilationInfo, 2*sizeof(uint32_t));
+
 // Deallocates a WGpuCompilationInfo object produced by a call to wgpu_free_compilation_info()
 #define wgpu_free_compilation_info(info) free((info))
 
