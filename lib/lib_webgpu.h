@@ -1608,10 +1608,10 @@ dictionary GPUProgrammableStage {
 typedef double GPUPipelineConstantValue; // May represent WGSL’s bool, f32, i32, u32, and f16 if enabled.
 */
 
-typedef struct WGpuPipelineConstant
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuPipelineConstant
 {
   const char *name;
-  uint32_t unused_padding; // (would be automatically inserted by the compiler, but present here for explicity)
+  _WGPU_PTR_PADDING(0);
   double value;
 } WGpuPipelineConstant;
 
