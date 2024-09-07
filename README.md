@@ -148,7 +148,7 @@ On Windows, the last `make` command is not available, so either install Mingw32-
 
 For the smallest Clear Screen "hello world" example, see [clear_screen.c/clear_screen.c](samples/clear_screen/clear_screen.c).
 
-There is also an Emscripten ASYNCIFY-enabled variant of the same demo, at [clear_screen.c/clear_screen_sync.c](samples/clear_screen/clear_screen.c).
+There is also an Emscripten JSPI-enabled variant of the same demo, at [clear_screen.c/clear_screen_sync.c](samples/clear_screen/clear_screen.c).
 
 ### failing_shader_compilation
 
