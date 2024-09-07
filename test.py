@@ -1,4 +1,4 @@
-import argparse, glob, subprocess, sys, re
+import argparse, glob, subprocess, os, sys, re, tempfile, shutil
 
 parser = argparse.ArgumentParser()
 
@@ -6,6 +6,11 @@ parser.add_argument('--browser',
                     help='Specifies the browser executable to run the tests in.')
 
 options = parser.parse_args(sys.argv[1:])
+
+test_dir = tempfile.TemporaryDirectory().name
+
+if not os.path.exists(test_dir):
+    os.makedirs(test_dir)
 
 modes = [
  ['-O0'],
@@ -17,8 +22,9 @@ modes = [
 #modes = [['-O3', '-g2']]
 
 tests = glob.glob('test/*.cpp')
+output_file = os.path.join(test_dir, 'test.html')
 
-cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp20.cpp', '-o', 'a.html', '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun']
+cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp20.cpp', '-o', output_file, '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun']
 
 failures = []
 passes = 0
@@ -35,7 +41,7 @@ for m in modes:
       subprocess.check_call(run)
       browser_cmd = ['emrun.bat']
       if options.browser: browser_cmd += ['--browser', options.browser]
-      browser_cmd += ['a.html']
+      browser_cmd += [output_file]
       print(str(browser_cmd))
       subprocess.check_call(browser_cmd)
       passes += 1
@@ -48,3 +54,5 @@ for f in failures:
   print(f'FAIL: {cmd}')
 print('')
 print(f'{passes}/{passes+len(failures)} tests passed.')
+
+shutil.rmtree(test_dir)
