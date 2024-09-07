@@ -1695,6 +1695,7 @@ typedef struct WGpuPrimitiveState
   WGPU_BOOL unclippedDepth; // defaults to false.
 } WGpuPrimitiveState;
 
+VERIFY_STRUCT_SIZE(WGpuPrimitiveState, 5*sizeof(uint32_t));
 /*
 enum GPUFrontFace {
     "ccw",
@@ -1733,6 +1734,8 @@ typedef struct WGpuMultisampleState
   WGPU_BOOL alphaToCoverageEnabled;
 } WGpuMultisampleState;
 
+VERIFY_STRUCT_SIZE(WGpuMultisampleState, 3*sizeof(uint32_t));
+
 /*
 dictionary GPUFragmentState: GPUProgrammableStage {
     required sequence<GPUColorTargetState?> targets;
@@ -1748,6 +1751,7 @@ typedef struct WGpuFragmentState
   const WGpuPipelineConstant *constants;
 } WGpuFragmentState;
 
+VERIFY_STRUCT_SIZE(WGpuFragmentState, 6*sizeof(uint32_t));
 /*
 dictionary GPUColorTargetState {
     required GPUTextureFormat format;
@@ -1893,6 +1897,7 @@ typedef struct WGpuStencilFaceState
   WGPU_STENCIL_OPERATION passOp;
 } WGpuStencilFaceState;
 
+VERIFY_STRUCT_SIZE(WGpuStencilFaceState, 4*sizeof(uint32_t));
 /*
 enum GPUStencilOperation {
     "keep",
@@ -2028,6 +2033,8 @@ typedef struct WGpuVertexState
   int numConstants;
   const WGpuPipelineConstant *constants;
 } WGpuVertexState;
+
+VERIFY_STRUCT_SIZE(WGpuVertexState, 6*sizeof(uint32_t));
 
 /*
 dictionary GPUVertexBufferLayout {
@@ -3016,6 +3023,8 @@ typedef struct WGpuDepthStencilState
   // Enable depth clamping (requires "depth-clamping" feature)
   WGPU_BOOL clampDepth;
 } WGpuDepthStencilState;
+
+VERIFY_STRUCT_SIZE(WGpuDepthStencilState, 17*sizeof(uint32_t));
 
 typedef struct WGpuBlendState
 {
