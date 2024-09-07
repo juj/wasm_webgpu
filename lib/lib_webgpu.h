@@ -46,6 +46,25 @@
 #define WGPU_TRUE 1
 #define WGPU_FALSE 0
 
+// This macro allows structs that contain pointers to be explicitly aligned up to 8 bytes so that
+// even in 32-bit pointer builds, struct alignments are checked to match against Wasm64 builds.
+#define _WGPU_ALIGN_TO_64BITS __attribute__((aligned(8)))
+
+// The _WGPU_PTR_PADDING() macro pads pointers in 32-bit builds up to 64-bits so that memory layout
+// of WebGPU structures is identical in 32-bit and 64-bit builds. This way the JS side marshalling
+// can stay the same (except for reading pointers).
+#ifdef __wasm64__
+#define _WGPU_PTR_PADDING(x)
+#else
+#define _WGPU_PTR_PADDING(x) uint32_t unused_padding_to_make_32bit_ptrs_64bit_##x;
+#endif
+
+#if defined(__EMSCRIPTEN__) && _cplusplus >= 201103L
+#define VERIFY_STRUCT_SIZE(struct_name, size) static_assert(sizeof((struct_name)) == (size), "lib_webgpu.js is hardcoded to expect this size. If this changes, modify lib_webgpu.js accordingly. (search for sizeof(" #struct_name "))");
+#else
+#define VERIFY_STRUCT_SIZE(struct_name, size)
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -200,6 +219,8 @@ typedef struct WGpuSupportedLimits
   uint32_t maxComputeWorkgroupSizeZ; // required >= 64
   uint32_t unused_padding;
 } WGpuSupportedLimits;
+
+VERIFY_STRUCT_SIZE(WGpuSupportedLimits, 36*sizeof(uint32_t));
 
 /*
 [Exposed=(Window, DedicatedWorker)]
@@ -418,10 +439,13 @@ WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter);
 dictionary GPUQueueDescriptor : GPUObjectDescriptorBase {
 };
 */
-typedef struct WGpuQueueDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuQueueDescriptor
 {
   const char *label;
+  _WGPU_PTR_PADDING(0);
 } WGpuQueueDescriptor;
+
+VERIFY_STRUCT_SIZE(WGpuQueueDescriptor, 2*sizeof(uint32_t));
 
 /*
 dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
@@ -432,11 +456,10 @@ dictionary GPUDeviceDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuDeviceDescriptor
 {
-  WGPU_FEATURES_BITFIELD requiredFeatures;
-  uint32_t unused_padding; // alignof(WGpuSupportedLimits) is 64-bit, hence explicitly show a padding here.
   WGpuSupportedLimits requiredLimits;
   WGpuQueueDescriptor defaultQueue;
-  uint32_t unused_padding2;
+  WGPU_FEATURES_BITFIELD requiredFeatures;
+  uint32_t unused_padding;
 } WGpuDeviceDescriptor;
 extern const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
