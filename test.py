@@ -15,7 +15,7 @@ if not os.path.exists(test_dir):
 modes = [
  ['-O0'],
  ['-O3'],
- ['-Oz', '--closure', '1'],
+ ['-Oz', '--closure', '1', '--closure-args=--externs=lib/webgpu-closure-externs.js'],
 ]
 
 # Uncomment for quick testing in one mode.
