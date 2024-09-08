@@ -186,23 +186,23 @@ typedef struct WGpuSupportedLimits
   // omit requesting limits for that particular field.
 
   // 64-bit fields must be present first before the 32-bit fields in this struct.
-  uint64_t maxUniformBufferBindingSize; // required >= 16384
+  uint64_t maxUniformBufferBindingSize; // required >= 65536
   uint64_t maxStorageBufferBindingSize; // required >= 128*1024*1024 (128MB)
   uint64_t maxBufferSize;               // required >= 256*1024*1024 (256MB)
 
   uint32_t maxTextureDimension1D; // required >= 8192
   uint32_t maxTextureDimension2D; // required >= 8192
   uint32_t maxTextureDimension3D; // required >= 2048
-  uint32_t maxTextureArrayLayers; // required >= 2048
+  uint32_t maxTextureArrayLayers; // required >= 256
   uint32_t maxBindGroups; // required >= 4
   uint32_t maxBindGroupsPlusVertexBuffers; // required >= 24
-  uint32_t maxBindingsPerBindGroup; // required >= 640
+  uint32_t maxBindingsPerBindGroup; // required >= 1000
   uint32_t maxDynamicUniformBuffersPerPipelineLayout; // required >= 8
   uint32_t maxDynamicStorageBuffersPerPipelineLayout; // required >= 4
   uint32_t maxSampledTexturesPerShaderStage; // required >= 16
   uint32_t maxSamplersPerShaderStage; // required >= 16
   uint32_t maxStorageBuffersPerShaderStage; // required >= 8
-  uint32_t maxStorageTexturesPerShaderStage; // required >= 8
+  uint32_t maxStorageTexturesPerShaderStage; // required >= 4
   uint32_t maxUniformBuffersPerShaderStage; // required >= 12
   uint32_t minUniformBufferOffsetAlignment; // required >= 256 bytes
   uint32_t minStorageBufferOffsetAlignment; // required >= 256 bytes
