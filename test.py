@@ -40,6 +40,7 @@ passes = 0
 
 for m in modes:
   for t in tests:
+    print('')
     run = cmd + m + [t]
     flags = re.findall(r"// flags: (.*)", open(t, 'r').read())
     if len(flags) > 0:
