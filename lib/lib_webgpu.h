@@ -507,9 +507,7 @@ WGPU_BOOL wgpu_is_device(WGpuObjectBase object);
 
 WGpuQueue wgpu_device_get_queue(WGpuDevice device);
 
-#ifdef __EMSCRIPTEN__
-void wgpu_device_tick(WGpuDevice device) __attribute__((deprecated("The function wgpu_device_tick() is not available when targeting the web. Presentation always occurs when yielding out from browser event loop.")));
-#else
+#ifndef __EMSCRIPTEN__
 void wgpu_device_tick(WGpuDevice device);
 #endif
 
