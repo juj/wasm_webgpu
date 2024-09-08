@@ -12,12 +12,6 @@ To utilize the library in your own application, copy the contents of the `lib/` 
  - [lib/lib_webgpu_fwd.h](lib/lib_webgpu_fwd.h)
  - [lib/lib_webgpu_cpp20.cpp](lib/lib_webgpu_cpp20.cpp) or [lib/lib_webgpu_cpp11.cpp](lib/lib_webgpu_cpp11.cpp), depending on if your compiler has C++20 or C++11.
 
-Additionally, if you are using Closure Compiler, also copy the Closure externs file into your project:
-
- - [lib/webgpu-closure-externs.js](lib/webgpu-closure-externs.js)
-
- and specify the Emscripten linker argument `--closure-args=--externs=/path/to/webgpu-closure-externs.js` when linking your project.
-
 <img align=right src='./screenshots/emscripten-logo.svg' width=30%>
 
 Then `#include "lib_webgpu.h"` to access the API, compile in `lib_webpgu.cpp` and `lib_webgpu_cpp20.cpp` with the rest of your project files, and finally link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](samples/CMakeLists.txt) for example usage.
@@ -90,6 +84,12 @@ If you are pondering whether to use this repository or the [WebGPU support heade
 The primary design goal of the library is to provide absolutely best runtime speed and minimal generated code size overhead, carefully shaving down every individual byte possible. The intent is to enable using this library in extremely code size constrained deployment scenarios.
 
 The library is implemented very C-like, void of high-level JavaScript abstractions, and manually tuned to produce smallest code possible. This has been observed to work best to provide the thinnest JS<->Wasm language marshalling layer that does not get in the way.
+
+In order to achieve the smallest code size, Closure Compiler should be used. Wasm_webgpu is fully Closure compatible. To enable Closure minification, copy the Closure externs file into your project:
+
+ - [lib/webgpu-closure-externs.js](lib/webgpu-closure-externs.js)
+
+and specify the Emscripten linker arguments `--closure 1` and `--closure-args=--externs=/path/to/webgpu-closure-externs.js` when linking your project.
 
 ### 🗑 Mindful about JS garbage generation
 
