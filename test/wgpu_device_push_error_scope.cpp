@@ -9,7 +9,7 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
   wgpu_device_push_error_scope(device, WGPU_ERROR_FILTER_OUT_OF_MEMORY);
   wgpu_device_push_error_scope(device, WGPU_ERROR_FILTER_INTERNAL);
 
-//  EM_ASM(window.close());
+  EM_ASM(window.close());
 }
 
 void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
