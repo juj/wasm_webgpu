@@ -346,7 +346,7 @@ typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // (fail on assert, and throw a JS exception in release builds). To gracefully detect whether the current browser is new enough to be WebGPU API aware,
 // call the function navigator_gpu_available() to check.
 WGPU_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions *options NOTNULL, WGpuRequestAdapterCallback adapterCallback, void *userData);
-// Requests a WebGPU adapter synchronously. Requires building with -sASYNCIFY=1 linker flag to work.
+// Requests a WebGPU adapter synchronously. Requires building with -sJSPI=1 linker flag to work.
 // options: may be null to request an adapter without specific options.
 WGpuAdapter navigator_gpu_request_adapter_sync(const WGpuRequestAdapterOptions *options NOTNULL);
 
@@ -430,7 +430,7 @@ WGPU_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter);
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 
 void wgpu_adapter_request_device_async(WGpuAdapter adapter, const WGpuDeviceDescriptor *descriptor NOTNULL, WGpuRequestDeviceCallback deviceCallback, void *userData);
-// Requests a WebGPU device synchronously. Requires building with -sASYNCIFY=1 linker flag to work.
+// Requests a WebGPU device synchronously. Requires building with -sJSPI=1 linker flag to work.
 WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDeviceDescriptor *descriptor NOTNULL);
 
 // Like above, but tiny code size without options.
@@ -600,7 +600,7 @@ typedef void (*WGpuBufferMapCallback)(WGpuBuffer buffer, void *userData, WGPU_MA
 #define WGPU_MAX_SIZE -1
 void wgpu_buffer_map_async(WGpuBuffer buffer, WGpuBufferMapCallback callback, void *userData, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAX_SIZE));
 
-// Maps the given WGpuBuffer synchronously. Requires building with -sASYNCIFY=1 or -sJSPI=1 linker flag to work.
+// Maps the given WGpuBuffer synchronously. Requires building with -sJSPI=1 linker flag to work.
 void wgpu_buffer_map_sync(WGpuBuffer buffer, WGPU_MAP_MODE_FLAGS mode, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAX_SIZE));
 
 #define WGPU_BUFFER_GET_MAPPED_RANGE_FAILED ((double_int53_t)-1)
