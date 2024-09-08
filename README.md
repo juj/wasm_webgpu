@@ -95,8 +95,6 @@ and specify the Emscripten linker arguments `--closure 1` and `--closure-args=--
 
 Another design goal is to minimize the amount of JS temporary garbage that is generated. Unlike WebGL, WebGPU API is unfortunately quite trashy, and it is not possible to operate WebGPU without generating some runaway garbage each rendered frame. However, the binding layer itself minimizes the amount of generated garbage as much as possible.
 
-If there is a tradeoff between generated garbage, code size, or runtime speed, build flags are provided to favor one over the other. (currently there aren't any, but this is expected to change)
-
 ### 📜 Custom API for marshalling buffer data
 
 Some WebGPU features do not interop well between JS and Wasm if translated 1:1. Buffer mapping is one of these features. To help JS<->Wasm interop, this library provides custom functions `wgpu_buffer_read_mapped_range()` and `wgpu_buffer_write_mapped_range()` that do not exist in the official WebGPU specification.
