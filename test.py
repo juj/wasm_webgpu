@@ -28,8 +28,7 @@ def contains_substring(s, arr):
       return True
 
 tests = glob.glob('test/*.cpp')
-if len(sys.argv) > 1:
-  sub = sys.argv[1]
+if len(options.tests_to_run) > 0:
   tests = filter(lambda t: contains_substring(t, options.tests_to_run), tests)
 
 output_file = os.path.join(test_dir, 'test.html')
