@@ -83,7 +83,7 @@ If you are pondering whether to use this repository or the [WebGPU support heade
 
 The primary design goal of the library is to provide absolutely best runtime speed and minimal generated code size overhead, carefully shaving down every individual byte possible. The intent is to enable using this library in extremely code size constrained deployment scenarios.
 
-The library is implemented very C-like, void of high-level JavaScript abstractions, and manually tuned to produce smallest code possible. This has been observed to work best to provide the thinnest JS<->Wasm language marshalling layer that does not get in the way.
+The library is implemented very C-like, void of high-level JavaScript abstractions, and manually tuned to produce smallest code possible. Past experience developing language bindings has taught that this kind of strategy works best to provide the thinnest JS<->Wasm language marshalling layer that does not get in the way as "bloaty".
 
 In order to achieve the smallest code size, Closure Compiler should be used. Wasm_webgpu is fully Closure compatible. To enable Closure minification, copy the Closure externs file into your project:
 
