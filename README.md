@@ -75,13 +75,15 @@ An ad hoc web server index will pop up, allowing you to launch the different sam
 
 This bindings library is developed with the following:
 
-### 📐 1:1 API mapping with JS
+### 📐 1:1 mapping with Browser WebGPU JS API
 
 For the most parts, the JavaScript side WebGPU API is directly mapped 1:1 over to WebAssembly side to enable developers to write WebGPU code in C/C++ by using the official [specification IDL](https://www.w3.org/TR/webgpu/) as reference.
 
 Type names and structs follow a naming convention `WGpu*`, mapped from JS names by transforming `GPUAdapter` -> `WGpuAdapter`. API function names use a prefix `wgpu_*`, and are mapped using the convention `GPUCanvasContext.configure(...)` -> `wgpu_canvas_context_configure(canvasContext, ...)`. Enums and #defines use a prefix `WGPU_`, e.g. `GPUPowerPreference` -> `WGPU_POWER_PREFERENCE`.
 
 A few exceptions to this are done in the name of accommodating better Wasm<->JS language marshalling, noted where present in the `lib_webgpu.h` header.
+
+If you are pondering whether to use this repository or the [WebGPU support header](https://github.com/emscripten-core/emscripten/tree/main/system/include/webgpu) provided in the Emscripten repository, this 1:1 API mapping with JS point is the main difference between the two interfaces. The Emscripten WebGPU header allows targeting WebGPU by using the [Dawn WebGPU](https://dawn.googlesource.com/dawn/+/refs/heads/main/README.md) C/C++ API as a reference. This repository allows targeting WebGPU via the [JavaScript Browser API](https://www.w3.org/TR/webgpu/) as a reference.
 
 ### 🚀 Best performance and Minimal code size
 
