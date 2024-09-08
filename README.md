@@ -46,10 +46,13 @@ If you want to get to building WebGPU content quickly, try the following:
 > cd emsdk
 > emsdk install latest ninja-git-release-64bit
 > emsdk activate latest ninja-git-release-64bit
-> source ./emsdk_env.sh     # This line only on Linux and macOS. Not needed on Windows
+> source ./emsdk_env.sh     # Linux and macOS
+> emsdk_env                 # Windows
 ```
 
-2. In the same command prompt, clone and build wasm_webgpu samples:
+Whenever you open a new command prompt, first run the `emsdk_env` line in `emsdk/` root directory.
+
+2. In an emsdk_env-enabled command prompt, clone and build wasm_webgpu samples:
 
 ```
 > git clone https://github.com/juj/wasm_webgpu
