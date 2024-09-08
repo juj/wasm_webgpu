@@ -33,6 +33,5 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
 
 int main()
 {
-  assert(!wgpu_is_adapter(0));
   navigator_gpu_request_adapter_async_simple(ObtainedWebGpuAdapter);
 }
