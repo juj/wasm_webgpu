@@ -4,6 +4,8 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--browser',
                     help='Specifies the browser executable to run the tests in.')
+parser.add_argument('--wasm64', action='store_true',
+                    help='If true, runs test suite in 64-bit Wasm mode.')
 parser.add_argument('tests_to_run',nargs='*')
 
 options = parser.parse_args(sys.argv[1:])
@@ -34,6 +36,9 @@ if len(options.tests_to_run) > 0:
 output_file = os.path.join(test_dir, 'test.html')
 
 cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp20.cpp', '-o', output_file, '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun', '-profiling-funcs', '-Wno-experimental']
+
+if options.wasm64:
+  cmd += ['-sMEMORY64']
 
 failures = []
 passes = 0
