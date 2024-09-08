@@ -2,7 +2,6 @@
 
 #include "lib_webgpu.h"
 #include <assert.h>
-#include <string.h>
 
 void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
 {
