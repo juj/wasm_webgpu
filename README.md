@@ -139,9 +139,9 @@ void offscreen_canvas_set_size(OffscreenCanvasId id, int width, int height);
 
 See [lib_webgpu.h](lib/lib_webgpu.h) header file for detailed documentation, and the [samples/offscreen_canvas/](samples/offscreen_canvas/) subdirectory for code snippets.
 
-When targeting OffscreenCanvas with Wasm Workers, pass the Emscripten compiler flag `-sWASM_WORKERS` for each compilation unit, and the linker flags `-sWASM_WORKERS -sENVIRONMENT=web,worker` for the final link.
+When targeting OffscreenCanvas with Wasm Workers, pass the Emscripten compiler flag `-sWASM_WORKERS` for each compilation unit, and the linker flags `-sWASM_WORKERS -sENVIRONMENT=web,worker` for the final link. There is no need to pass the Emscripten `-sOFFSCREENCANVAS_SUPPORT` or `-sOFFSCREENCANVASES_TO_PTHREAD=` linker flags in this mode (doing so will just increase generated code size for no gain)
 
-When targeting OffscreenCanvas with pthreads, pass the Emscripten compiler flag `-pthread` for each compilation unit, and the linker flags `-pthread -sENVIRONMENT=web,worker` for the final link.
+When targeting OffscreenCanvas with pthreads, pass the Emscripten compiler flag `-pthread` for each compilation unit, and the linker flags `-pthread -sENVIRONMENT=web,worker` for the final link. Likewise, in this mode there is no need to specify the Emscripten `-sOFFSCREENCANVAS_SUPPORT` and `-sOFFSCREENCANVASES_TO_PTHREAD=` linker flags.
 
 Finally, when targeting OffscreenCanvas with the proxy-to-pthread option, pass the Emscripten compiler flag `-pthread` for each compilation unit, and the linker flags `-pthread -sENVIRONMENT=web,worker -sOFFSCREENCANVAS_SUPPORT -sOFFSCREENCANVASES_TO_PTHREAD=#canvas -lGL -sPROXY_TO_PTHREAD` for the final link. Note that the linkage to the WebGL support library is needed here for historical reasons. This might change in the future.
 
