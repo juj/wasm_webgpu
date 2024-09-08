@@ -8,7 +8,7 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
 {
   WGPU_FEATURES_BITFIELD features = wgpu_device_get_features(device);
 
-  assert(features == WGPU_FEATURE_SHADER_F16); // Should have exactly only the WGPU_FEATURE_SHADER_F16 feature.
+  assert(features == (WGPU_FEATURE_SHADER_F16 | WGPU_FEATURE_DEPTH_CLIP_CONTROL)); // Should have exactly only the requested features.
 
   EM_ASM(window.close());
 }
@@ -16,7 +16,7 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
 void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
 {
   WGpuDeviceDescriptor desc = {};
-  desc.requiredFeatures = WGPU_FEATURE_SHADER_F16; // Ask for a single feature. This test assumes that the test device can handle this.
+  desc.requiredFeatures = WGPU_FEATURE_SHADER_F16 | WGPU_FEATURE_DEPTH_CLIP_CONTROL; // Ask for two features. This test assumes that the test device can handle this.
   wgpu_adapter_request_device_async(adapter, &desc, ObtainedWebGpuDevice, 0);
 }
 
