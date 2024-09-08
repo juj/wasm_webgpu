@@ -79,7 +79,7 @@ A few exceptions to this are done in the name of accommodating better Wasm<->JS 
 
 If you are pondering whether to use this repository or the [WebGPU support header provided in the Emscripten repository](https://github.com/emscripten-core/emscripten/tree/main/system/include/webgpu), this 1:1 API mapping with JS point is the main difference between the two interfaces. The Emscripten WebGPU header allows targeting WebGPU by using the [Dawn WebGPU](https://dawn.googlesource.com/dawn/+/refs/heads/main/README.md) C/C++ API as a reference, whereas this repository allows targeting WebGPU via the [JavaScript Browser API](https://www.w3.org/TR/webgpu/) as a reference.
 
-### 🚀 Best performance and Minimal code size
+### 🚀 Fast performance and Minimal code size
 
 The primary design goal of the library is to provide absolutely best runtime speed and minimal generated code size overhead, carefully shaving down every individual byte possible. The intent is to enable using this library in extremely code size constrained deployment scenarios.
 
