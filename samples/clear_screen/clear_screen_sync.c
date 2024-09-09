@@ -15,7 +15,6 @@ int main(int argc, char **argv)
 {
   WGpuAdapter adapter = navigator_gpu_request_adapter_sync_simple();
   WGpuDevice device = wgpu_adapter_request_device_sync_simple(adapter);
-  WGpuQueue queue = wgpu_device_get_queue(device);
 
   WGpuCanvasContext canvasContext = wgpu_canvas_get_webgpu_context("canvas");
 
@@ -43,7 +42,7 @@ int main(int argc, char **argv)
     passDesc.colorAttachments = &colorAttachment;
 
     wgpu_render_pass_encoder_end(wgpu_command_encoder_begin_render_pass_1color_0depth(encoder, &passDesc));
-    wgpu_queue_submit_one_and_destroy(queue, wgpu_command_encoder_finish(encoder));
+    wgpu_queue_submit_one_and_destroy(wgpu_device_get_queue(device), wgpu_command_encoder_finish(encoder));
 
     // This sample shows how to use a synchronous-looking infinite rendering loop,
     // where the following function yields back to the browser event loop using
