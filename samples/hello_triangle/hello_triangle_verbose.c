@@ -7,7 +7,6 @@
 WGpuAdapter adapter;
 WGpuCanvasContext canvasContext;
 WGpuDevice device;
-WGpuQueue queue;
 WGpuRenderPipeline renderPipeline;
 
 void uncapturedError(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage, void *userData)
@@ -51,9 +50,9 @@ WGPU_BOOL raf(double time, void *userData)
   WGpuCommandBuffer commandBuffer = wgpu_command_encoder_finish(encoder);
   assert(wgpu_is_command_buffer(commandBuffer));
 
-  wgpu_queue_submit_one_and_destroy(queue, commandBuffer);
+  wgpu_queue_submit_one_and_destroy(wgpu_device_get_queue(device), commandBuffer);
 
-  wgpu_queue_set_on_submitted_work_done_callback(queue, onSubmittedWorkDone, 0);
+  wgpu_queue_set_on_submitted_work_done_callback(wgpu_device_get_queue(device), onSubmittedWorkDone, 0);
 
   static int numLiveObjects = 0;
   int numLiveNow = wgpu_get_num_live_objects();
@@ -84,9 +83,6 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
   wgpu_object_get_label(device, deviceLabel, sizeof(deviceLabel));
   printf("Got device, set label: \"%s\"\n", deviceLabel);
   assert(!strcmp(deviceLabel, "My WebGPU device"));
-
-  queue = wgpu_device_get_queue(device);
-  assert(wgpu_is_queue(queue));
 
   // TODO: read device.features and device.limits;
 

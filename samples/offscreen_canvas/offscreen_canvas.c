@@ -7,7 +7,6 @@
 
 WGpuAdapter adapter;
 WGpuDevice device;
-WGpuQueue queue;
 WGpuCanvasContext canvasContext;
 OffscreenCanvasId canvasId;
 emscripten_wasm_worker_t worker;
@@ -71,7 +70,6 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData) // runs in worker
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData) // runs in worker thread
 {
   device = result;
-  queue = wgpu_device_get_queue(device);
 
   // 6. Instead of using the usual main thread function
   //      wgpu_canvas_get_webgpu_context(cssSelector);
@@ -121,7 +119,7 @@ WGPU_BOOL raf(double time, void *userData) // runs in worker thread
   passDesc.colorAttachments = &colorAttachment;
 
   wgpu_render_pass_encoder_end(wgpu_command_encoder_begin_render_pass_1color_0depth(encoder, &passDesc));
-  wgpu_queue_submit_one_and_destroy(queue, wgpu_command_encoder_finish(encoder));
+  wgpu_queue_submit_one_and_destroy(wgpu_device_get_queue(device), wgpu_command_encoder_finish(encoder));
 
   return EM_TRUE;
 }

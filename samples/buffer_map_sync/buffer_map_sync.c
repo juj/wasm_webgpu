@@ -10,7 +10,6 @@
 WGpuAdapter adapter;
 WGpuCanvasContext canvasContext;
 WGpuDevice device;
-WGpuQueue queue;
 WGpuRenderPipeline renderPipeline;
 WGpuBuffer stagingBuffer, renderBuffer;
 
@@ -50,7 +49,7 @@ WGPU_BOOL raf(double time, void *userData)
   wgpu_render_pass_encoder_end(pass);
 
   WGpuCommandBuffer commandBuffer = wgpu_command_encoder_finish(encoder);
-  wgpu_queue_submit_one_and_destroy(queue, commandBuffer);
+  wgpu_queue_submit_one_and_destroy(wgpu_device_get_queue(device), commandBuffer);
 
   assert(wgpu_get_num_live_objects() < 100); // Check against programming errors from Wasm<->JS WebGPU object leaks
   return EM_TRUE;
@@ -63,9 +62,6 @@ int main()
 
   WGpuDeviceDescriptor deviceDesc = {};
   device = wgpu_adapter_request_device_sync(adapter, &deviceDesc);
-
-  assert(device);
-  queue = wgpu_device_get_queue(device);
 
   canvasContext = wgpu_canvas_get_webgpu_context("canvas");
 

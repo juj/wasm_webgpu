@@ -8,7 +8,6 @@
 
 WGpuAdapter adapter;
 WGpuDevice device;
-WGpuQueue queue;
 WGpuCanvasContext canvasContext;
 
 void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData);
@@ -37,7 +36,6 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
 {
   device = result;
-  queue = wgpu_device_get_queue(device);
 
   // 3. Search for an OffscreenCanvas using a CSS ID.
   //    For this call to find the right canvas, it is also necessary to set
@@ -87,7 +85,7 @@ WGPU_BOOL raf(double time, void *userData) // runs in pthread
   passDesc.colorAttachments = &colorAttachment;
 
   wgpu_render_pass_encoder_end(wgpu_command_encoder_begin_render_pass_1color_0depth(encoder, &passDesc));
-  wgpu_queue_submit_one_and_destroy(queue, wgpu_command_encoder_finish(encoder));
+  wgpu_queue_submit_one_and_destroy(wgpu_device_get_queue(device), wgpu_command_encoder_finish(encoder));
 
   return EM_TRUE;
 }
