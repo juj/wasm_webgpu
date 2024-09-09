@@ -1,5 +1,3 @@
-#include <assert.h>
-#include <stdio.h>
 #include <math.h>
 #include <emscripten/em_math.h>
 #include "lib_webgpu.h"
@@ -56,6 +54,5 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
 
 int main(int argc, char **argv)
 {
-  assert(navigator_gpu_available());
   navigator_gpu_request_adapter_async_simple(ObtainedWebGpuAdapter);
 }
