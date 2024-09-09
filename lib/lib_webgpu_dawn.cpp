@@ -2095,24 +2095,6 @@ WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder 
   return _wgpu_store(kWebGPURenderPassEncoder, renderPassEncoder);
 }
 
-WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass_1color_0depth(WGpuCommandEncoder commandEncoder, const WGpuRenderPassDescriptor *renderPassDesc) {
-  assert(wgpu_is_command_encoder(commandEncoder));
-  assert(renderPassDesc);
-
-  WGPURenderPassDescriptor _desc = {};
-  _desc.colorAttachmentCount = 1;
-  WGPURenderPassColorAttachment _attachment = getColorAttachInfo(renderPassDesc->colorAttachments[0]);
-  _desc.colorAttachments = &_attachment;
-  _desc.depthStencilAttachment = nullptr;
-  _desc.occlusionQuerySet = _wgpu_get_dawn<WGPUQuerySet>(renderPassDesc->occlusionQuerySet);
-  _desc.timestampWrites = nullptr;
-  _desc.label = nullptr;
-  _desc.nextInChain = nullptr;
-
-  WGPURenderPassEncoder renderPassEncoder = wgpuCommandEncoderBeginRenderPass(_wgpu_get_dawn<WGPUCommandEncoder>(commandEncoder), &_desc);
-  return _wgpu_store(kWebGPURenderPassEncoder, renderPassEncoder);
-}
-
 WGpuComputePassEncoder wgpu_command_encoder_begin_compute_pass(WGpuCommandEncoder commandEncoder, const WGpuComputePassDescriptor *computePassDesc) {
   assert(wgpu_is_command_encoder(commandEncoder));
 

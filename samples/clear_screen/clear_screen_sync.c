@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     passDesc.numColorAttachments = 1;
     passDesc.colorAttachments = &colorAttachment;
 
-    wgpu_render_pass_encoder_end(wgpu_command_encoder_begin_render_pass_1color_0depth(encoder, &passDesc));
+    wgpu_render_pass_encoder_end(wgpu_command_encoder_begin_render_pass(encoder, &passDesc));
     wgpu_queue_submit_one_and_destroy(wgpu_device_get_queue(device), wgpu_command_encoder_finish(encoder));
 
     // This sample shows how to use a synchronous-looking infinite rendering loop,
