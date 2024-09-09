@@ -3,7 +3,10 @@
 
 #include <stdio.h>
 #include <emscripten/em_math.h>
+#include <math.h>
 #include "lib_webgpu.h"
+
+#define HUE2COLOR(hue) fmax(0.0, fmin(1.0, 2.0 - fabs(emscripten_math_fmod((hue), 6.0) - 3.0)))
 
 WGpuAdapter adapter;
 WGpuDevice device;
@@ -91,15 +94,6 @@ void ObtainedWebGpuDevice(WGpuDevice result, void *userData) // runs in worker t
   wgpu_request_animation_frame_loop(raf, 0);
 }
 
-double hue2color(double hue) // runs in worker thread
-{
-  hue = emscripten_math_fmod(hue, 1.0);
-  if (hue < 1.0 / 6.0) return 6.0 * hue;
-  if (hue < 1.0 / 2.0) return 1;
-  if (hue < 2.0 / 3.0) return 4.0 - 6.0 * hue;
-  return 0;
-}
-
 WGPU_BOOL raf(double time, void *userData) // runs in worker thread
 {
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder_simple(device);
@@ -107,10 +101,10 @@ WGPU_BOOL raf(double time, void *userData) // runs in worker thread
   WGpuRenderPassColorAttachment colorAttachment = WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEFAULT_INITIALIZER;
   colorAttachment.view = wgpu_canvas_context_get_current_texture_view(canvasContext);
 
-  double hue = time * 0.00005;
-  colorAttachment.clearValue.r = hue2color(hue + 1.0 / 3.0);
-  colorAttachment.clearValue.g = hue2color(hue);
-  colorAttachment.clearValue.b = hue2color(hue - 1.0 / 3.0);
+  double hue = time * 0.0005;
+  colorAttachment.clearValue.r = HUE2COLOR(hue + 2.0);
+  colorAttachment.clearValue.g = HUE2COLOR(hue);
+  colorAttachment.clearValue.b = HUE2COLOR(hue - 2.0);
   colorAttachment.clearValue.a = 1.0;
   colorAttachment.loadOp = WGPU_LOAD_OP_CLEAR;
 
