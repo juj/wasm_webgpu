@@ -12,6 +12,39 @@
 
 var canvas = document.querySelector('canvas');
 
+function resizeCanvas() {
+  canvas.style.width = window.innerWidth + 'px';
+  canvas.style.height = window.innerHeight + 'px';
+  if (!canvas.isOffscreen) {
+    canvas.width = Math.round(window.innerWidth * window.devicePixelRatio);
+    canvas.height = Math.round(window.innerHeight * window.devicePixelRatio);
+  }
+  if (window.resizeCallback) {
+    getWasmTableEntry(window.resizeCallback)();
+  }
+}
+
+if (!location.search.includes('windowed')) {
+  resizeCanvas();
+  onresize = resizeCanvas;
+}
+
+if (location.search.includes('thumbnail')) {
+  // Save the canvas to file when clicking on it.
+  // Not working: https://bugs.chromium.org/p/chromium/issues/detail?id=1175665
+  canvas.onclick = function() {
+    var img = canvas.toDataURL("image/png");
+    var a = document.createElement('a');
+    a.href = img;
+    a.download = 'canvas.png';
+    a.click();
+  }
+}
+
+#if WASM == 2
+  var supportsWasm = window.WebAssembly && location.search.indexOf('_rwasm=0') < 0;
+#endif
+
 // Depending on the build flags that one uses, different files need to be downloaded
 // to load the compiled page. The right set of files will be expanded to be downloaded
 // via the directive below.
