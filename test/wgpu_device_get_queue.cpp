@@ -8,10 +8,12 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
 {
   WGpuQueue queue = wgpu_device_get_queue(device);
   assert(queue);
+  assert(wgpu_get_num_live_objects() == 3); // Adapter, Device and Queue
 
   WGpuQueue queue2 = wgpu_device_get_queue(device);
 
   assert(queue == queue2); // Asking for the same queue multiple times should return the same object.
+  assert(wgpu_get_num_live_objects() == 3); // And should not increase the live object count.
 
   char label[32];
   wgpu_object_get_label(queue, label, sizeof(label));
