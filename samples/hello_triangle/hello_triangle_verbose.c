@@ -63,7 +63,7 @@ WGPU_BOOL raf(double time, void *userData)
   }
   assert(wgpu_get_num_live_objects() < 100); // Check against programming errors from Wasm<->JS WebGPU object leaks
 
-  return EM_FALSE;//EM_TRUE; // This is static content, but keep rendering to debug leaking WebGPU objects above
+  return EM_TRUE; // This is static content, but keep rendering to debug leaking WebGPU objects above
 }
 
 void ObtainedWebGpuDevice(WGpuDevice result, void *userData)
