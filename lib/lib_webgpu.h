@@ -48,7 +48,7 @@
 
 // This macro allows structs that contain pointers to be explicitly aligned up to 8 bytes so that
 // even in 32-bit pointer builds, struct alignments are checked to match against Wasm64 builds.
-#define _WGPU_ALIGN_TO_64BITS __attribute__((aligned(8)))
+#define _WGPU_ALIGN_TO_64BITS alignas(8)
 
 // The _WGPU_PTR_PADDING() macro pads pointers in 32-bit builds up to 64-bits so that memory layout
 // of WebGPU structures is identical in 32-bit and 64-bit builds. This way the JS side marshalling

@@ -31,6 +31,7 @@ const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {
   WGPU_TEXTURE_DIMENSION_2D, /* dimension */
   0, /* format */
   0, /* usage */
+  0, /* unused_padding */
 };
 
 const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER = {
@@ -132,9 +133,11 @@ const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER = {
   WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT, /* usage */
   0, /* numViewFormats */
   nullptr, /* viewFormats */
+  PTR_PAD_ZERO
   HTML_PREDEFINED_COLOR_SPACE_SRGB, /* colorSpace */
   WGPU_CANVAS_TONE_MAPPING_DEFAULT_INITIALIZER, /* toneMapping */
   WGPU_CANVAS_ALPHA_MODE_OPAQUE, /* alphaMode */
+  0 /* unused_padding */
 };
 
 const WGpuRenderPassTimestampWrites WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER = {
@@ -144,13 +147,13 @@ const WGpuRenderPassTimestampWrites WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_IN
 };
 
 const WGpuRenderPassDescriptor WGPU_RENDER_PASS_DESCRIPTOR_DEFAULT_INITIALIZER = {
-  0, /* numColorAttachments */
+  0, /* maxDrawCount */
   0, /* colorAttachments */
+  0, /* unused_padding */
+  0, /* numColorAttachments */
   WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER, /* depthStencilAttachment */
   0, /* occlusionQuerySet */
-  0, /* maxDrawCount */
   WGPU_RENDER_PASS_TIMESTAMP_WRITES_DEFAULT_INITIALIZER, /* timestampWrites */
-  0 /* unusedPadding */
 };
 
 const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {
@@ -172,12 +175,16 @@ const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {
 
 const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITIALIZER = {
   { /* vertex */
-    0, /* module */
     nullptr, /* entryPoint */
-    0, /* numBuffers */
+    PTR_PAD_ZERO
     nullptr, /* buffers */
-    0, /* numConstants */
+    PTR_PAD_ZERO
     nullptr, /* constants */
+    PTR_PAD_ZERO
+    0, /* module */
+    0, /* numBuffers */
+    0, /* numConstants */
+    0, /* unused_padding */
   },
   { /* primitive */
     WGPU_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, /* topology */
@@ -214,15 +221,21 @@ const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITI
     0xFFFFFFFFu, /* mask */
     false /* alphaToCoverageEnabled */
   },
+  0, /* unused_padding */
   { /* fragment */
-    0, /* module */
     nullptr, /* entryPoint */
-    0, /* numTargets */
+    PTR_PAD_ZERO
     nullptr, /* targets */
+    PTR_PAD_ZERO
+    nullptr, /* constants */
+    PTR_PAD_ZERO
+    0, /* module */
+    0, /* numTargets */
     0, /* numConstants */
-    nullptr /* constants */
+    0, /* unused_padding */
   },
-  0 /* layout */
+  0, /* layout */
+  0, /* unused_padding */
 };
 
 extern const WGpuExtent3D WGPU_EXTENT_3D_DEFAULT_INITIALIZER = {

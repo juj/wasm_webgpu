@@ -104,6 +104,7 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_DepthClipControl,
   WGPUFeatureName_Depth32FloatStencil8,
   WGPUFeatureName_TextureCompressionBC,
+  WGPUFeatureName_Undefined, // WGPU_FEATURE_TEXTURE_COMPRESSION_BC_SLICED_3D
   WGPUFeatureName_TextureCompressionETC2,
   WGPUFeatureName_TextureCompressionASTC,
   WGPUFeatureName_TimestampQuery,
@@ -112,9 +113,10 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_RG11B10UfloatRenderable,
   WGPUFeatureName_BGRA8UnormStorage,
   WGPUFeatureName_Float32Filterable,
-  WGPUFeatureName_ClipDistances,
+  WGPUFeatureName_Undefined, // WGPU_FEATURE_CLIP_DISTANCES
+  WGPUFeatureName_Undefined, // WGPU_FEATURE_DUAL_SOURCE_BLENDING
 };
-const int _wgpu_num_features = 12;
+const int _wgpu_num_features = 13;
 
 const WGPUPowerPreference WGPU_POWER_PREFERENCE_to_Dawn[] = {
   WGPUPowerPreference_Undefined,
