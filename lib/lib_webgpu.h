@@ -2768,7 +2768,7 @@ enum GPUErrorFilter {
 };
 */
 typedef int WGPU_ERROR_FILTER;
-#define WGPU_ERROR_FILTER_INVALID       0
+#define WGPU_ERROR_FILTER_NO_ERROR      0
 #define WGPU_ERROR_FILTER_OUT_OF_MEMORY 1
 #define WGPU_ERROR_FILTER_VALIDATION    2
 #define WGPU_ERROR_FILTER_INTERNAL      3
@@ -2781,7 +2781,10 @@ partial interface GPUDevice {
 */
 void wgpu_device_push_error_scope(WGpuDevice device, WGPU_ERROR_FILTER filter);
 
-typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage NOTNULL, void *userData);
+// Callback type for popped error scopes.
+// errorType: The type of error that occurred, or WGPU_ERROR_FILTER_NO_ERROR.
+// errorMessage: Points to string message of the error, or null pointer if no error occurred.
+typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage, void *userData);
 void wgpu_device_pop_error_scope_async(WGpuDevice device, WGpuDeviceErrorCallback callback, void *userData);
 
 /*
