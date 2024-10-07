@@ -2787,6 +2787,11 @@ void wgpu_device_push_error_scope(WGpuDevice device, WGPU_ERROR_FILTER filter);
 typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage, void *userData);
 void wgpu_device_pop_error_scope_async(WGpuDevice device, WGpuDeviceErrorCallback callback, void *userData);
 
+// Synchronously pop an error scope.
+// Returns the type of an error that occurred, or WGPU_ERROR_FILTER_NO_ERROR if no error.
+// dstErrorMessage: A pointer to a buffer area to receive the error message, if one exists.
+// errorMessageLength: Number of bytes that can be written to dstErrorMessage.
+WGPU_ERROR_TYPE wgpu_device_pop_error_scope_sync(WGpuDevice device, char *dstErrorMessage, int errorMessageLength);
 /*
 [
     Exposed=(Window, DedicatedWorker)
