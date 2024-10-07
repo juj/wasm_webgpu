@@ -46,7 +46,7 @@ int main()
   wgpu_buffer_map_sync(dstBuffer, WGPU_MAP_MODE_READ);
   wgpu_buffer_get_mapped_range(dstBuffer, 0);
   wgpu_buffer_read_mapped_range(dstBuffer, 0, 0, &dstData, sizeof(dstData));
-  printf("Got: 0x%llx, expected: 0x%llx\n", data, dstData);
+  printf("Got: 0x%llx, expected: 0x%llx\n", dstData, data);
   assert(data == dstData);
 
   EM_ASM(window.close());
