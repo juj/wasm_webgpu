@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-WGpuAdapter adapter;
 bool no_error = true;
 
 void OnError(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage, void *userData)
@@ -125,9 +124,8 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
   wgpu_buffer_map_async(buffer2, bufferCallback, 0, WGPU_MAP_MODE_READ);
 }
 
-void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
+void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
 {
-  adapter = result;
   WGpuDeviceDescriptor desc = {};
   desc.requiredFeatures = WGPU_FEATURE_TIMESTAMP_QUERY; // This test needs timestamp queries to be supported.
   wgpu_adapter_request_device_async(adapter, &desc, ObtainedWebGpuDevice, 0);
