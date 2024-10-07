@@ -4,8 +4,10 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--browser',
                     help='Specifies the browser executable to run the tests in.')
+parser.add_argument('--bigint', action='store_true',
+                    help='If true, runs test suite in Emscripten -sWASM_BIGINT mode.')
 parser.add_argument('--wasm64', action='store_true',
-                    help='If true, runs test suite in 64-bit Wasm mode.')
+                    help='If true, runs test suite in 64-bit Wasm mode. This implies -sWASM_BIGINT mode.')
 parser.add_argument('--std_cpp11', action='store_true',
                     help='If true, runs test suite in -std=c++11 mode.')
 parser.add_argument('tests_to_run',nargs='*')
@@ -41,6 +43,8 @@ cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp11.cpp' if options.s
 
 if options.wasm64:
   cmd += ['-sMEMORY64']
+elif options.bigint:
+  cmd += ['-sWASM_BIGINT']
 
 failures = []
 passes = 0
