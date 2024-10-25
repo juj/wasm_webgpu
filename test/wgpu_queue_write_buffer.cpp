@@ -43,12 +43,12 @@ int main()
   if (strlen(msg) > 0) printf("%s\n", msg);
   assert(!error);
 
-  uint64_t dstData;
+  uint64_t *dstData = (uint64_t *)malloc(sizeof(uint64_t));
   wgpu_buffer_map_sync(dstBuffer, WGPU_MAP_MODE_READ);
   wgpu_buffer_get_mapped_range(dstBuffer, 0);
-  wgpu_buffer_read_mapped_range(dstBuffer, 0, 0, &dstData, sizeof(dstData));
-  printf("Got: 0x%llx, expected: 0x%llx\n", dstData, *data);
-  assert(*data == dstData);
+  wgpu_buffer_read_mapped_range(dstBuffer, 0, 0, dstData, sizeof(uint64_t));
+  printf("Got: 0x%llx, expected: 0x%llx\n", *dstData, *data);
+  assert(*data == *dstData);
 
   EM_ASM(window.close());
 }
