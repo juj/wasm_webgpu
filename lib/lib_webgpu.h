@@ -46,6 +46,14 @@
 #define WGPU_TRUE 1
 #define WGPU_FALSE 0
 
+// This macro allows structs that contain pointers to be explicitly aligned up to 8 bytes so that
+// even in 32-bit pointer builds, struct alignments are checked to match against Wasm64 builds.
+#if __cplusplus >= 201103L
+#define _WGPU_ALIGN_TO_64BITS alignas(8)
+#else
+#define _WGPU_ALIGN_TO_64BITS __attribute__((aligned(8)))
+#endif
+
 // The _WGPU_PTR_PADDING() macro pads pointers in 32-bit builds up to 64-bits so that memory layout
 // of WebGPU structures is identical in 32-bit and 64-bit builds. This way the JS side marshalling
 // can stay the same (except for reading pointers).
@@ -437,7 +445,7 @@ WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter);
 dictionary GPUQueueDescriptor : GPUObjectDescriptorBase {
 };
 */
-typedef struct alignas(8) WGpuQueueDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuQueueDescriptor
 {
   const char *label;
   _WGPU_PTR_PADDING(0);
@@ -724,7 +732,7 @@ dictionary GPUTextureDescriptor : GPUObjectDescriptorBase {
     sequence<GPUTextureFormat> viewFormats = [];
 };
 */
-typedef struct alignas(8) WGpuTextureDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuTextureDescriptor
 {
   WGPU_TEXTURE_FORMAT *viewFormats;
   _WGPU_PTR_PADDING(0);
@@ -1462,7 +1470,7 @@ dictionary GPUShaderModuleCompilationHint {
     (GPUPipelineLayout or GPUAutoLayoutMode) layout;
 };
 */
-typedef struct alignas(8) WGpuShaderModuleCompilationHint
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuShaderModuleCompilationHint
 {
   const char *entryPoint;
   _WGPU_PTR_PADDING(0);
@@ -1477,7 +1485,7 @@ dictionary GPUShaderModuleDescriptor : GPUObjectDescriptorBase {
     sequence<GPUShaderModuleCompilationHint> compilationHints = [];
 };
 */
-typedef struct alignas(8) WGpuShaderModuleDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuShaderModuleDescriptor
 {
   const char *code;
   _WGPU_PTR_PADDING(0);
@@ -1512,7 +1520,7 @@ interface GPUCompilationMessage {
     readonly attribute unsigned long long length;
 };
 */
-typedef struct alignas(8) WGpuCompilationMessage
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuCompilationMessage
 {
   // A human-readable string containing the message generated during the shader compilation.
   char *message;
@@ -1604,7 +1612,7 @@ dictionary GPUProgrammableStage {
 typedef double GPUPipelineConstantValue; // May represent WGSL’s bool, f32, i32, u32, and f16 if enabled.
 */
 
-typedef struct alignas(8) WGpuPipelineConstant
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuPipelineConstant
 {
   const char *name;
   _WGPU_PTR_PADDING(0);
@@ -1737,7 +1745,7 @@ dictionary GPUFragmentState: GPUProgrammableStage {
     required sequence<GPUColorTargetState?> targets;
 };
 */
-typedef struct alignas(8) WGpuFragmentState
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuFragmentState
 {
   const char *entryPoint;
   _WGPU_PTR_PADDING(0);
@@ -2027,7 +2035,7 @@ dictionary GPUVertexState: GPUProgrammableStage {
     sequence<GPUVertexBufferLayout?> buffers = [];
 };
 */
-typedef struct alignas(8) WGpuVertexState
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuVertexState
 {
   const char *entryPoint;
   _WGPU_PTR_PADDING(0);
@@ -2053,7 +2061,7 @@ dictionary GPUVertexBufferLayout {
     required sequence<GPUVertexAttribute> attributes;
 };
 */
-typedef struct alignas(8) WGpuVertexBufferLayout
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuVertexBufferLayout
 {
   const WGpuVertexAttribute *attributes;
   _WGPU_PTR_PADDING(0);
@@ -2922,7 +2930,7 @@ dictionary GPUCanvasConfiguration : GPUObjectDescriptorBase {
     GPUCanvasAlphaMode alphaMode = "opaque";
 };
 */
-typedef struct alignas(8) WGpuCanvasConfiguration
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuCanvasConfiguration
 {
   WGpuDevice device;
   WGPU_TEXTURE_FORMAT format;
@@ -2963,7 +2971,7 @@ dictionary GPURenderPassDescriptor : GPUObjectDescriptorBase {
     GPUSize64 maxDrawCount = 50000000;
 };
 */
-typedef struct alignas(8) WGpuRenderPassDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuRenderPassDescriptor
 {
   double_int53_t maxDrawCount; // If set to zero, the default value (50000000) will be used.
   const WGpuRenderPassColorAttachment *colorAttachments;
@@ -3064,7 +3072,7 @@ typedef struct WGpuColorTargetState
 } WGpuColorTargetState;
 extern const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER;
 
-typedef struct alignas(8) WGpuRenderPipelineDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuRenderPipelineDescriptor
 {
   WGpuVertexState vertex;
   WGpuPrimitiveState primitive;
