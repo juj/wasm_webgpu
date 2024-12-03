@@ -74,7 +74,8 @@ extern "C" {
 #endif
 
 
-// Returns the number of WebGPU objects referenced by the WebGPU JS library.
+// Returns the number of WebGPU objects referenced by the WebGPU JS library. N.b. aim to use this function only for debugging purposes, as it
+// takes O(n) time to enumerate through all live objects.
 uint32_t wgpu_get_num_live_objects(void);
 
 // Calls .destroy() on the given WebGPU object (if it has such a member function) and releases the JS side reference to it. Use this function
