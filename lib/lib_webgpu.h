@@ -359,7 +359,13 @@ WGpuAdapter navigator_gpu_request_adapter_sync(const WGpuRequestAdapterOptions *
 void navigator_gpu_request_adapter_async_simple(WGpuRequestAdapterCallback adapterCallback);
 WGpuAdapter navigator_gpu_request_adapter_sync_simple(void);
 
+#ifdef __EMSCRIPTEN__
 WGPU_TEXTURE_FORMAT navigator_gpu_get_preferred_canvas_format(void);
+#else
+// Dawn requires the adapter and canvas context to get the preferred format.
+WGPU_TEXTURE_FORMAT navigator_gpu_get_preferred_canvas_format(WGpuAdapter adapter, WGpuCanvasContext canvasContext);
+#endif
+
 
 // Returns an array of strings representing supported WGSL language features. The array of strings is terminated by a null string.
 // If you do not need to enumerate though all supported language features, you can use the simpler navigator_gpu_is_wgsl_language_feature_supported()
