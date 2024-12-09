@@ -104,7 +104,7 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_DepthClipControl,
   WGPUFeatureName_Depth32FloatStencil8,
   WGPUFeatureName_TextureCompressionBC,
-  WGPUFeatureName_Undefined, // WGPU_FEATURE_TEXTURE_COMPRESSION_BC_SLICED_3D
+  WGPUFeatureName_Force32, // WGPU_FEATURE_TEXTURE_COMPRESSION_BC_SLICED_3D, no Dawn equivalent
   WGPUFeatureName_TextureCompressionETC2,
   WGPUFeatureName_TextureCompressionASTC,
   WGPUFeatureName_TimestampQuery,
@@ -113,8 +113,8 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_RG11B10UfloatRenderable,
   WGPUFeatureName_BGRA8UnormStorage,
   WGPUFeatureName_Float32Filterable,
-  WGPUFeatureName_Undefined, // WGPU_FEATURE_CLIP_DISTANCES
-  WGPUFeatureName_Undefined, // WGPU_FEATURE_DUAL_SOURCE_BLENDING
+  WGPUFeatureName_ClipDistances,
+  WGPUFeatureName_DualSourceBlending,
 };
 const int _wgpu_num_features = 13;
 
@@ -540,7 +540,7 @@ const WGPUIndexFormat WGPU_INDEX_FORMAT_to_Dawn[] = {
 #define wgpu_index_format_to_dawn(format) WGPU_INDEX_FORMAT_to_Dawn[format]
 
 const WGPUVertexFormat WGPU_VERTEX_FORMAT_to_Dawn[] = {
-  WGPUVertexFormat_Undefined,
+  WGPUVertexFormat_Force32,
   WGPUVertexFormat_Uint8x2,
   WGPUVertexFormat_Uint8x4,
   WGPUVertexFormat_Sint8x2,
@@ -573,7 +573,7 @@ const WGPUVertexFormat WGPU_VERTEX_FORMAT_to_Dawn[] = {
   WGPUVertexFormat_Sint32x4,
   WGPUVertexFormat_Unorm10_10_10_2
 };
-#define wgpu_vertex_format_to_dawn(format) (format == 0 ? WGPUVertexFormat_Undefined : WGPU_VERTEX_FORMAT_to_Dawn[format - (WGPU_VERTEX_FORMAT_UINT8X2 - 1)])
+#define wgpu_vertex_format_to_dawn(format) (format == 0 ? WGPUVertexFormat_Force32 : WGPU_VERTEX_FORMAT_to_Dawn[format - (WGPU_VERTEX_FORMAT_UINT8X2 - 1)])
 
 const WGPUVertexStepMode WGPU_VERTEX_STEP_MODE_to_Dawn[] = {
   WGPUVertexStepMode_VertexBufferNotUsed,
@@ -623,6 +623,13 @@ WGPU_DEVICE_LOST_REASON Dawn_to_WGPU_DEVICE_LOST_REASON[] = {
 };
 #define dawn_to_wgpu_device_lost_reason(reason) Dawn_to_WGPU_DEVICE_LOST_REASON[reason]
 
+const WGPUCompositeAlphaMode WGPU_CANVAS_ALPHA_MODE_to_Dawn[] = {
+  WGPUCompositeAlphaMode_Force32,
+  WGPUCompositeAlphaMode_Opaque,
+  WGPUCompositeAlphaMode_Premultiplied
+};
+#define wgpu_canvas_alpha_mode_to_dawn(alphaMode) WGPU_CANVAS_ALPHA_MODE_to_Dawn[alphaMode]
+
 //////////////////////////////////////////////////////////////////////
 
 #ifdef DAWN_UNSAFE_API
@@ -643,8 +650,6 @@ static dawn::native::Instance& GetDawnInstance() {
 
 struct _WGpuCanvasContext {
   WGPUSurface surface;
-  WGPUSwapChain swapChain;
-  DawnProcTable procTable;
 };
 
 // Returns the number of leading zeros.
@@ -840,10 +845,10 @@ WGpuCanvasContext wgpu_canvas_get_webgpu_context(void *hwnd) {
   WGPUSurfaceDescriptor surfaceDesc{};
 
 #ifdef _WIN32
-  WGPUSurfaceDescriptorFromWindowsHWND chainedDesc;
+  WGPUSurfaceSourceWindowsHWND chainedDesc = WGPU_SURFACE_SOURCE_WINDOWS_HWND_INIT;
   chainedDesc.hinstance = GetModuleHandle(NULL);
   chainedDesc.hwnd = hwnd;
-  chainedDesc.chain = { nullptr, WGPUSType_SurfaceDescriptorFromWindowsHWND };
+  chainedDesc.chain = { nullptr, WGPUSType_SurfaceSourceWindowsHWND };
   surfaceDesc.nextInChain = reinterpret_cast<WGPUChainedStruct*>(&chainedDesc);
 #endif
 
@@ -862,58 +867,58 @@ void wgpu_object_set_label(WGpuObjectBase objBase, const char* label) {
   assert(obj);
   switch (obj->type) {
   case kWebGPUDevice:
-    wgpuDeviceSetLabel((WGPUDevice)obj->dawnObject, label);
+    wgpuDeviceSetLabel((WGPUDevice)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUBindGroupLayout:
-    wgpuBindGroupLayoutSetLabel((WGPUBindGroupLayout)obj->dawnObject, label);
+    wgpuBindGroupLayoutSetLabel((WGPUBindGroupLayout)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUBuffer:
-    wgpuBufferSetLabel((WGPUBuffer)obj->dawnObject, label);
+    wgpuBufferSetLabel((WGPUBuffer)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUTexture:
-    wgpuTextureSetLabel((WGPUTexture)obj->dawnObject, label);
+    wgpuTextureSetLabel((WGPUTexture)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUTextureView:
-    wgpuTextureViewSetLabel((WGPUTextureView)obj->dawnObject, label);
+    wgpuTextureViewSetLabel((WGPUTextureView)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUExternalTexture:
-    wgpuExternalTextureSetLabel((WGPUExternalTexture)obj->dawnObject, label);
+    wgpuExternalTextureSetLabel((WGPUExternalTexture)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUSampler:
-    wgpuSamplerSetLabel((WGPUSampler)obj->dawnObject, label);
+    wgpuSamplerSetLabel((WGPUSampler)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUBindGroup:
-    wgpuBindGroupSetLabel((WGPUBindGroup)obj->dawnObject, label);
+    wgpuBindGroupSetLabel((WGPUBindGroup)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUPipelineLayout:
-    wgpuPipelineLayoutSetLabel((WGPUPipelineLayout)obj->dawnObject, label);
+    wgpuPipelineLayoutSetLabel((WGPUPipelineLayout)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUShaderModule:
-    wgpuShaderModuleSetLabel((WGPUShaderModule)obj->dawnObject, label);
+    wgpuShaderModuleSetLabel((WGPUShaderModule)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUComputePipeline:
-    wgpuComputePipelineSetLabel((WGPUComputePipeline)obj->dawnObject, label);
+    wgpuComputePipelineSetLabel((WGPUComputePipeline)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPURenderPipeline:
-    wgpuRenderPipelineSetLabel((WGPURenderPipeline)obj->dawnObject, label);
+    wgpuRenderPipelineSetLabel((WGPURenderPipeline)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUCommandBuffer:
-    wgpuCommandBufferSetLabel((WGPUCommandBuffer)obj->dawnObject, label);
+    wgpuCommandBufferSetLabel((WGPUCommandBuffer)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUCommandEncoder:
-    wgpuCommandEncoderSetLabel((WGPUCommandEncoder)obj->dawnObject, label);
+    wgpuCommandEncoderSetLabel((WGPUCommandEncoder)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUComputePassEncoder:
-    wgpuComputePassEncoderSetLabel((WGPUComputePassEncoder)obj->dawnObject, label);
+    wgpuComputePassEncoderSetLabel((WGPUComputePassEncoder)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPURenderPassEncoder:
-    wgpuRenderPassEncoderSetLabel((WGPURenderPassEncoder)obj->dawnObject, label);
+    wgpuRenderPassEncoderSetLabel((WGPURenderPassEncoder)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUQueue:
-    wgpuQueueSetLabel((WGPUQueue)obj->dawnObject, label);
+    wgpuQueueSetLabel((WGPUQueue)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   case kWebGPUQuerySet:
-    wgpuQuerySetSetLabel((WGPUQuerySet)obj->dawnObject, label);
+    wgpuQuerySetSetLabel((WGPUQuerySet)obj->dawnObject, WGPUStringView{label, WGPU_STRLEN });
     break;
   }
 }
@@ -970,8 +975,16 @@ WGpuAdapter navigator_gpu_request_adapter_sync_simple() {
   return navigator_gpu_request_adapter_sync(&options);
 }
 
-WGPU_TEXTURE_FORMAT navigator_gpu_get_preferred_canvas_format() {
-  return WGPUTextureFormat_BGRA8Unorm; /* TODO Figure out how to get the preferred format from Dawn */
+WGPU_TEXTURE_FORMAT navigator_gpu_get_preferred_canvas_format(WGpuAdapter adapter, WGpuCanvasContext canvasContext) {
+  assert(wgpu_is_adapter(adapter));
+  assert(wgpu_is_canvas_context(canvasContext));
+
+  _WGpuCanvasContext* context = _wgpu_get_dawn<_WGpuCanvasContext*>(canvasContext);
+  WGPUSurfaceCapabilities capabilities = WGPU_SURFACE_CAPABILITIES_INIT;
+  wgpuSurfaceGetCapabilities(context->surface, _wgpu_get_dawn<WGPUAdapter>(adapter), &capabilities);
+  assert(capabilities.formats && capabilities.formatCount > 0);
+
+  return capabilities.formats[0];
 }
 
 WGPU_BOOL wgpu_is_adapter(WGpuObjectBase object) {
@@ -1123,8 +1136,8 @@ WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDevic
 
   WGPUDeviceDescriptor _desc = {
     nullptr, /* nextInChain */
-    nullptr, /* label */
-    (uint32_t)features.size(), /* requiredFeaturesCount */
+    WGPU_STRING_VIEW_INIT, /* label */
+    features.size(), /* requiredFeaturesCount */
     features.data(), /* requiredFeatures */
     &requiredLimits, /* requiredLimits */
     0 /* defaultQueue */
@@ -1169,7 +1182,7 @@ WGpuBuffer wgpu_device_create_buffer(WGpuDevice device, const WGpuBufferDescript
   _desc.usage = wgpu_buffer_usage_to_dawn(bufferDesc->usage);
   _desc.size = bufferDesc->size;
   _desc.mappedAtCreation = bufferDesc->mappedAtCreation;
-  _desc.label = nullptr;
+  _desc.label = WGPU_STRING_VIEW_INIT;
   _desc.nextInChain = nullptr;
 
   WGPUBuffer buffer = wgpuDeviceCreateBuffer(_wgpu_get_dawn<WGPUDevice>(device), &_desc);
@@ -1186,7 +1199,7 @@ WGpuTexture wgpu_device_create_texture(WGpuDevice device, const WGpuTextureDescr
   assert(textureDesc);
 
   WGPUTextureDescriptor _desc = {};
-  _desc.usage = (WGPUTextureUsageFlags)textureDesc->usage;
+  _desc.usage = (WGPUTextureUsage)textureDesc->usage;
   _desc.dimension = wgpu_texture_dimension_to_dawn(textureDesc->dimension);
   _desc.size = WGPUExtent3D{ textureDesc->width, textureDesc->height, textureDesc->depthOrArrayLayers };
   _desc.format = wgpu_texture_format_to_dawn(textureDesc->format);
@@ -1336,9 +1349,9 @@ WGpuShaderModule wgpu_device_create_shader_module(WGpuDevice device, const WGpuS
   assert(wgpu_is_device(device));
   assert(shaderModuleDesc != nullptr);
 
-  WGPUShaderModuleWGSLDescriptor wgslDescriptor = {};
-  wgslDescriptor.code = shaderModuleDesc->code;
-  wgslDescriptor.chain = { nullptr, WGPUSType_ShaderModuleWGSLDescriptor };
+  WGPUShaderSourceWGSL wgslDescriptor = {};
+  wgslDescriptor.code = { shaderModuleDesc->code, WGPU_STRLEN } ;
+  wgslDescriptor.chain = { nullptr, WGPUSType_ShaderSourceWGSL };
 
   WGPUShaderModuleDescriptor _desc = {};
   _desc.nextInChain = reinterpret_cast<WGPUChainedStruct*>(&wgslDescriptor);
@@ -1349,7 +1362,7 @@ WGpuShaderModule wgpu_device_create_shader_module(WGpuDevice device, const WGpuS
 
 static void fillConstantsArray(const WGpuPipelineConstant* constants, uint32_t numConstants, std::vector<WGPUConstantEntry>& output) {
   for (int i = 0; i < numConstants; ++i) {
-    output[i].key = constants[i].name;
+    output[i].key = WGPUStringView{ constants[i].name, WGPU_STRLEN } ;
     output[i].value = constants[i].value;
     output[i].nextInChain = nullptr;
   }
@@ -1366,7 +1379,7 @@ WGpuComputePipeline wgpu_device_create_compute_pipeline(WGpuDevice device, WGpuS
   WGPUComputePipelineDescriptor _desc = {};
   _desc.layout = _wgpu_get_dawn<WGPUPipelineLayout>(layout);
   _desc.compute.module = _wgpu_get_dawn<WGPUShaderModule>(computeModule);
-  _desc.compute.entryPoint = entryPoint;
+  _desc.compute.entryPoint = WGPUStringView{ entryPoint, WGPU_STRLEN };
   _desc.compute.constantCount = numConstants;
   std::vector<WGPUConstantEntry> _constants(numConstants);
   _desc.compute.constants = numConstants > 0 ? _constants.data() : nullptr;
@@ -1388,7 +1401,7 @@ void wgpu_device_create_compute_pipeline_async(WGpuDevice device, WGpuShaderModu
   WGPUComputePipelineDescriptor _desc = {};
   _desc.layout = _wgpu_get_dawn<WGPUPipelineLayout>(layout);
   _desc.compute.module = _wgpu_get_dawn<WGPUShaderModule>(computeModule);
-  _desc.compute.entryPoint = entryPoint;
+  _desc.compute.entryPoint = WGPUStringView{ entryPoint, WGPU_STRLEN };
   _desc.compute.constantCount = numConstants;
   std::vector<WGPUConstantEntry> _constants(numConstants);
   _desc.compute.constants = numConstants > 0 ? _constants.data() : nullptr;
@@ -1402,7 +1415,7 @@ void wgpu_device_create_compute_pipeline_async(WGpuDevice device, WGpuShaderModu
   Data* data = new Data{device, callback, userData};
 
   wgpuDeviceCreateComputePipelineAsync(_wgpu_get_dawn<WGPUDevice>(device), &_desc,
-    [](WGPUCreatePipelineAsyncStatus status, WGPUComputePipeline pipeline, char const* message, void* userdata) {
+    [](WGPUCreatePipelineAsyncStatus status, WGPUComputePipeline pipeline, WGPUStringView message, void* userdata) {
       Data* data = (Data*)userdata;
       WGpuRenderPipeline _pipeline = _wgpu_store_and_set_parent(kWebGPUComputePipeline, pipeline, data->device);
       data->callback(data->device, nullptr, _pipeline, data->userData);
@@ -1449,7 +1462,7 @@ WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const W
     depthState.depthBiasClamp = renderPipelineDesc->depthStencil.depthBiasClamp;
     depthState.depthBiasSlopeScale = renderPipelineDesc->depthStencil.depthBiasSlopeScale;
     depthState.depthCompare = wgpu_compare_function_to_dawn(renderPipelineDesc->depthStencil.depthCompare);
-    depthState.depthWriteEnabled = renderPipelineDesc->depthStencil.depthWriteEnabled;
+    depthState.depthWriteEnabled = static_cast<WGPUOptionalBool>(renderPipelineDesc->depthStencil.depthWriteEnabled);
     depthState.format = wgpu_texture_format_to_dawn(renderPipelineDesc->depthStencil.format);
     depthState.stencilBack = fillStencilFaceState(renderPipelineDesc->depthStencil.stencilBack);
     depthState.stencilFront = fillStencilFaceState(renderPipelineDesc->depthStencil.stencilFront);
@@ -1471,7 +1484,7 @@ WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const W
   const auto& vertex = renderPipelineDesc->vertex;
   _vertex.nextInChain = nullptr;
   _vertex.module = _wgpu_get_dawn<WGPUShaderModule>(vertex.module);
-  _vertex.entryPoint = vertex.entryPoint;
+  _vertex.entryPoint = WGPUStringView{ vertex.entryPoint, WGPU_STRLEN };
   _vertex.constantCount = (uint32_t)vertex.numConstants;
 
   std::vector<WGPUConstantEntry> _vertexConstants(vertex.numConstants);
@@ -1507,7 +1520,7 @@ WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const W
     _desc.fragment = nullptr;
   } else {
     fragmentState.constantCount = fragment.numConstants;
-    fragmentState.entryPoint = fragment.entryPoint;
+    fragmentState.entryPoint = WGPUStringView{ fragment.entryPoint, WGPU_STRLEN };
     fragmentState.nextInChain = nullptr;
     fragmentState.module = _wgpu_get_dawn<WGPUShaderModule>(fragment.module);
     fragmentState.targetCount = fragment.numTargets;
@@ -1557,7 +1570,7 @@ void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRende
   WGPURenderPipelineDescriptor _desc = {};
   _desc.layout = renderPipelineDesc->layout > 0 ? _wgpu_get_dawn<WGPUPipelineLayout>(renderPipelineDesc->layout) : 0;
   _desc.nextInChain = nullptr;
-  _desc.label = nullptr;
+  _desc.label = WGPU_STRING_VIEW_INIT;
 
   {
     WGPUPrimitiveState _primitive = {};
@@ -1575,7 +1588,7 @@ void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRende
     depthState.depthBiasClamp = renderPipelineDesc->depthStencil.depthBiasClamp;
     depthState.depthBiasSlopeScale = renderPipelineDesc->depthStencil.depthBiasSlopeScale;
     depthState.depthCompare = wgpu_compare_function_to_dawn(renderPipelineDesc->depthStencil.depthCompare);
-    depthState.depthWriteEnabled = renderPipelineDesc->depthStencil.depthWriteEnabled;
+    depthState.depthWriteEnabled = static_cast<WGPUOptionalBool>(renderPipelineDesc->depthStencil.depthWriteEnabled);
     depthState.format = wgpu_texture_format_to_dawn(renderPipelineDesc->depthStencil.format);
     depthState.nextInChain = nullptr;
     depthState.stencilBack = fillStencilFaceState(renderPipelineDesc->depthStencil.stencilBack);
@@ -1599,7 +1612,7 @@ void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRende
   const auto& vertex = renderPipelineDesc->vertex;
   _vertex.nextInChain = nullptr;
   _vertex.module = _wgpu_get_dawn<WGPUShaderModule>(vertex.module);
-  _vertex.entryPoint = vertex.entryPoint;
+  _vertex.entryPoint = WGPUStringView{ vertex.entryPoint, WGPU_STRLEN };
   _vertex.constantCount = (uint32_t)vertex.numConstants;
 
   std::vector<WGPUConstantEntry> _vertexConstants(vertex.numConstants);
@@ -1636,7 +1649,7 @@ void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRende
     _desc.fragment = nullptr;
   } else {
     fragmentState.constantCount = fragment.numConstants;
-    fragmentState.entryPoint = fragment.entryPoint;
+    fragmentState.entryPoint = WGPUStringView{ fragment.entryPoint, WGPU_STRLEN };
     fragmentState.nextInChain = nullptr;
     fragmentState.module = fragment.module > 0 ? _wgpu_get_dawn<WGPUShaderModule>(fragment.module) : 0;
     fragmentState.targetCount = fragment.numTargets;
@@ -1673,7 +1686,7 @@ void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRende
   _Data* data = new _Data{ device, callback, userData };
 
   wgpuDeviceCreateRenderPipelineAsync(_device, &_desc,
-        [](WGPUCreatePipelineAsyncStatus status, WGPURenderPipeline pipeline, char const *message, void *userdata) {
+        [](WGPUCreatePipelineAsyncStatus status, WGPURenderPipeline pipeline, WGPUStringView message, void *userdata) {
     _Data* data = (_Data*)userdata;
     WGpuRenderPipeline _pipeline = _wgpu_store_and_set_parent(kWebGPURenderPipeline, pipeline, data->device);
     data->callback(data->device, nullptr, _pipeline, data->userdata);
@@ -1764,7 +1777,7 @@ void wgpu_buffer_map_async(WGpuBuffer buffer, WGpuBufferMapCallback callback, vo
   
   obj->state = kWebGPUBufferMapStatePending;
   _Data* data = new _Data{ buffer, mode, offset, size, callback, userData };
-  wgpuBufferMapAsync(_wgpu_get_dawn<WGPUBuffer>(buffer), (WGPUMapModeFlags)mode, (size_t)offset, (size_t)size,
+  wgpuBufferMapAsync(_wgpu_get_dawn<WGPUBuffer>(buffer), (WGPUMapMode)mode, (size_t)offset, (size_t)size,
           [](WGPUBufferMapAsyncStatus status, void* userdata) {
     _Data* data = (_Data*)userdata;
     _WGpuObjectBuffer* obj = (_WGpuObjectBuffer*)_wgpu_get(data->buffer);
@@ -1798,7 +1811,7 @@ void wgpu_buffer_map_sync(WGpuBuffer buffer, WGPU_MAP_MODE_FLAGS mode, double_in
   };
 
   _Data data{ buffer, mode };
-  wgpuBufferMapAsync(_wgpu_get_dawn<WGPUBuffer>(buffer), (WGPUMapModeFlags)mode, (size_t)offset, (size_t)size, callback, &data);
+  wgpuBufferMapAsync(_wgpu_get_dawn<WGPUBuffer>(buffer), (WGPUMapMode)mode, (size_t)offset, (size_t)size, callback, &data);
 
   while (!data.done) {
   	wgpuInstanceProcessEvents(GetDawnInstance().Get());
@@ -1927,7 +1940,7 @@ WGPU_TEXTURE_FORMAT wgpu_texture_format(WGpuTexture texture) {
 
 WGPU_TEXTURE_USAGE_FLAGS wgpu_texture_usage(WGpuTexture texture) {
   assert(wgpu_is_texture(texture));
-  WGPUTextureUsageFlags usage = wgpuTextureGetUsage(_wgpu_get_dawn<WGPUTexture>(texture));
+  WGPUTextureUsage usage = wgpuTextureGetUsage(_wgpu_get_dawn<WGPUTexture>(texture));
   return (WGPU_TEXTURE_USAGE_FLAGS)usage;
 }
 
@@ -2002,11 +2015,11 @@ void wgpu_encoder_push_debug_group(WGpuDebugCommandsMixin encoder, const char *g
   assert(wgpu_is_debug_commands_mixin(encoder));
 
   if (wgpu_is_render_pass_encoder(encoder))
-    wgpuRenderPassEncoderPushDebugGroup(_wgpu_get_dawn<WGPURenderPassEncoder>(encoder), groupLabel);
+    wgpuRenderPassEncoderPushDebugGroup(_wgpu_get_dawn<WGPURenderPassEncoder>(encoder), WGPUStringView{ groupLabel, WGPU_STRLEN });
   else if (wgpu_is_compute_pass_encoder(encoder))
-    wgpuComputePassEncoderPushDebugGroup(_wgpu_get_dawn<WGPUComputePassEncoder>(encoder), groupLabel);
+    wgpuComputePassEncoderPushDebugGroup(_wgpu_get_dawn<WGPUComputePassEncoder>(encoder), WGPUStringView{ groupLabel, WGPU_STRLEN });
   else
-    wgpuCommandEncoderPushDebugGroup(_wgpu_get_dawn<WGPUCommandEncoder>(encoder), groupLabel);
+    wgpuCommandEncoderPushDebugGroup(_wgpu_get_dawn<WGPUCommandEncoder>(encoder), WGPUStringView{ groupLabel, WGPU_STRLEN });
 }
 
 void wgpu_encoder_pop_debug_group(WGpuDebugCommandsMixin encoder) {
@@ -2024,11 +2037,11 @@ void wgpu_encoder_insert_debug_marker(WGpuDebugCommandsMixin encoder, const char
   assert(wgpu_is_debug_commands_mixin(encoder));
 
   if (wgpu_is_render_pass_encoder(encoder))
-    wgpuRenderPassEncoderInsertDebugMarker(_wgpu_get_dawn<WGPURenderPassEncoder>(encoder), markerLabel);
+    wgpuRenderPassEncoderInsertDebugMarker(_wgpu_get_dawn<WGPURenderPassEncoder>(encoder), WGPUStringView{ markerLabel, WGPU_STRLEN });
   else if (wgpu_is_compute_pass_encoder(encoder))
-    wgpuComputePassEncoderInsertDebugMarker(_wgpu_get_dawn<WGPUComputePassEncoder>(encoder), markerLabel);
+    wgpuComputePassEncoderInsertDebugMarker(_wgpu_get_dawn<WGPUComputePassEncoder>(encoder), WGPUStringView{ markerLabel, WGPU_STRLEN });
   else
-    wgpuCommandEncoderInsertDebugMarker(_wgpu_get_dawn<WGPUCommandEncoder>(encoder), markerLabel);
+    wgpuCommandEncoderInsertDebugMarker(_wgpu_get_dawn<WGPUCommandEncoder>(encoder), WGPUStringView{ markerLabel, WGPU_STRLEN });
 }
 
 WGPU_BOOL wgpu_is_command_encoder(WGpuObjectBase object) {
@@ -2080,15 +2093,15 @@ WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder 
   }
 
   _desc.occlusionQuerySet = _wgpu_get_dawn<WGPUQuerySet>(renderPassDesc->occlusionQuerySet);
-  _desc.label = nullptr;
+  _desc.label = WGPU_STRING_VIEW_INIT;
 
   /* TODO add timestampWrite support*/
   _desc.timestampWrites = nullptr;
   
-  WGPURenderPassDescriptorMaxDrawCount chainedDesc;
+  WGPURenderPassMaxDrawCount chainedDesc;
   if (renderPassDesc->maxDrawCount > 0) {
     chainedDesc.maxDrawCount = renderPassDesc->maxDrawCount;
-    chainedDesc.chain = { nullptr, WGPUSType_RenderPassDescriptorMaxDrawCount };
+    chainedDesc.chain = { nullptr, WGPUSType_RenderPassMaxDrawCount };
     _desc.nextInChain = reinterpret_cast<WGPUChainedStruct*>(&chainedDesc);
   } else
     _desc.nextInChain = nullptr;
@@ -2540,29 +2553,37 @@ WGPU_BOOL wgpu_is_canvas_context(WGpuObjectBase object) {
 void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCanvasConfiguration *config, int width, int height) {
   assert(wgpu_is_canvas_context(canvasContext));
   assert(config != nullptr);
-
+  assert(wgpu_is_device(config->device));
   _WGpuCanvasContext* context = _wgpu_get_dawn<_WGpuCanvasContext*>(canvasContext);
-  if (context->swapChain)
-    wgpuSwapChainRelease(context->swapChain);
+  if (!context->surface)
+    return;
 
-  WGPUSwapChainDescriptor swapDesc = {};
-  swapDesc.width = width;
-  swapDesc.height = height;
-  swapDesc.format = wgpu_texture_format_to_dawn(config->format);
-  swapDesc.presentMode = WGPUPresentMode_Fifo;
-  swapDesc.usage = (WGPUTextureUsageFlags)config->usage;
-  swapDesc.nextInChain = nullptr;
-  swapDesc.label = nullptr;
-  context->swapChain = wgpuDeviceCreateSwapChain(_wgpu_get_dawn<WGPUDevice>(config->device), context->surface, &swapDesc);
+  std::vector<WGPUTextureFormat> viewFormats(config->numViewFormats);
+  for (int i = 0; i < config->numViewFormats; i++)
+  {
+    viewFormats[i] = wgpu_texture_format_to_dawn(config->viewFormats[i]);
+  }
+
+  WGPUSurfaceConfiguration configuration = WGPU_SURFACE_CONFIGURATION_INIT;
+  configuration.device = _wgpu_get_dawn<WGPUDevice>(config->device); 
+  configuration.format = wgpu_texture_format_to_dawn(config->format);
+  configuration.usage = wgpu_texture_usage_flags_to_dawn(config->usage);
+  configuration.viewFormatCount = config->numViewFormats;
+  configuration.viewFormats = viewFormats.data();
+  configuration.alphaMode = wgpu_canvas_alpha_mode_to_dawn(config->alphaMode);
+  configuration.width = width;
+  configuration.height = height;
+  configuration.presentMode = WGPUPresentMode_Fifo;
+
+  wgpuSurfaceConfigure(context->surface, &configuration);
 }
 
 void wgpu_canvas_context_unconfigure(WGpuCanvasContext canvasContext) {
   assert(wgpu_is_canvas_context(canvasContext));
   _WGpuCanvasContext* context = _wgpu_get_dawn<_WGpuCanvasContext*>(canvasContext);
 
-  if (context->swapChain) {
-    wgpuSwapChainRelease(context->swapChain);
-    context->swapChain = 0;
+  if (context->surface) {
+    wgpuSurfaceUnconfigure(context->surface);
   }
 }
 
@@ -2575,19 +2596,27 @@ WGpuTexture wgpu_canvas_context_get_current_texture(WGpuCanvasContext canvasCont
 WGpuTextureView wgpu_canvas_context_get_current_texture_view(WGpuCanvasContext canvasContext) {
   assert(wgpu_is_canvas_context(canvasContext));
   _WGpuCanvasContext* context = _wgpu_get_dawn<_WGpuCanvasContext*>(canvasContext);
-  if (!context->swapChain)
+  if (!context->surface)
     return 0;
 
-  WGPUTextureView textureView = wgpuSwapChainGetCurrentTextureView(context->swapChain);
-  return _wgpu_store(kWebGPUTextureView, textureView);
+  WGPUSurfaceTexture surfaceTexture = WGPU_SURFACE_TEXTURE_INIT;
+  wgpuSurfaceGetCurrentTexture(context->surface, &surfaceTexture);
+
+  if (surfaceTexture.status == WGPUSurfaceGetCurrentTextureStatus_Success) {
+    WGPUTextureView textureView = wgpuTextureCreateView(surfaceTexture.texture, nullptr);
+    return _wgpu_store(kWebGPUTextureView, textureView);
+  } else {
+    return 0;
+  }
 }
 
 void wgpu_canvas_context_present(WGpuCanvasContext canvasContext) {
   assert(wgpu_is_canvas_context(canvasContext));
   _WGpuCanvasContext* context = _wgpu_get_dawn<_WGpuCanvasContext*>(canvasContext);
-  if (!context->swapChain)
+  if (!context->surface)
     return;
-  wgpuSwapChainPresent(context->swapChain);
+
+  wgpuSurfacePresent(context->surface);
 }
 
 void wgpu_device_set_lost_callback(WGpuDevice device, WGpuDeviceLostCallback callback, void* userData) {
@@ -2604,9 +2633,9 @@ void wgpu_device_set_lost_callback(WGpuDevice device, WGpuDeviceLostCallback cal
     void* userData;
   };
   _Data* data = new _Data{device, callback, userData};
-  wgpuDeviceSetDeviceLostCallback(_device, [](WGPUDeviceLostReason reason, char const* message, void* userdata) {
+  wgpuDeviceSetDeviceLostCallback(_device, [](WGPUDeviceLostReason reason, WGPUStringView message, void* userdata) {
     _Data* data = (_Data*)userdata;
-    data->callback(data->device, dawn_to_wgpu_device_lost_reason(reason), message, data->userData);
+    data->callback(data->device, dawn_to_wgpu_device_lost_reason(reason), message.data, data->userData);
     delete data;
   }, data);
 }
@@ -2627,10 +2656,10 @@ void wgpu_device_pop_error_scope_async(WGpuDevice device, WGpuDeviceErrorCallbac
     void* userData;
   };
   _Data* data = new _Data{device, callback, userData};
-  wgpuDevicePopErrorScope(_device, [](WGPUErrorType type, char const* message, void* userdata) {
+  wgpuDevicePopErrorScope(_device, [](WGPUErrorType type, WGPUStringView message, void* userdata) {
     _Data* data = (_Data*)userdata;
-    if (message && message[0] != 0)
-      data->callback(data->device, type, message, data->userData);
+    if (message.data && message.data[0] != 0)
+      data->callback(data->device, type, message.data, data->userData);
     delete data;
   }, data);
 }
@@ -2645,10 +2674,10 @@ void wgpu_device_set_uncapturederror_callback(WGpuDevice device, WGpuDeviceError
     void* userData;
   };
   _Data* data = new _Data{device, callback, userData};
-  wgpuDeviceSetUncapturedErrorCallback(_device, [](WGPUErrorType type, char const* message, void* userdata) {
+  wgpuDeviceSetUncapturedErrorCallback(_device, [](WGPUErrorType type, WGPUStringView message, void* userdata) {
     _Data* data = (_Data*)userdata;
-    if (message && message[0] != 0)
-      data->callback(data->device, type, message, data->userData);
+    if (message.data && message.data[0] != 0)
+      data->callback(data->device, type, message.data, data->userData);
   }, data);
 }
 
