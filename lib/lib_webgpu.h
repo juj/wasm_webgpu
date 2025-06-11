@@ -222,7 +222,7 @@ typedef struct WGpuSupportedLimits
   uint32_t maxComputeWorkgroupSizeX; // required >= 256
   uint32_t maxComputeWorkgroupSizeY; // required >= 256
   uint32_t maxComputeWorkgroupSizeZ; // required >= 64
-  uint32_t unused_padding;
+  uint32_t maxComputeWorkgroupsPerDimension; // required >= 65535
 } WGpuSupportedLimits;
 
 VERIFY_STRUCT_SIZE(WGpuSupportedLimits, 34*sizeof(uint32_t));

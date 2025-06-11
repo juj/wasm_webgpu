@@ -187,6 +187,7 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
   ADAPTER_LIMIT(maxComputeWorkgroupSizeX);
   ADAPTER_LIMIT(maxComputeWorkgroupSizeY);
   ADAPTER_LIMIT(maxComputeWorkgroupSizeZ);
+  ADAPTER_LIMIT(maxComputeWorkgroupsPerDimension);
   ADAPTER_LIMIT(maxUniformBufferBindingSize);
   ADAPTER_LIMIT(maxStorageBufferBindingSize);
 

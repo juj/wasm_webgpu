@@ -312,7 +312,8 @@ const stringArrays = {
     'maxComputeInvocationsPerWorkgroup',
     'maxComputeWorkgroupSizeX',
     'maxComputeWorkgroupSizeY',
-    'maxComputeWorkgroupSizeZ'],
+    'maxComputeWorkgroupSizeZ',
+    'maxComputeWorkgroupsPerDimension'],
 
   'wgpu64BitLimitNames': [
     'maxUniformBufferBindingSize',

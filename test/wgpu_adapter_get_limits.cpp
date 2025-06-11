@@ -44,6 +44,7 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
   TEST32(limits.maxComputeWorkgroupSizeX, 256);
   TEST32(limits.maxComputeWorkgroupSizeY, 256);
   TEST32(limits.maxComputeWorkgroupSizeZ, 64);
+  TEST32(limits.maxComputeWorkgroupsPerDimension, 65535);
 
   EM_ASM(window.close());
 }

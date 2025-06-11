@@ -1065,6 +1065,7 @@ void wgpu_adapter_or_device_get_limits(WGpuAdapter adapterOrDevice, WGpuSupporte
   limits->maxComputeWorkgroupSizeX = _limits.limits.maxComputeWorkgroupSizeX;
   limits->maxComputeWorkgroupSizeY = _limits.limits.maxComputeWorkgroupSizeY;
   limits->maxComputeWorkgroupSizeZ = _limits.limits.maxComputeWorkgroupSizeZ;
+  limits->maxComputeWorkgroupsPerDimension = _limits.limits.maxComputeWorkgroupsPerDimension;
 }
 
 void wgpu_adapter_get_info(WGpuAdapter adapter, WGpuAdapterInfo *adapterInfo)
@@ -1129,6 +1130,7 @@ WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDevic
   limits.maxComputeWorkgroupSizeX = descriptor->requiredLimits.maxComputeWorkgroupSizeX;
   limits.maxComputeWorkgroupSizeY = descriptor->requiredLimits.maxComputeWorkgroupSizeY;
   limits.maxComputeWorkgroupSizeZ = descriptor->requiredLimits.maxComputeWorkgroupSizeZ;
+  limits.maxComputeWorkgroupsPerDimension = descriptor->requiredLimits.maxComputeWorkgroupsPerDimension;
 
   WGPURequiredLimits requiredLimits = {};
   requiredLimits.nextInChain = nullptr;
