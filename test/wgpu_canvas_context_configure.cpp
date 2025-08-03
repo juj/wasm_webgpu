@@ -4,9 +4,12 @@
 
 void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
 {
+  WGPU_TEXTURE_FORMAT format = WGPU_TEXTURE_FORMAT_BGRA8UNORM;
   WGpuCanvasConfiguration config = {
     .device = device,
-    .format = WGPU_TEXTURE_FORMAT_BGRA8UNORM
+    .format = format,
+    .numViewFormats = 1,
+    .viewFormats = &format
   };
   wgpu_canvas_context_configure(wgpu_canvas_get_webgpu_context("canvas"), &config);
 
