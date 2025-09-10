@@ -139,6 +139,8 @@ const stringArrays = {
     "r8sint",
 
     // 16-bit formats
+    "r16unorm", // Supported with "texture-formats-tier1"
+    "r16snorm", // Supported with "texture-formats-tier1"
     "r16uint",
     "r16sint",
     "r16float",
@@ -151,6 +153,8 @@ const stringArrays = {
     "r32uint",
     "r32sint",
     "r32float",
+    "rg16unorm", // Supported with "texture-formats-tier1"
+    "rg16snorm", // Supported with "texture-formats-tier1"
     "rg16uint",
     "rg16sint",
     "rg16float",
@@ -171,6 +175,8 @@ const stringArrays = {
     "rg32uint",
     "rg32sint",
     "rg32float",
+    "rgba16unorm", // Supported with "texture-formats-tier1"
+    "rgba16snorm", // Supported with "texture-formats-tier1"
     "rgba16uint",
     "rgba16sint",
     "rgba16float",
@@ -335,7 +341,8 @@ const stringArrays = {
     'float32-filterable',
     'clip-distances',
     'dual-source-blending',
-    'subgroups'],
+    'subgroups',
+    'texture-formats-tier1'],
 
   '$GPUBlendFactors': [/*undefined*/,
     'zero',
