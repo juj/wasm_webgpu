@@ -10,8 +10,6 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
   assert(wgpu_is_adapter(adapter));
   assert(userData == (void*)42);
 
-  assert(!wgpu_adapter_is_fallback_adapter(adapter));
-
   EM_ASM(window.close());
 }
 

@@ -1075,11 +1075,6 @@ void wgpu_adapter_get_info(WGpuAdapter adapter, WGpuAdapterInfo *adapterInfo)
   assert(false); /* TODO */
 }
 
-WGPU_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter) {
-  assert(wgpu_is_adapter(adapter));
-  return false; /* TODO */
-}
-
 void wgpu_adapter_request_device_async(WGpuAdapter adapter, const WGpuDeviceDescriptor* descriptor,
         WGpuRequestDeviceCallback deviceCallback, void* userData) {
   assert(wgpu_is_adapter(adapter));

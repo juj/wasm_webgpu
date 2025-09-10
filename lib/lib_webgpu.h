@@ -294,6 +294,7 @@ interface GPUAdapterInfo {
     readonly attribute DOMString description;
     readonly attribute unsigned long subgroupMinSize;
     readonly attribute unsigned long subgroupMaxSize;
+    readonly attribute boolean isFallbackAdapter;
 };
 */
 typedef struct WGpuAdapterInfo
@@ -304,6 +305,7 @@ typedef struct WGpuAdapterInfo
   char description[512];
   uint32_t subgroupMinSize;
   uint32_t subgroupMaxSize;
+  WGPU_BOOL isFallbackAdapter;
 } WGpuAdapterInfo;
 
 /*
@@ -441,8 +443,6 @@ void wgpu_adapter_or_device_get_limits(WGpuAdapter adapter, WGpuSupportedLimits 
 
 // Returns the WebGPU adapter 'info' field.
 void wgpu_adapter_get_info(WGpuAdapter adapter, WGpuAdapterInfo *adapterInfo NOTNULL);
-
-WGPU_BOOL wgpu_adapter_is_fallback_adapter(WGpuAdapter adapter);
 
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 

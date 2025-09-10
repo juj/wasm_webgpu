@@ -20,7 +20,6 @@ int main()
   WGpuAdapter adapter = navigator_gpu_request_adapter_sync_simple();
   assert(wgpu_sync_operations_pending() == 0); // All async operations should have resolved now.
   assert(wgpu_is_adapter(adapter)); // Should have got a valid adapter
-  assert(!wgpu_adapter_is_fallback_adapter(adapter));
 
   if (ok) // TODO: Grab errors and early quit in emrun harness
     EM_ASM(window.close());
