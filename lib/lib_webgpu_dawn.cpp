@@ -555,22 +555,31 @@ const WGPUIndexFormat WGPU_INDEX_FORMAT_to_Dawn[] = {
 
 const WGPUVertexFormat WGPU_VERTEX_FORMAT_to_Dawn[] = {
   WGPUVertexFormat_Force32,
+  WGPUVertexFormat_Uint8,
   WGPUVertexFormat_Uint8x2,
   WGPUVertexFormat_Uint8x4,
+  WGPUVertexFormat_Sint8,
   WGPUVertexFormat_Sint8x2,
   WGPUVertexFormat_Sint8x4,
+  WGPUVertexFormat_Unorm8,
   WGPUVertexFormat_Unorm8x2,
   WGPUVertexFormat_Unorm8x4,
+  WGPUVertexFormat_Snorm8,
   WGPUVertexFormat_Snorm8x2,
   WGPUVertexFormat_Snorm8x4,
+  WGPUVertexFormat_Uint16,
   WGPUVertexFormat_Uint16x2,
   WGPUVertexFormat_Uint16x4,
+  WGPUVertexFormat_Sint16,
   WGPUVertexFormat_Sint16x2,
   WGPUVertexFormat_Sint16x4,
+  WGPUVertexFormat_Unorm16,
   WGPUVertexFormat_Unorm16x2,
   WGPUVertexFormat_Unorm16x4,
+  WGPUVertexFormat_Snorm16,
   WGPUVertexFormat_Snorm16x2,
   WGPUVertexFormat_Snorm16x4,
+  WGPUVertexFormat_Float16,
   WGPUVertexFormat_Float16x2,
   WGPUVertexFormat_Float16x4,
   WGPUVertexFormat_Float32,
@@ -586,8 +595,9 @@ const WGPUVertexFormat WGPU_VERTEX_FORMAT_to_Dawn[] = {
   WGPUVertexFormat_Sint32x3,
   WGPUVertexFormat_Sint32x4,
   WGPUVertexFormat_Unorm10_10_10_2
+  WGPUVertexFormat_Unorm8x4_bgra
 };
-#define wgpu_vertex_format_to_dawn(format) (format == 0 ? WGPUVertexFormat_Force32 : WGPU_VERTEX_FORMAT_to_Dawn[format - (WGPU_VERTEX_FORMAT_UINT8X2 - 1)])
+#define wgpu_vertex_format_to_dawn(format) (format == 0 ? WGPUVertexFormat_Force32 : WGPU_VERTEX_FORMAT_to_Dawn[format - (WGPU_VERTEX_FORMAT_UINT8 - 1)])
 
 const WGPUVertexStepMode WGPU_VERTEX_STEP_MODE_to_Dawn[] = {
   WGPUVertexStepMode_VertexBufferNotUsed,

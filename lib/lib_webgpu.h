@@ -1972,22 +1972,31 @@ typedef int WGPU_INDEX_FORMAT;
 
 /*
 enum GPUVertexFormat {
+    "uint8",
     "uint8x2",
     "uint8x4",
+    "sint8",
     "sint8x2",
     "sint8x4",
+    "unorm8",
     "unorm8x2",
     "unorm8x4",
+    "snorm8",
     "snorm8x2",
     "snorm8x4",
+    "uint16",
     "uint16x2",
     "uint16x4",
+    "sint16",
     "sint16x2",
     "sint16x4",
+    "unorm16",
     "unorm16x2",
     "unorm16x4",
+    "snorm16",
     "snorm16x2",
     "snorm16x4",
+    "float16",
     "float16x2",
     "float16x4",
     "float32",
@@ -2002,7 +2011,8 @@ enum GPUVertexFormat {
     "sint32x2",
     "sint32x3",
     "sint32x4",
-    "unorm10-10-10-2"
+    "unorm10-10-10-2",
+    "unorm8x4-bgra",
 };
 */
 // The numbering on these types continues at the end of WGPU_TEXTURE_FORMAT
@@ -2010,37 +2020,47 @@ enum GPUVertexFormat {
 typedef int WGPU_VERTEX_FORMAT;
 #define WGPU_VERTEX_FORMAT_INVALID           0
 #define WGPU_VERTEX_FORMAT_FIRST_VALUE     102
-#define WGPU_VERTEX_FORMAT_UINT8X2         102
-#define WGPU_VERTEX_FORMAT_UINT8X4         103
-#define WGPU_VERTEX_FORMAT_SINT8X2         104
-#define WGPU_VERTEX_FORMAT_SINT8X4         105
-#define WGPU_VERTEX_FORMAT_UNORM8X2        106
-#define WGPU_VERTEX_FORMAT_UNORM8X4        107
-#define WGPU_VERTEX_FORMAT_SNORM8X2        108
-#define WGPU_VERTEX_FORMAT_SNORM8X4        109
-#define WGPU_VERTEX_FORMAT_UINT16X2        110
-#define WGPU_VERTEX_FORMAT_UINT16X4        111
-#define WGPU_VERTEX_FORMAT_SINT16X2        112
-#define WGPU_VERTEX_FORMAT_SINT16X4        113
-#define WGPU_VERTEX_FORMAT_UNORM16X2       114
-#define WGPU_VERTEX_FORMAT_UNORM16X4       115
-#define WGPU_VERTEX_FORMAT_SNORM16X2       116
-#define WGPU_VERTEX_FORMAT_SNORM16X4       117
-#define WGPU_VERTEX_FORMAT_FLOAT16X2       118
-#define WGPU_VERTEX_FORMAT_FLOAT16X4       119
-#define WGPU_VERTEX_FORMAT_FLOAT32         120
-#define WGPU_VERTEX_FORMAT_FLOAT32X2       121
-#define WGPU_VERTEX_FORMAT_FLOAT32X3       122
-#define WGPU_VERTEX_FORMAT_FLOAT32X4       123
-#define WGPU_VERTEX_FORMAT_UINT32          124
-#define WGPU_VERTEX_FORMAT_UINT32X2        125
-#define WGPU_VERTEX_FORMAT_UINT32X3        126
-#define WGPU_VERTEX_FORMAT_UINT32X4        127
-#define WGPU_VERTEX_FORMAT_SINT32          128
-#define WGPU_VERTEX_FORMAT_SINT32X2        129
-#define WGPU_VERTEX_FORMAT_SINT32X3        130
-#define WGPU_VERTEX_FORMAT_SINT32X4        131
-#define WGPU_VERTEX_FORMAT_UNORM10_10_10_2 132
+#define WGPU_VERTEX_FORMAT_UINT8           102
+#define WGPU_VERTEX_FORMAT_UINT8X2         103
+#define WGPU_VERTEX_FORMAT_UINT8X4         104
+#define WGPU_VERTEX_FORMAT_SINT8           105
+#define WGPU_VERTEX_FORMAT_SINT8X2         106
+#define WGPU_VERTEX_FORMAT_SINT8X4         107
+#define WGPU_VERTEX_FORMAT_UNORM8          108
+#define WGPU_VERTEX_FORMAT_UNORM8X2        109
+#define WGPU_VERTEX_FORMAT_UNORM8X4        110
+#define WGPU_VERTEX_FORMAT_SNORM8          111
+#define WGPU_VERTEX_FORMAT_SNORM8X2        112
+#define WGPU_VERTEX_FORMAT_SNORM8X4        113
+#define WGPU_VERTEX_FORMAT_UINT16          114
+#define WGPU_VERTEX_FORMAT_UINT16X2        115
+#define WGPU_VERTEX_FORMAT_UINT16X4        116
+#define WGPU_VERTEX_FORMAT_SINT16          117
+#define WGPU_VERTEX_FORMAT_SINT16X2        118
+#define WGPU_VERTEX_FORMAT_SINT16X4        119
+#define WGPU_VERTEX_FORMAT_UNORM16         120
+#define WGPU_VERTEX_FORMAT_UNORM16X2       121
+#define WGPU_VERTEX_FORMAT_UNORM16X4       122
+#define WGPU_VERTEX_FORMAT_SNORM16         123
+#define WGPU_VERTEX_FORMAT_SNORM16X2       124
+#define WGPU_VERTEX_FORMAT_SNORM16X4       125
+#define WGPU_VERTEX_FORMAT_FLOAT16         126
+#define WGPU_VERTEX_FORMAT_FLOAT16X2       127
+#define WGPU_VERTEX_FORMAT_FLOAT16X4       128
+#define WGPU_VERTEX_FORMAT_FLOAT32         129
+#define WGPU_VERTEX_FORMAT_FLOAT32X2       130
+#define WGPU_VERTEX_FORMAT_FLOAT32X3       131
+#define WGPU_VERTEX_FORMAT_FLOAT32X4       132
+#define WGPU_VERTEX_FORMAT_UINT32          133
+#define WGPU_VERTEX_FORMAT_UINT32X2        134
+#define WGPU_VERTEX_FORMAT_UINT32X3        135
+#define WGPU_VERTEX_FORMAT_UINT32X4        136
+#define WGPU_VERTEX_FORMAT_SINT32          137
+#define WGPU_VERTEX_FORMAT_SINT32X2        138
+#define WGPU_VERTEX_FORMAT_SINT32X3        139
+#define WGPU_VERTEX_FORMAT_SINT32X4        140
+#define WGPU_VERTEX_FORMAT_UNORM10_10_10_2 141
+#define WGPU_VERTEX_FORMAT_UNORM8X4_BGRA   142
 
 #if __cplusplus >= 201103L
 static_assert(WGPU_VERTEX_FORMAT_FIRST_VALUE == WGPU_TEXTURE_FORMAT_LAST_VALUE + 1, "WGPU_VERTEX_FORMAT enums must have values after WGPU_TEXTURE_FORMAT values!");
