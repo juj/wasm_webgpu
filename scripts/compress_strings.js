@@ -334,7 +334,8 @@ const stringArrays = {
     'bgra8unorm-storage',
     'float32-filterable',
     'clip-distances',
-    'dual-source-blending'],
+    'dual-source-blending',
+    'subgroups'],
 
   '$GPUBlendFactors': [/*undefined*/,
     'zero',

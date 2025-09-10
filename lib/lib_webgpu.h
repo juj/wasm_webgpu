@@ -249,6 +249,7 @@ enum GPUFeatureName {
     "float32-filterable",
     "clip-distances",
     "dual-source-blending",
+    "subgroups",
 };
 */
 typedef int WGPU_FEATURES_BITFIELD;
@@ -266,8 +267,9 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_FLOAT32_FILTERABLE                  0x800
 #define WGPU_FEATURE_CLIP_DISTANCES                     0x1000
 #define WGPU_FEATURE_DUAL_SOURCE_BLENDING               0x2000
+#define WGPU_FEATURE_SUBGROUPS                          0x4000
 
-#define WGPU_FEATURE_FIRST_UNUSED_BIT                   0x4000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
+#define WGPU_FEATURE_FIRST_UNUSED_BIT                   0x8000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
 
 /*
 // WebGPU reuses the color space enum from the HTML Canvas specification:
@@ -290,6 +292,8 @@ interface GPUAdapterInfo {
     readonly attribute DOMString architecture;
     readonly attribute DOMString device;
     readonly attribute DOMString description;
+    readonly attribute unsigned long subgroupMinSize;
+    readonly attribute unsigned long subgroupMaxSize;
 };
 */
 typedef struct WGpuAdapterInfo
@@ -298,6 +302,8 @@ typedef struct WGpuAdapterInfo
   char architecture[512];
   char device[512];
   char description[512];
+  uint32_t subgroupMinSize;
+  uint32_t subgroupMaxSize;
 } WGpuAdapterInfo;
 
 /*
