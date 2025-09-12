@@ -440,19 +440,20 @@ typedef WGpuObjectBase WGpuAdapter;
 WGPU_BOOL wgpu_is_adapter(WGpuObjectBase object);
 
 // Returns a bitfield of all the supported features on this adapter.
-WGPU_FEATURES_BITFIELD wgpu_adapter_or_device_get_features(WGpuAdapter adapter);
+WGPU_FEATURES_BITFIELD wgpu_adapter_or_device_get_features(WGpuAdapter adapterOrDevice);
 #define wgpu_adapter_get_features wgpu_adapter_or_device_get_features
 
 // Returns true if the given feature is supported by this adapter.
-WGPU_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapter, WGPU_FEATURES_BITFIELD feature);
+WGPU_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapterOrDevice, WGPU_FEATURES_BITFIELD feature);
 #define wgpu_adapter_supports_feature wgpu_adapter_or_device_supports_feature
 
 // Populates the adapter.limits field of the given adapter to the provided structure.
-void wgpu_adapter_or_device_get_limits(WGpuAdapter adapter, WGpuSupportedLimits *limits NOTNULL);
+void wgpu_adapter_or_device_get_limits(WGpuAdapter adapterOrDevice, WGpuSupportedLimits *limits NOTNULL);
 #define wgpu_adapter_get_limits wgpu_adapter_or_device_get_limits
 
 // Returns the WebGPU adapter 'info' field.
-void wgpu_adapter_get_info(WGpuAdapter adapter, WGpuAdapterInfo *adapterInfo NOTNULL);
+void wgpu_adapter_or_device_get_info(WGpuAdapter adapterOrDevice, WGpuAdapterInfo *adapterInfo NOTNULL);
+#define wgpu_adapter_get_info wgpu_adapter_or_device_get_info
 
 typedef void (*WGpuRequestDeviceCallback)(WGpuDevice device, void *userData);
 
@@ -497,6 +498,7 @@ extern const WGpuDeviceDescriptor WGPU_DEVICE_DESCRIPTOR_DEFAULT_INITIALIZER;
 interface GPUDevice : EventTarget {
     [SameObject] readonly attribute GPUSupportedFeatures features;
     [SameObject] readonly attribute GPUSupportedLimits limits;
+    [SameObject] readonly attribute GPUAdapterInfo adapterInfo;
 
     [SameObject] readonly attribute GPUQueue queue;
 
@@ -530,6 +532,7 @@ WGPU_BOOL wgpu_is_device(WGpuObjectBase object);
 
 #define wgpu_device_get_features wgpu_adapter_or_device_get_features
 #define wgpu_device_supports_feature wgpu_adapter_or_device_supports_feature
+#define wgpu_device_get_adapter_info wgpu_adapter_or_device_get_info
 #define wgpu_device_get_limits wgpu_adapter_or_device_get_limits
 
 WGpuQueue wgpu_device_get_queue(WGpuDevice device);
