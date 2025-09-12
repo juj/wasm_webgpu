@@ -101,6 +101,7 @@ RuntimeStatic<std::map<void*, void*>> _webgpu_to_dawn;
 
 // Translate lib_webgpu enums to Dawn enums
 const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
+  WGPUFeatureName_CoreFeaturesAndLimits,
   WGPUFeatureName_DepthClipControl,
   WGPUFeatureName_Depth32FloatStencil8,
   WGPUFeatureName_TextureCompressionBC,
@@ -122,7 +123,7 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_TextureFormatsTier2,
   WGPUFeatureName_PrimitiveIndex,
 };
-const int _wgpu_num_features = 20;
+const int _wgpu_num_features = 21;
 
 const WGPUPowerPreference WGPU_POWER_PREFERENCE_to_Dawn[] = {
   WGPUPowerPreference_Undefined,

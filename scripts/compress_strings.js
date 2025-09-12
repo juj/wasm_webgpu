@@ -337,6 +337,7 @@ const stringArrays = {
     'maxBufferSize'],
 
   'wgpuFeatures': [
+    'core-features-and-limits',
     'depth-clip-control',
     'depth32float-stencil8',
     'texture-compression-bc',

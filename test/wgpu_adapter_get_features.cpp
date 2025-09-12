@@ -13,6 +13,7 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
   assert(features < WGPU_FEATURE_FIRST_UNUSED_BIT);
 
   printf("Supported features:\n");
+  if ((features & WGPU_FEATURE_CORE_FEATURES_AND_LIMITS          ) != 0) printf("WGPU_FEATURE_CORE_FEATURES_AND_LIMITS          \n");
   if ((features & WGPU_FEATURE_DEPTH_CLIP_CONTROL                ) != 0) printf("WGPU_FEATURE_DEPTH_CLIP_CONTROL                \n");
   if ((features & WGPU_FEATURE_DEPTH32FLOAT_STENCIL8             ) != 0) printf("WGPU_FEATURE_DEPTH32FLOAT_STENCIL8             \n");
   if ((features & WGPU_FEATURE_TEXTURE_COMPRESSION_BC            ) != 0) printf("WGPU_FEATURE_TEXTURE_COMPRESSION_BC            \n");
