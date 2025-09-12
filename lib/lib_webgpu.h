@@ -253,6 +253,7 @@ enum GPUFeatureName {
     "dual-source-blending",
     "subgroups",
     "texture-formats-tier1",
+    "texture-formats-tier2",
     "primitive-index",
 };
 */
@@ -880,17 +881,17 @@ typedef int WGPU_TEXTURE_ASPECT;
 /*
 enum GPUTextureFormat {
     // 8-bit formats
-    "r8unorm",
+    "r8unorm", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
     "r8snorm",
-    "r8uint",
-    "r8sint",
+    "r8uint", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+    "r8sint", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
 
     // 16-bit formats
     "r16unorm", // Supported with "texture-formats-tier1"
     "r16snorm", // Supported with "texture-formats-tier1"
-    "r16uint",
-    "r16sint",
-    "r16float",
+    "r16uint", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+    "r16sint", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+    "r16float", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
     "rg8unorm",
     "rg8snorm",
     "rg8uint",
@@ -905,11 +906,11 @@ enum GPUTextureFormat {
     "rg16uint",
     "rg16sint",
     "rg16float",
-    "rgba8unorm",
+    "rgba8unorm", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
     "rgba8unorm-srgb",
     "rgba8snorm",
-    "rgba8uint",
-    "rgba8sint",
+    "rgba8uint", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+    "rgba8sint", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
     "bgra8unorm",
     "bgra8unorm-srgb",
 
@@ -925,14 +926,14 @@ enum GPUTextureFormat {
     "rg32float",
     "rgba16unorm", // Supported with "texture-formats-tier1"
     "rgba16snorm", // Supported with "texture-formats-tier1"
-    "rgba16uint",
-    "rgba16sint",
-    "rgba16float",
+    "rgba16uint", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+    "rgba16sint", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+    "rgba16float", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
 
     // 128-bit formats
-    "rgba32uint",
-    "rgba32sint",
-    "rgba32float",
+    "rgba32uint", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+    "rgba32sint", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+    "rgba32float", // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
 
     // Depth/stencil formats
     "stencil8",
@@ -1009,16 +1010,16 @@ enum GPUTextureFormat {
 typedef int WGPU_TEXTURE_FORMAT;
 #define WGPU_TEXTURE_FORMAT_INVALID               0
     // 8-bit formats
-#define WGPU_TEXTURE_FORMAT_R8UNORM               1
+#define WGPU_TEXTURE_FORMAT_R8UNORM               1 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
 #define WGPU_TEXTURE_FORMAT_R8SNORM               2
-#define WGPU_TEXTURE_FORMAT_R8UINT                3
-#define WGPU_TEXTURE_FORMAT_R8SINT                4
+#define WGPU_TEXTURE_FORMAT_R8UINT                3 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+#define WGPU_TEXTURE_FORMAT_R8SINT                4 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
     // 16-bit formats
 #define WGPU_TEXTURE_FORMAT_R16UNORM              5 // Supported with "texture-formats-tier1"
 #define WGPU_TEXTURE_FORMAT_R16SNORM              6 // Supported with "texture-formats-tier1"
-#define WGPU_TEXTURE_FORMAT_R16UINT               7
-#define WGPU_TEXTURE_FORMAT_R16SINT               8
-#define WGPU_TEXTURE_FORMAT_R16FLOAT              9
+#define WGPU_TEXTURE_FORMAT_R16UINT               7 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+#define WGPU_TEXTURE_FORMAT_R16SINT               8 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+#define WGPU_TEXTURE_FORMAT_R16FLOAT              9 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
 #define WGPU_TEXTURE_FORMAT_RG8UNORM              10
 #define WGPU_TEXTURE_FORMAT_RG8SNORM              11
 #define WGPU_TEXTURE_FORMAT_RG8UINT               12
@@ -1032,11 +1033,11 @@ typedef int WGPU_TEXTURE_FORMAT;
 #define WGPU_TEXTURE_FORMAT_RG16UINT              19
 #define WGPU_TEXTURE_FORMAT_RG16SINT              20
 #define WGPU_TEXTURE_FORMAT_RG16FLOAT             21
-#define WGPU_TEXTURE_FORMAT_RGBA8UNORM            22
+#define WGPU_TEXTURE_FORMAT_RGBA8UNORM            22 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
 #define WGPU_TEXTURE_FORMAT_RGBA8UNORM_SRGB       23
 #define WGPU_TEXTURE_FORMAT_RGBA8SNORM            24
-#define WGPU_TEXTURE_FORMAT_RGBA8UINT             25
-#define WGPU_TEXTURE_FORMAT_RGBA8SINT             26
+#define WGPU_TEXTURE_FORMAT_RGBA8UINT             25 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+#define WGPU_TEXTURE_FORMAT_RGBA8SINT             26 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
 #define WGPU_TEXTURE_FORMAT_BGRA8UNORM            27
 #define WGPU_TEXTURE_FORMAT_BGRA8UNORM_SRGB       28
     // Packed 32-bit formats
@@ -1050,13 +1051,13 @@ typedef int WGPU_TEXTURE_FORMAT;
 #define WGPU_TEXTURE_FORMAT_RG32FLOAT             35
 #define WGPU_TEXTURE_FORMAT_RGBA16UNORM           36 // Supported with "texture-formats-tier1"
 #define WGPU_TEXTURE_FORMAT_RGBA16SNORM           37 // Supported with "texture-formats-tier1"
-#define WGPU_TEXTURE_FORMAT_RGBA16UINT            38
-#define WGPU_TEXTURE_FORMAT_RGBA16SINT            39
-#define WGPU_TEXTURE_FORMAT_RGBA16FLOAT           40
+#define WGPU_TEXTURE_FORMAT_RGBA16UINT            38 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+#define WGPU_TEXTURE_FORMAT_RGBA16SINT            39 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+#define WGPU_TEXTURE_FORMAT_RGBA16FLOAT           40 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
     // 128-bit formats
-#define WGPU_TEXTURE_FORMAT_RGBA32UINT            41
-#define WGPU_TEXTURE_FORMAT_RGBA32SINT            42
-#define WGPU_TEXTURE_FORMAT_RGBA32FLOAT           43
+#define WGPU_TEXTURE_FORMAT_RGBA32UINT            41 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+#define WGPU_TEXTURE_FORMAT_RGBA32SINT            42 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
+#define WGPU_TEXTURE_FORMAT_RGBA32FLOAT           43 // Read-write GPUStorageTextureAccess is available if "texture-formats-tier2" is enabled
     // Depth/stencil formats
 #define WGPU_TEXTURE_FORMAT_STENCIL8              44
 #define WGPU_TEXTURE_FORMAT_DEPTH16UNORM          45

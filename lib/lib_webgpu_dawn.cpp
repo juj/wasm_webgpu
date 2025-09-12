@@ -119,9 +119,10 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_DualSourceBlending,
   WGPUFeatureName_Subgroups,
   WGPUFeatureName_TextureFormatsTier1,
+  WGPUFeatureName_TextureFormatsTier2,
   WGPUFeatureName_PrimitiveIndex,
 };
-const int _wgpu_num_features = 18;
+const int _wgpu_num_features = 19;
 
 const WGPUPowerPreference WGPU_POWER_PREFERENCE_to_Dawn[] = {
   WGPUPowerPreference_Undefined,
