@@ -1481,7 +1481,7 @@ WGPU_BOOL wgpu_is_pipeline_layout(WGpuObjectBase object);
 
 /*
 dictionary GPUPipelineLayoutDescriptor : GPUObjectDescriptorBase {
-    required sequence<GPUBindGroupLayout> bindGroupLayouts;
+    required sequence<GPUBindGroupLayout?> bindGroupLayouts;
 };
 */
 // Currently unused.
