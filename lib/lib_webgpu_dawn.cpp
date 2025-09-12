@@ -113,12 +113,13 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_RG11B10UfloatRenderable,
   WGPUFeatureName_BGRA8UnormStorage,
   WGPUFeatureName_Float32Filterable,
+  WGPUFeatureName_Float32Blendable,
   WGPUFeatureName_ClipDistances,
   WGPUFeatureName_DualSourceBlending,
   WGPUFeatureName_Subgroups,
   WGPUFeatureName_TextureFormatsTier1,
 };
-const int _wgpu_num_features = 15;
+const int _wgpu_num_features = 16;
 
 const WGPUPowerPreference WGPU_POWER_PREFERENCE_to_Dawn[] = {
   WGPUPowerPreference_Undefined,
