@@ -396,6 +396,7 @@ const char * const * navigator_gpu_get_wgsl_language_features(void);
 WGPU_BOOL navigator_gpu_is_wgsl_language_feature_supported(const char *feature);
 /*
 dictionary GPURequestAdapterOptions {
+    DOMString featureLevel = "core"; // TODO: Currently unused, since no actual implementations exist.
     GPUPowerPreference powerPreference;
     boolean forceFallbackAdapter = false;
     boolean xrCompatible = false;
