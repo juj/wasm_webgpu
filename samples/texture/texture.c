@@ -161,10 +161,10 @@ void DownloadedImage(WGpuImageBitmap bitmap, int width, int height, void *userDa
 
   texture = wgpu_device_create_texture(device, &textureDesc);
 
-  WGpuImageCopyExternalImage src = {};
+  WGpuCopyExternalImageSourceInfo src = {};
   src.source = bitmap;
 
-  WGpuImageCopyTextureTagged dst = {};
+  WGpuCopyExternalImageDestInfo dst = {};
   dst.texture = texture;
 
   wgpu_queue_copy_external_image_to_texture(wgpu_device_get_queue(device), &src, &dst, width, height, 1);

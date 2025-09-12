@@ -43,14 +43,14 @@ int main()
     for(int x = 0; x < 8; ++x)
       data[y*8+x] = y*8+x;
 
-  WGpuImageCopyTexture copyTexture = {
+  WGpuTexelCopyTextureInfo copyTexture = {
     .texture = texture,
     .aspect = WGPU_TEXTURE_ASPECT_ALL
   };
 
   wgpu_queue_write_texture(wgpu_device_get_queue(device), &copyTexture, data, 8, 8, 8, 8);
 
-  WGpuImageCopyBuffer copyBuffer = {
+  WGpuTexelCopyBufferInfo copyBuffer = {
     .bytesPerRow = 256,
     .rowsPerImage = 8,
     .buffer = dstBuffer,

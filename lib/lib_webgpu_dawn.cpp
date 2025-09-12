@@ -2158,71 +2158,71 @@ void wgpu_command_encoder_copy_buffer_to_buffer(WGpuCommandEncoder commandEncode
   wgpuCommandEncoderCopyBufferToBuffer(_commandEncoder, _source, (uint64_t)sourceOffset, _destination, (uint64_t)destinationOffset, (uint64_t)size);
 }
 
-// Helper Function for reading in WGpuImageCopyTexture-> dawn WGPUImageCopyTexture
-static void wgpuReadGpuImageCopyTexture(const WGpuImageCopyTexture* source, WGPUImageCopyTexture& output) {
+// Helper Function for reading in WGpuTexelCopyTextureInfo-> dawn WGPUTexelCopyTextureInfo
+static void wgpuReadGpuTexelCopyTextureInfo(const WGpuTexelCopyTextureInfo* source, WGPUTexelCopyTextureInfo& output) {
   output.texture = _wgpu_get_dawn<WGPUTexture>(source->texture);
   output.mipLevel = source->mipLevel;
   output.origin = { (uint32_t)source->origin.x, (uint32_t)source->origin.y, (uint32_t)source->origin.z };
   output.aspect = wgpu_texture_aspect_to_dawn(source->aspect);
 }
 
-// Helper Function for reading in WGpuImageCopyBuffer-> dawn WGPUImageCopyBuffer
-static void wgpuReadGpuImageCopyBuffer(const WGpuImageCopyBuffer* source, WGPUImageCopyBuffer& output) {
+// Helper Function for reading in WGpuTexelCopyBufferInfo-> dawn WGPUTexelCopyBufferInfo
+static void wgpuReadGpuTexelCopyBufferInfo(const WGpuTexelCopyBufferInfo* source, WGPUTexelCopyBufferInfo& output) {
   output.layout.offset = source->offset;
   output.layout.bytesPerRow = source->bytesPerRow;
   output.layout.rowsPerImage = source->rowsPerImage;
   output.buffer = _wgpu_get_dawn<WGPUBuffer>(source->buffer);
 }
 
-void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyBuffer *source,
-    const WGpuImageCopyTexture *destination, uint32_t copyWidth, uint32_t copyHeight, uint32_t copyDepthOrArrayLayers) {
+void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuTexelCopyBufferInfo *source,
+    const WGpuTexelCopyBufferInfo *destination, uint32_t copyWidth, uint32_t copyHeight, uint32_t copyDepthOrArrayLayers) {
   assert(wgpu_is_command_encoder(commandEncoder));
   assert(source);
   assert(destination);
 
   WGPUCommandEncoder _commandEncoder = _wgpu_get_dawn<WGPUCommandEncoder>(commandEncoder);
 
-  WGPUImageCopyBuffer _source;
-  wgpuReadGpuImageCopyBuffer(source, _source);
+  WGPUTexelCopyBufferInfo _source;
+  wgpuReadGpuTexelCopyBufferInfo(source, _source);
 
-  WGPUImageCopyTexture _destination;
-  wgpuReadGpuImageCopyTexture(destination, _destination);
+  WGPUTexelCopyTextureInfo _destination;
+  wgpuReadGpuTexelCopyTextureInfo(destination, _destination);
 
   WGPUExtent3D copySize { copyWidth, copyHeight, copyDepthOrArrayLayers };
   wgpuCommandEncoderCopyBufferToTexture(_commandEncoder, &_source, &_destination, &copySize);
 }
 
-void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source,
-    const WGpuImageCopyBuffer *destination, uint32_t copyWidth, uint32_t copyHeight, uint32_t copyDepthOrArrayLayers) {
+void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, const WGpuTexelCopyTextureInfo *source,
+    const WGpuTexelCopyBufferInfo *destination, uint32_t copyWidth, uint32_t copyHeight, uint32_t copyDepthOrArrayLayers) {
   assert(wgpu_is_command_encoder(commandEncoder));
   assert(source);
   assert(destination);
 
   WGPUCommandEncoder _commandEncoder = _wgpu_get_dawn<WGPUCommandEncoder>(commandEncoder);
 
-  WGPUImageCopyTexture _source;
-  wgpuReadGpuImageCopyTexture(source, _source);
+  WGPUTexelCopyTextureInfo _source;
+  wgpuReadGpuTexelCopyTextureInfo(source, _source);
 
-  WGPUImageCopyBuffer _destination;
-  wgpuReadGpuImageCopyBuffer(destination, _destination);
+  WGPUTexelCopyBufferInfo _destination;
+  wgpuReadGpuTexelCopyBufferInfo(destination, _destination);
 
   WGPUExtent3D copySize {copyWidth, copyHeight, copyDepthOrArrayLayers};
   wgpuCommandEncoderCopyTextureToBuffer(_commandEncoder, &_source, &_destination, &copySize);
 }
 
-void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source,
-    const WGpuImageCopyTexture *destination, uint32_t copyWidth, uint32_t copyHeight, uint32_t copyDepthOrArrayLayers) {
+void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuTexelCopyTextureInfo *source,
+    const WGpuTexelCopyTextureInfo *destination, uint32_t copyWidth, uint32_t copyHeight, uint32_t copyDepthOrArrayLayers) {
   assert(wgpu_is_command_encoder(commandEncoder));
   assert(source);
   assert(destination);
 
   WGPUCommandEncoder _commandEncoder = _wgpu_get_dawn<WGPUCommandEncoder>(commandEncoder);
 
-  WGPUImageCopyTexture _source;
-  wgpuReadGpuImageCopyTexture(source, _source);
+  WGPUTexelCopyTextureInfo _source;
+  wgpuReadGpuTexelCopyTextureInfo(source, _source);
 
-  WGPUImageCopyTexture _destination;
-  wgpuReadGpuImageCopyTexture(destination, _destination);
+  WGPUTexelCopyTextureInfo _destination;
+  wgpuReadGpuTexelCopyTextureInfo(destination, _destination);
 
   WGPUExtent3D copySize {copyWidth, copyHeight, copyDepthOrArrayLayers};
   wgpuCommandEncoderCopyTextureToTexture(_commandEncoder, &_source, &_destination, &copySize);
@@ -2527,15 +2527,15 @@ void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t 
   wgpuQueueWriteBuffer(_queue, _buffer, (uint64_t)bufferOffset, data, (size_t)size);
 }
 
-void wgpu_queue_write_texture(WGpuQueue queue, const WGpuImageCopyTexture *destination, const void *data, uint32_t bytesPerBlockRow,
+void wgpu_queue_write_texture(WGpuQueue queue, const WGpuTexelCopyTextureInfo *destination, const void *data, uint32_t bytesPerBlockRow,
     uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight, uint32_t writeDepthOrArrayLayers) {
   assert(wgpu_is_queue(queue));
   assert(destination != nullptr);
   assert(data != nullptr);
 
   WGPUQueue _queue = _wgpu_get_dawn<WGPUQueue>(queue);
-  WGPUImageCopyTexture _destination = {};
-  wgpuReadGpuImageCopyTexture(destination, _destination);
+  WGPUTexelCopyTextureInfo _destination = {};
+  wgpuReadGpuTexelCopyTextureInfo(destination, _destination);
 
   WGPUTextureDataLayout dataLayout{ nullptr, 0, bytesPerBlockRow, blockRowsPerImage};
   WGPUExtent3D extents {writeWidth, writeHeight, writeDepthOrArrayLayers};
@@ -2543,7 +2543,7 @@ void wgpu_queue_write_texture(WGpuQueue queue, const WGpuImageCopyTexture *desti
   wgpuQueueWriteTexture(_queue, &_destination, data, bytesPerBlockRow * blockRowsPerImage, &dataLayout, &extents);
 }
 
-void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuImageCopyExternalImage *source, const WGpuImageCopyTextureTagged *destination,
+void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuCopyExternalImageSourceInfo *source, const WGpuCopyExternalImageDestInfo *destination,
     uint32_t copyWidth, uint32_t copyHeight, uint32_t copyDepthOrArrayLayers) {
   assert(wgpu_is_queue(queue));
   assert(source != nullptr);

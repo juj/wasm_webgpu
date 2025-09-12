@@ -2193,18 +2193,18 @@ interface GPUCommandEncoder {
         GPUSize64 size);
 
     undefined copyBufferToTexture(
-        GPUImageCopyBuffer source,
-        GPUImageCopyTexture destination,
+        GPUTexelCopyBufferInfo source,
+        GPUTexelCopyTextureInfo destination,
         GPUExtent3D copySize);
 
     undefined copyTextureToBuffer(
-        GPUImageCopyTexture source,
-        GPUImageCopyBuffer destination,
+        GPUTexelCopyTextureInfo source,
+        GPUTexelCopyBufferInfo destination,
         GPUExtent3D copySize);
 
     undefined copyTextureToTexture(
-        GPUImageCopyTexture source,
-        GPUImageCopyTexture destination,
+        GPUTexelCopyTextureInfo source,
+        GPUTexelCopyTextureInfo destination,
         GPUExtent3D copySize);
 
     undefined clearBuffer(
@@ -2232,9 +2232,9 @@ WGPU_BOOL wgpu_is_command_encoder(WGpuObjectBase object);
 WGpuRenderPassEncoder wgpu_command_encoder_begin_render_pass(WGpuCommandEncoder commandEncoder, const WGpuRenderPassDescriptor *renderPassDesc NOTNULL);
 WGpuComputePassEncoder wgpu_command_encoder_begin_compute_pass(WGpuCommandEncoder commandEncoder, const WGpuComputePassDescriptor *computePassDesc _WGPU_DEFAULT_VALUE(0));
 void wgpu_command_encoder_copy_buffer_to_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer source, double_int53_t sourceOffset, WGpuBuffer destination, double_int53_t destinationOffset, double_int53_t size);
-void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyBuffer *source NOTNULL, const WGpuImageCopyTexture *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
-void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source NOTNULL, const WGpuImageCopyBuffer *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
-void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuImageCopyTexture *source NOTNULL, const WGpuImageCopyTexture *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuTexelCopyBufferInfo *source NOTNULL, const WGpuTexelCopyTextureInfo *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_command_encoder_copy_texture_to_buffer(WGpuCommandEncoder commandEncoder, const WGpuTexelCopyTextureInfo *source NOTNULL, const WGpuTexelCopyBufferInfo *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_command_encoder_copy_texture_to_texture(WGpuCommandEncoder commandEncoder, const WGpuTexelCopyTextureInfo *source NOTNULL, const WGpuTexelCopyTextureInfo *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 void wgpu_command_encoder_clear_buffer(WGpuCommandEncoder commandEncoder, WGpuBuffer buffer, double_int53_t offset _WGPU_DEFAULT_VALUE(0), double_int53_t size _WGPU_DEFAULT_VALUE(WGPU_MAX_SIZE));
 void wgpu_command_encoder_resolve_query_set(WGpuCommandEncoder commandEncoder, WGpuQuerySet querySet, uint32_t firstQuery, uint32_t queryCount, WGpuBuffer destination, double_int53_t destinationOffset);
 
@@ -2258,31 +2258,31 @@ typedef struct WGpuCommandEncoderDescriptor
 extern const WGpuCommandEncoderDescriptor WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 /*
-dictionary GPUImageDataLayout {
+dictionary GPUTexelCopyBufferLayout {
     GPUSize64 offset = 0;
     GPUSize32 bytesPerRow;
     GPUSize32 rowsPerImage;
 };
-// unused: fused to WGpuImageCopyBuffer
+// unused: fused to WGpuTexelCopyBufferInfo
 */
 
 /*
-dictionary GPUImageCopyBuffer : GPUImageDataLayout {
+dictionary GPUTexelCopyBufferInfo : GPUTexelCopyBufferLayout {
     required GPUBuffer buffer;
 };
 */
-typedef struct WGpuImageCopyBuffer
+typedef struct WGpuTexelCopyBufferInfo
 {
   uint64_t offset;
   uint32_t bytesPerRow;
   uint32_t rowsPerImage;
   WGpuBuffer buffer;
   uint32_t unused_padding;
-} WGpuImageCopyBuffer;
-extern const WGpuImageCopyBuffer WGPU_IMAGE_COPY_BUFFER_DEFAULT_INITIALIZER;
+} WGpuTexelCopyBufferInfo;
+extern const WGpuTexelCopyBufferInfo WGPU_TEXEL_COPY_BUFFER_INFO_DEFAULT_INITIALIZER;
 
 /*
-dictionary GPUImageCopyTexture {
+dictionary GPUTexelCopyTextureInfo {
     required GPUTexture texture;
     GPUIntegerCoordinate mipLevel = 0;
     GPUOrigin3D origin = {};
@@ -2292,7 +2292,7 @@ dictionary GPUImageCopyTexture {
 // Defined at the end of this file
 
 /*
-dictionary GPUImageCopyTextureTagged : GPUImageCopyTexture {
+dictionary WGPUCopyExternalImageDestInfo : GPUTexelCopyTextureInfo {
     PredefinedColorSpace colorSpace = "srgb";
     boolean premultipliedAlpha = false;
 };
@@ -2300,7 +2300,7 @@ dictionary GPUImageCopyTextureTagged : GPUImageCopyTexture {
 // Defined at the end of this file
 
 /*
-dictionary GPUImageCopyExternalImage {
+dictionary GPUCopyExternalImageSourceInfo {
     required (ImageBitmap or HTMLVideoElement or HTMLCanvasElement or OffscreenCanvas) source;
     GPUOrigin2D origin = {};
     boolean flipY = false;
@@ -2636,14 +2636,14 @@ interface GPUQueue {
         optional GPUSize64 size);
 
     undefined writeTexture(
-      GPUImageCopyTexture destination,
+      GPUTexelCopyTextureInfo destination,
       [AllowShared] BufferSource data,
-      GPUImageDataLayout dataLayout,
+      GPUTexelCopyBufferLayout dataLayout,
       GPUExtent3D size);
 
     undefined copyExternalImageToTexture(
-        GPUImageCopyExternalImage source,
-        GPUImageCopyTextureTagged destination,
+        GPUCopyExternalImageSourceInfo source,
+        GPUCopyExternalImageDestInfo destination,
         GPUExtent3D copySize);
 };
 GPUQueue includes GPUObjectBase;
@@ -2668,8 +2668,8 @@ void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmi
 // Uploads data to the given GPUBuffer. Data is copied from memory in byte addresses data[0], data[1], ... data[size-1], and uploaded
 // to the GPU buffer at byte offset bufferOffset, bufferOffset+1, ..., bufferOffset+size-1.
 void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, const void *data NOTNULL, double_int53_t size);
-void wgpu_queue_write_texture(WGpuQueue queue, const WGpuImageCopyTexture *destination NOTNULL, const void *data NOTNULL, uint32_t bytesPerBlockRow, uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
-void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuImageCopyExternalImage *source NOTNULL, const WGpuImageCopyTextureTagged *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_queue_write_texture(WGpuQueue queue, const WGpuTexelCopyTextureInfo *destination NOTNULL, const void *data NOTNULL, uint32_t bytesPerBlockRow, uint32_t blockRowsPerImage, uint32_t writeWidth, uint32_t writeHeight _WGPU_DEFAULT_VALUE(1), uint32_t writeDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
+void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuCopyExternalImageSourceInfo *source NOTNULL, const WGpuCopyExternalImageDestInfo *destination NOTNULL, uint32_t copyWidth, uint32_t copyHeight _WGPU_DEFAULT_VALUE(1), uint32_t copyDepthOrArrayLayers _WGPU_DEFAULT_VALUE(1));
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
@@ -3062,26 +3062,26 @@ extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEF
 
 VERIFY_STRUCT_SIZE(WGpuRenderPassColorAttachment, 14*sizeof(uint32_t));
 
-typedef struct WGpuImageCopyExternalImage
+typedef struct WGpuCopyExternalImageSourceInfo
 {
   WGpuObjectBase source; // must point to a WGpuImageBitmap (could also point to a HTMLVideoElement, HTMLCanvasElement or OffscreenCanvas, but those are currently unimplemented)
   WGpuOrigin2D origin;
   WGPU_BOOL flipY; // defaults to false.
-} WGpuImageCopyExternalImage;
-extern const WGpuImageCopyExternalImage WGPU_IMAGE_COPY_EXTERNAL_IMAGE_DEFAULT_INITIALIZER;
+} WGpuCopyExternalImageSourceInfo;
+extern const WGpuCopyExternalImageSourceInfo WGPU_COPY_EXTERNAL_IMAGE_SOURCE_INFO_DEFAULT_INITIALIZER;
 
-typedef struct WGpuImageCopyTexture
+typedef struct WGpuTexelCopyTextureInfo
 {
   WGpuTexture texture;
   uint32_t mipLevel;
   WGpuOrigin3D origin;
   WGPU_TEXTURE_ASPECT aspect;
-} WGpuImageCopyTexture;
-extern const WGpuImageCopyTexture WGPU_IMAGE_COPY_TEXTURE_DEFAULT_INITIALIZER;
+} WGpuTexelCopyTextureInfo;
+extern const WGpuTexelCopyTextureInfo WGPU_TEXEL_COPY_TEXTURE_INFO_DEFAULT_INITIALIZER;
 
-typedef struct WGpuImageCopyTextureTagged
+typedef struct WGpuCopyExternalImageDestInfo
 {
-  // WGpuImageCopyTexture part:
+  // WGpuTexelCopyTextureInfo part:
   WGpuTexture texture;
   uint32_t mipLevel;
   WGpuOrigin3D origin;
@@ -3089,8 +3089,8 @@ typedef struct WGpuImageCopyTextureTagged
 
   HTML_PREDEFINED_COLOR_SPACE colorSpace; // = "srgb";
   WGPU_BOOL premultipliedAlpha; // = false;
-} WGpuImageCopyTextureTagged;
-extern const WGpuImageCopyTextureTagged WGPU_IMAGE_COPY_TEXTURE_TAGGED_DEFAULT_INITIALIZER;
+} WGpuCopyExternalImageDestInfo;
+extern const WGpuCopyExternalImageDestInfo WGPU_COPY_EXTERNAL_IMAGE_DEST_INFO_DEFAULT_INITIALIZER;
 
 typedef struct WGpuDepthStencilState
 {
