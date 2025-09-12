@@ -2725,6 +2725,7 @@ interface GPUCanvasContext {
     undefined configure(GPUCanvasConfiguration configuration);
     undefined unconfigure();
 
+    GPUCanvasConfiguration? getConfiguration();
     GPUTexture getCurrentTexture();
 };
 */
@@ -2737,6 +2738,11 @@ WGPU_BOOL wgpu_is_canvas_context(WGpuObjectBase object);
 // Configures the swap chain for this context.
 #ifdef __EMSCRIPTEN__
 void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCanvasConfiguration *config NOTNULL);
+
+// Reads the configuration of the given canvas context.
+// Note: If getConfiguration() returns an empty object, then this function will return a null pointer.
+// IMPORTANT! The return value from this function is malloc()ed. Call free() on the returned pointer to avoid leaking memory.
+WGpuCanvasConfiguration *wgpu_canvas_context_get_configuration(WGpuCanvasContext canvasContext);
 #else
 void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCanvasConfiguration *config NOTNULL, int width _WGPU_DEFAULT_VALUE(0), int height _WGPU_DEFAULT_VALUE(0));
 #endif
