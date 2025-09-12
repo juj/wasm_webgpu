@@ -343,6 +343,7 @@ const stringArrays = {
     'texture-compression-bc-sliced-3d',
     'texture-compression-etc2',
     'texture-compression-astc',
+    'texture-compression-astc-sliced-3d',
     'timestamp-query',
     'indirect-first-instance',
     'shader-f16',

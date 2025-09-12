@@ -107,6 +107,7 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_Force32, // WGPU_FEATURE_TEXTURE_COMPRESSION_BC_SLICED_3D, no Dawn equivalent
   WGPUFeatureName_TextureCompressionETC2,
   WGPUFeatureName_TextureCompressionASTC,
+  WGPUFeatureName_TextureCompressionASTCSliced3D,
   WGPUFeatureName_TimestampQuery,
   WGPUFeatureName_IndirectFirstInstance,
   WGPUFeatureName_ShaderF16,
@@ -119,7 +120,7 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_Subgroups,
   WGPUFeatureName_TextureFormatsTier1,
 };
-const int _wgpu_num_features = 16;
+const int _wgpu_num_features = 17;
 
 const WGPUPowerPreference WGPU_POWER_PREFERENCE_to_Dawn[] = {
   WGPUPowerPreference_Undefined,

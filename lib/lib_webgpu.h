@@ -241,6 +241,7 @@ enum GPUFeatureName {
     "texture-compression-bc-sliced-3d",
     "texture-compression-etc2",
     "texture-compression-astc",
+    "texture-compression-astc-sliced-3d",
     "timestamp-query",
     "indirect-first-instance",
     "shader-f16",
@@ -261,19 +262,20 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_TEXTURE_COMPRESSION_BC_SLICED_3D     0x08
 #define WGPU_FEATURE_TEXTURE_COMPRESSION_ETC2             0x10
 #define WGPU_FEATURE_TEXTURE_COMPRESSION_ASTC             0x20
-#define WGPU_FEATURE_TIMESTAMP_QUERY                      0x40
-#define WGPU_FEATURE_INDIRECT_FIRST_INSTANCE              0x80
-#define WGPU_FEATURE_SHADER_F16                          0x100
-#define WGPU_FEATURE_RG11B10UFLOAT_RENDERABLE            0x200
-#define WGPU_FEATURE_BGRA8UNORM_STORAGE                  0x400
-#define WGPU_FEATURE_FLOAT32_FILTERABLE                  0x800
-#define WGPU_FEATURE_FLOAT32_BLENDABLE                  0x1000
-#define WGPU_FEATURE_CLIP_DISTANCES                     0x2000
-#define WGPU_FEATURE_DUAL_SOURCE_BLENDING               0x4000
-#define WGPU_FEATURE_SUBGROUPS                          0x8000
-#define WGPU_FEATURE_TEXTURE_FORMATS_TIER1             0x10000
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_ASTC_SLICED_3D   0x40
+#define WGPU_FEATURE_TIMESTAMP_QUERY                      0x80
+#define WGPU_FEATURE_INDIRECT_FIRST_INSTANCE             0x100
+#define WGPU_FEATURE_SHADER_F16                          0x200
+#define WGPU_FEATURE_RG11B10UFLOAT_RENDERABLE            0x400
+#define WGPU_FEATURE_BGRA8UNORM_STORAGE                  0x800
+#define WGPU_FEATURE_FLOAT32_FILTERABLE                 0x1000
+#define WGPU_FEATURE_FLOAT32_BLENDABLE                  0x2000
+#define WGPU_FEATURE_CLIP_DISTANCES                     0x4000
+#define WGPU_FEATURE_DUAL_SOURCE_BLENDING               0x8000
+#define WGPU_FEATURE_SUBGROUPS                         0x10000
+#define WGPU_FEATURE_TEXTURE_FORMATS_TIER1             0x20000
 
-#define WGPU_FEATURE_FIRST_UNUSED_BIT                  0x20000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
+#define WGPU_FEATURE_FIRST_UNUSED_BIT                  0x40000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
 
 /*
 // WebGPU reuses the color space enum from the HTML Canvas specification:
