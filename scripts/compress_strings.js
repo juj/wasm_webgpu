@@ -354,7 +354,8 @@ const stringArrays = {
     'clip-distances',
     'dual-source-blending',
     'subgroups',
-    'texture-formats-tier1'],
+    'texture-formats-tier1',
+    'primitive-index'],
 
   '$GPUBlendFactors': [/*undefined*/,
     'zero',

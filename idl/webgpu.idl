@@ -120,6 +120,7 @@ enum GPUFeatureName {
     "dual-source-blending",
     "subgroups",
     "texture-formats-tier1",
+    "primitive-index",
 };
 
 [Exposed=(Window, Worker), SecureContext]

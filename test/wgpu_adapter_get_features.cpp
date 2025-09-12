@@ -31,6 +31,7 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
   if ((features & WGPU_FEATURE_DUAL_SOURCE_BLENDING              ) != 0) printf("WGPU_FEATURE_DUAL_SOURCE_BLENDING              \n");
   if ((features & WGPU_FEATURE_SUBGROUPS                         ) != 0) printf("WGPU_FEATURE_SUBGROUPS                         \n");
   if ((features & WGPU_FEATURE_TEXTURE_FORMATS_TIER1             ) != 0) printf("WGPU_FEATURE_TEXTURE_FORMATS_TIER1             \n");
+  if ((features & WGPU_FEATURE_PRIMITIVE_INDEX                   ) != 0) printf("WGPU_FEATURE_PRIMITIVE_INDEX                   \n");
 
   EM_ASM(window.close());
 }
