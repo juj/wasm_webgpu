@@ -1,5 +1,5 @@
 // flags: -sJSPI
-// expected-output: navigator.gpu.requestAdapter(options={"forceFallbackAdapter":true,"powerPreference":"high-performance"})
+// expected-output: navigator.gpu.requestAdapter(options={"forceFallbackAdapter":false,"xrCompatible":false,"powerPreference":"high-performance"})
 
 #include "lib_webgpu.h"
 #include <assert.h>
@@ -17,7 +17,8 @@ int main()
 {
   WGpuRequestAdapterOptions options = {
     .powerPreference = WGPU_POWER_PREFERENCE_HIGH_PERFORMANCE,
-    .forceFallbackAdapter = WGPU_TRUE
+    .forceFallbackAdapter = WGPU_FALSE,
+    .xrCompatible = WGPU_FALSE
   };
 
   assert(wgpu_sync_operations_pending() == 0); // We should start with no asyncified operations running.

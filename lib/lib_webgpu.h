@@ -395,6 +395,7 @@ WGPU_BOOL navigator_gpu_is_wgsl_language_feature_supported(const char *feature);
 dictionary GPURequestAdapterOptions {
     GPUPowerPreference powerPreference;
     boolean forceFallbackAdapter = false;
+    boolean xrCompatible = false;
 };
 */
 typedef struct WGpuRequestAdapterOptions
@@ -408,6 +409,7 @@ typedef struct WGpuRequestAdapterOptions
   //       state and powerPreference, the user agent is likely to select the same adapter.
   WGPU_POWER_PREFERENCE powerPreference;
   WGPU_BOOL forceFallbackAdapter;
+  WGPU_BOOL xrCompatible;
 } WGpuRequestAdapterOptions;
 extern const WGpuRequestAdapterOptions WGPU_REQUEST_ADAPTER_OPTIONS_DEFAULT_INITIALIZER;
 
