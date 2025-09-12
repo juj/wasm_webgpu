@@ -2872,7 +2872,6 @@ dictionary GPUUncapturedErrorEventInit : EventInit {
 };
 
 partial interface GPUDevice {
-    [Exposed=(Window, DedicatedWorker)]
     attribute EventHandler onuncapturederror;
 };
 */
