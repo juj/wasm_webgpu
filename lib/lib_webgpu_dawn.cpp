@@ -2155,6 +2155,7 @@ void wgpu_command_encoder_copy_buffer_to_buffer(WGpuCommandEncoder commandEncode
   WGPUBuffer _source  = _wgpu_get_dawn<WGPUBuffer>(source);
   WGPUBuffer _destination = _wgpu_get_dawn<WGPUBuffer>(destination);
 
+  // TODO: if (size == WGPU_INFINITY) size = whole buffer size;
   wgpuCommandEncoderCopyBufferToBuffer(_commandEncoder, _source, (uint64_t)sourceOffset, _destination, (uint64_t)destinationOffset, (uint64_t)size);
 }
 
