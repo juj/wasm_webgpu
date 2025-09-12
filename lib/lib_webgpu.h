@@ -278,9 +278,10 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_DUAL_SOURCE_BLENDING              0x10000
 #define WGPU_FEATURE_SUBGROUPS                         0x20000
 #define WGPU_FEATURE_TEXTURE_FORMATS_TIER1             0x40000
-#define WGPU_FEATURE_PRIMITIVE_INDEX                   0x80000
+#define WGPU_FEATURE_TEXTURE_FORMATS_TIER2             0x80000
+#define WGPU_FEATURE_PRIMITIVE_INDEX                  0x100000
 
-#define WGPU_FEATURE_FIRST_UNUSED_BIT                 0x100000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
+#define WGPU_FEATURE_FIRST_UNUSED_BIT                 0x200000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
 
 /*
 // WebGPU reuses the color space enum from the HTML Canvas specification:
