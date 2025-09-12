@@ -1442,6 +1442,7 @@ dictionary GPUBindGroupDescriptor : GPUObjectDescriptorBase {
 
 /*
 typedef (GPUSampler or
+         GPUTexture or
          GPUTextureView or
          GPUBuffer or
          GPUBufferBinding or
@@ -2484,9 +2485,9 @@ void wgpu_render_pass_encoder_execute_bundles(WGpuRenderPassEncoder encoder, con
 
 /*
 dictionary GPURenderPassColorAttachment {
-    required GPUTextureView view;
+    required (GPUTexture or GPUTextureView) view;
     GPUIntegerCoordinate depthSlice;
-    GPUTextureView resolveTarget;
+    (GPUTexture or GPUTextureView) resolveTarget;
 
     GPUColor clearValue;
     required GPULoadOp loadOp;
@@ -2497,7 +2498,7 @@ dictionary GPURenderPassColorAttachment {
 
 /*
 dictionary GPURenderPassDepthStencilAttachment {
-    required GPUTextureView view;
+    required (GPUTexture or GPUTextureView) view;
 
     float depthClearValue;
     GPULoadOp depthLoadOp;
@@ -2512,7 +2513,7 @@ dictionary GPURenderPassDepthStencilAttachment {
 */
 typedef struct WGpuRenderPassDepthStencilAttachment
 {
-  WGpuTextureView view;
+  WGpuObjectBase view; // WGpuTexture, or WGpuTextureView
 
   WGPU_LOAD_OP depthLoadOp; // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR
   float depthClearValue;
@@ -3054,9 +3055,9 @@ extern const WGpuRenderPassDescriptor WGPU_RENDER_PASS_DESCRIPTOR_DEFAULT_INITIA
 
 typedef struct WGpuRenderPassColorAttachment
 {
-  WGpuTextureView view;
+  WGpuObjectBase view; // WGpuTexture, or WGpuTextureView
   int depthSlice;
-  WGpuTextureView resolveTarget;
+  WGpuObjectBase resolveTarget; // WGpuTexture, or WGpuTextureView
 
   WGPU_STORE_OP storeOp; // Required, be sure to set to WGPU_STORE_OP_STORE (default) or WGPU_STORE_OP_DISCARD
   WGPU_LOAD_OP loadOp; // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR.
