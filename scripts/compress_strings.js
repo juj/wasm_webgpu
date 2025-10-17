@@ -357,7 +357,8 @@ const stringArrays = {
     'subgroups',
     'texture-formats-tier1',
     'texture-formats-tier2',
-    'primitive-index'],
+    'primitive-index',
+    'texture-component-swizzle'],
 
   '$GPUBlendFactors': [/*undefined*/,
     'zero',

@@ -43,6 +43,7 @@ const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER
   0, /* mipLevelCount */
   0, /* baseArrayLayer */
   0, /* arrayLayerCount */
+  "rgba" /* swizzle */
 };
 
 const WGpuExternalTextureDescriptor WGPU_EXTERNAL_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {

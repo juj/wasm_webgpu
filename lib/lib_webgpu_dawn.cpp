@@ -122,8 +122,9 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_TextureFormatsTier1,
   WGPUFeatureName_TextureFormatsTier2,
   WGPUFeatureName_PrimitiveIndex,
+  WGPUFeatureName_TextureComponentSwizzle,
 };
-const int _wgpu_num_features = 21;
+const int _wgpu_num_features = 22;
 
 const WGPUPowerPreference WGPU_POWER_PREFERENCE_to_Dawn[] = {
   WGPUPowerPreference_Undefined,
@@ -1915,6 +1916,7 @@ WGpuTextureView wgpu_texture_create_view(WGpuTexture texture, const WGpuTextureV
   _desc.baseArrayLayer = textureViewDesc->baseArrayLayer;
   _desc.arrayLayerCount = textureViewDesc->arrayLayerCount;
   _desc.aspect = wgpu_texture_aspect_to_dawn(textureViewDesc->aspect);
+  strcpy(_desc.swizzle, textureViewDesc->swizzle);
 
   WGPUTextureView textureView = wgpuTextureCreateView(_wgpu_get_dawn<WGPUTexture>(texture), &_desc);
   return _wgpu_store_and_set_parent(kWebGPUTextureView, textureView, texture);

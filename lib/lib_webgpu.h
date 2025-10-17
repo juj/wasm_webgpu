@@ -256,6 +256,7 @@ enum GPUFeatureName {
     "texture-formats-tier1",
     "texture-formats-tier2",
     "primitive-index",
+    "texture-component-swizzle",
 };
 */
 typedef int WGPU_FEATURES_BITFIELD;
@@ -280,8 +281,9 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_TEXTURE_FORMATS_TIER1             0x40000
 #define WGPU_FEATURE_TEXTURE_FORMATS_TIER2             0x80000
 #define WGPU_FEATURE_PRIMITIVE_INDEX                  0x100000
+#define WGPU_FEATURE_TEXTURE_COMPONENT_SWIZZLE        0x200000
 
-#define WGPU_FEATURE_FIRST_UNUSED_BIT                 0x200000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
+#define WGPU_FEATURE_FIRST_UNUSED_BIT                 0x400000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
 
 /*
 // WebGPU reuses the color space enum from the HTML Canvas specification:
@@ -847,6 +849,9 @@ typedef struct WGpuTextureViewDescriptor
   uint32_t mipLevelCount;
   uint32_t baseArrayLayer; // default = 0
   uint32_t arrayLayerCount;
+
+  // A null-terminated string, representing the swizzle access order of this texture. Default "rgba". Valid characters 'r','g','b','a','0','1', e.g. "a001" and "rrrr" are valid.
+  unsigned char swizzle[8];
 } WGpuTextureViewDescriptor;
 extern const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER;
 

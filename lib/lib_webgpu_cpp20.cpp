@@ -24,7 +24,8 @@ const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {
 const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER = {
   .aspect = WGPU_TEXTURE_ASPECT_ALL,
   .baseMipLevel = 0,
-  .baseArrayLayer = 0
+  .baseArrayLayer = 0,
+  .swizzle = "rgba"
 };
 
 const WGpuExternalTextureDescriptor WGPU_EXTERNAL_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {
