@@ -29,7 +29,11 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
   TEST32(limits.maxSampledTexturesPerShaderStage, 16);
   TEST32(limits.maxSamplersPerShaderStage, 16);
   TEST32(limits.maxStorageBuffersPerShaderStage, 8);
+  TEST32(limits.maxStorageBuffersInVertexStage, 8);
+  TEST32(limits.maxStorageBuffersInFragmentStage, 8);
   TEST32(limits.maxStorageTexturesPerShaderStage, 4);
+  TEST32(limits.maxStorageTexturesInVertexStage, 8);
+  TEST32(limits.maxStorageTexturesInFragmentStage, 8);
   TEST32(limits.maxUniformBuffersPerShaderStage, 12);
   TEST32(limits.minUniformBufferOffsetAlignment, 256);
   TEST32(limits.minStorageBufferOffsetAlignment, 256);

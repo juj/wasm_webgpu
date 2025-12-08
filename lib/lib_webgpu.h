@@ -161,7 +161,11 @@ interface GPUSupportedLimits {
     readonly attribute unsigned long maxSampledTexturesPerShaderStage;
     readonly attribute unsigned long maxSamplersPerShaderStage;
     readonly attribute unsigned long maxStorageBuffersPerShaderStage;
+    readonly attribute unsigned long maxStorageBuffersInVertexStage;
+    readonly attribute unsigned long maxStorageBuffersInFragmentStage;
     readonly attribute unsigned long maxStorageTexturesPerShaderStage;
+    readonly attribute unsigned long maxStorageTexturesInVertexStage;
+    readonly attribute unsigned long maxStorageTexturesInFragmentStage;
     readonly attribute unsigned long maxUniformBuffersPerShaderStage;
     readonly attribute unsigned long long maxUniformBufferBindingSize;
     readonly attribute unsigned long long maxStorageBufferBindingSize;
@@ -207,7 +211,11 @@ typedef struct WGpuSupportedLimits
   uint32_t maxSampledTexturesPerShaderStage; // required >= 16
   uint32_t maxSamplersPerShaderStage; // required >= 16
   uint32_t maxStorageBuffersPerShaderStage; // required >= 8
+  uint32_t maxStorageBuffersInVertexStage; // required >= 8
+  uint32_t maxStorageBuffersInFragmentStage; // required >= 8
   uint32_t maxStorageTexturesPerShaderStage; // required >= 4
+  uint32_t maxStorageTexturesInVertexStage; // required >= 8
+  uint32_t maxStorageTexturesInFragmentStage; // required >= 8
   uint32_t maxUniformBuffersPerShaderStage; // required >= 12
   uint32_t minUniformBufferOffsetAlignment; // required >= 256 bytes
   uint32_t minStorageBufferOffsetAlignment; // required >= 256 bytes
@@ -225,7 +233,7 @@ typedef struct WGpuSupportedLimits
   uint32_t maxComputeWorkgroupsPerDimension; // required >= 65535
 } WGpuSupportedLimits;
 
-VERIFY_STRUCT_SIZE(WGpuSupportedLimits, 34*sizeof(uint32_t));
+VERIFY_STRUCT_SIZE(WGpuSupportedLimits, 38*sizeof(uint32_t));
 
 /*
 [Exposed=(Window, DedicatedWorker)]

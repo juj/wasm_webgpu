@@ -1080,7 +1080,11 @@ void wgpu_adapter_or_device_get_limits(WGpuAdapter adapterOrDevice, WGpuSupporte
   limits->maxSampledTexturesPerShaderStage = _limits.limits.maxSampledTexturesPerShaderStage;
   limits->maxSamplersPerShaderStage = _limits.limits.maxSamplersPerShaderStage;
   limits->maxStorageBuffersPerShaderStage = _limits.limits.maxStorageBuffersPerShaderStage;
+  limits->maxStorageBuffersInVertexStage = _limits.limits.maxStorageBuffersInVertexStage;
+  limits->maxStorageBuffersInFragmentStage = _limits.limits.maxStorageBuffersInFragmentStage;
   limits->maxStorageTexturesPerShaderStage = _limits.limits.maxStorageTexturesPerShaderStage;
+  limits->maxStorageTexturesInVertexStage = _limits.limits.maxStorageTexturesInVertexStage;
+  limits->maxStorageTexturesInFragmentStage = _limits.limits.maxStorageTexturesInFragmentStage;
   limits->maxUniformBuffersPerShaderStage = _limits.limits.maxUniformBuffersPerShaderStage;
   limits->minUniformBufferOffsetAlignment = _limits.limits.minUniformBufferOffsetAlignment;
   limits->minStorageBufferOffsetAlignment = _limits.limits.minStorageBufferOffsetAlignment;

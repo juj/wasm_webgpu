@@ -174,7 +174,11 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
   ADAPTER_LIMIT(maxSampledTexturesPerShaderStage);
   ADAPTER_LIMIT(maxSamplersPerShaderStage);
   ADAPTER_LIMIT(maxStorageBuffersPerShaderStage);
+  ADAPTER_LIMIT(maxStorageBuffersInVertexStage);
+  ADAPTER_LIMIT(maxStorageBuffersInFragmentStage);
   ADAPTER_LIMIT(maxStorageTexturesPerShaderStage);
+  ADAPTER_LIMIT(maxStorageTexturesInVertexStage);
+  ADAPTER_LIMIT(maxStorageTexturesInFragmentStage);
   ADAPTER_LIMIT(maxUniformBuffersPerShaderStage);
   ADAPTER_LIMIT(minUniformBufferOffsetAlignment);
   ADAPTER_LIMIT(minStorageBufferOffsetAlignment);
