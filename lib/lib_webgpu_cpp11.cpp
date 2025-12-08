@@ -31,7 +31,7 @@ const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {
   WGPU_TEXTURE_DIMENSION_2D, /* dimension */
   0, /* format */
   0, /* usage */
-  0, /* unused_padding */
+  WGPU_TEXTURE_VIEW_DIMENSION_INVALID, /* textureBindingViewDimension */
 };
 
 const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER = {

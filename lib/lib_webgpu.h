@@ -728,6 +728,25 @@ typedef int WGPU_MAP_MODE_FLAGS;
 #define WGPU_MAP_MODE_WRITE  0x2
 
 /*
+enum GPUTextureViewDimension {
+    "1d",
+    "2d",
+    "2d-array",
+    "cube",
+    "cube-array",
+    "3d"
+};
+*/
+typedef int WGPU_TEXTURE_VIEW_DIMENSION;
+#define WGPU_TEXTURE_VIEW_DIMENSION_INVALID 0
+#define WGPU_TEXTURE_VIEW_DIMENSION_1D 1
+#define WGPU_TEXTURE_VIEW_DIMENSION_2D 2
+#define WGPU_TEXTURE_VIEW_DIMENSION_2D_ARRAY 3
+#define WGPU_TEXTURE_VIEW_DIMENSION_CUBE 4
+#define WGPU_TEXTURE_VIEW_DIMENSION_CUBE_ARRAY 5
+#define WGPU_TEXTURE_VIEW_DIMENSION_3D 6
+
+/*
 [Exposed=(Window, DedicatedWorker), SecureContext]
 interface GPUTexture {
     GPUTextureView createView(optional GPUTextureViewDescriptor descriptor = {});
@@ -742,6 +761,7 @@ interface GPUTexture {
     readonly attribute GPUTextureDimension dimension;
     readonly attribute GPUTextureFormat format;
     readonly attribute GPUFlagsConstant usage;
+    readonly attribute (GPUTextureViewDimension or undefined) textureBindingViewDimension;
 };
 GPUTexture includes GPUObjectBase;
 */
@@ -762,6 +782,7 @@ uint32_t wgpu_texture_sample_count(WGpuTexture texture);
 WGPU_TEXTURE_DIMENSION wgpu_texture_dimension(WGpuTexture texture);
 WGPU_TEXTURE_FORMAT wgpu_texture_format(WGpuTexture texture);
 WGPU_TEXTURE_USAGE_FLAGS wgpu_texture_usage(WGpuTexture texture);
+WGPU_TEXTURE_VIEW_DIMENSION wgpu_texture_binding_view_dimension(WGpuTexture texture);
 /*
 dictionary GPUTextureDescriptor : GPUObjectDescriptorBase {
     required GPUExtent3D size;
@@ -771,6 +792,7 @@ dictionary GPUTextureDescriptor : GPUObjectDescriptorBase {
     required GPUTextureFormat format;
     required GPUTextureUsageFlags usage;
     sequence<GPUTextureFormat> viewFormats = [];
+    GPUTextureViewDimension textureBindingViewDimension;
 };
 */
 typedef struct _WGPU_ALIGN_TO_64BITS WGpuTextureDescriptor
@@ -786,7 +808,10 @@ typedef struct _WGPU_ALIGN_TO_64BITS WGpuTextureDescriptor
   WGPU_TEXTURE_DIMENSION dimension; // default = WGPU_TEXTURE_DIMENSION_2D
   WGPU_TEXTURE_FORMAT format;
   WGPU_TEXTURE_USAGE_FLAGS usage;
-  uint32_t unused_padding;
+  // On compatibility mode devices, views created from this texture must have this as their dimension.
+  // If not specified (0==WGPU_TEXTURE_VIEW_DIMENSION_INVALID is passed), a default is chosen.
+  // On core mode devices devices, this is ignored, and there is no such restriction.
+  WGPU_TEXTURE_VIEW_DIMENSION textureBindingViewDimension;
 } WGpuTextureDescriptor;
 extern const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
@@ -862,25 +887,6 @@ typedef struct WGpuTextureViewDescriptor
   unsigned char swizzle[8];
 } WGpuTextureViewDescriptor;
 extern const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER;
-
-/*
-enum GPUTextureViewDimension {
-    "1d",
-    "2d",
-    "2d-array",
-    "cube",
-    "cube-array",
-    "3d"
-};
-*/
-typedef int WGPU_TEXTURE_VIEW_DIMENSION;
-#define WGPU_TEXTURE_VIEW_DIMENSION_INVALID 0
-#define WGPU_TEXTURE_VIEW_DIMENSION_1D 1
-#define WGPU_TEXTURE_VIEW_DIMENSION_2D 2
-#define WGPU_TEXTURE_VIEW_DIMENSION_2D_ARRAY 3
-#define WGPU_TEXTURE_VIEW_DIMENSION_CUBE 4
-#define WGPU_TEXTURE_VIEW_DIMENSION_CUBE_ARRAY 5
-#define WGPU_TEXTURE_VIEW_DIMENSION_3D 6
 
 /*
 enum GPUTextureAspect {

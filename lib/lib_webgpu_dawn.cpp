@@ -1230,6 +1230,7 @@ WGpuTexture wgpu_device_create_texture(WGpuDevice device, const WGpuTextureDescr
   assert(textureDesc);
 
   WGPUTextureDescriptor _desc = {};
+  _desc.textureBindingViewDimension = wgpu_texture_view_dimension_to_dawn(textureDesc->textureBindingViewDimension);
   _desc.usage = (WGPUTextureUsage)textureDesc->usage;
   _desc.dimension = wgpu_texture_dimension_to_dawn(textureDesc->dimension);
   _desc.size = WGPUExtent3D{ textureDesc->width, textureDesc->height, textureDesc->depthOrArrayLayers };
@@ -1974,6 +1975,12 @@ WGPU_TEXTURE_USAGE_FLAGS wgpu_texture_usage(WGpuTexture texture) {
   assert(wgpu_is_texture(texture));
   WGPUTextureUsage usage = wgpuTextureGetUsage(_wgpu_get_dawn<WGPUTexture>(texture));
   return (WGPU_TEXTURE_USAGE_FLAGS)usage;
+}
+
+WGPU_TEXTURE_DIMENSION wgpu_texture_binding_view_dimension(WGpuTexture texture) {
+  assert(wgpu_is_texture(texture));
+  WGPUTextureDimension dimension = wgpuTextureGetBindingViewDimension(_wgpu_get_dawn<WGPUTexture>(texture));
+  return dawn_to_wgpu_texture_dimension(dimension);
 }
 
 WGPU_BOOL wgpu_is_texture_view(WGpuObjectBase object) {

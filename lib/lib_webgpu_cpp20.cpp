@@ -18,7 +18,8 @@ const WGpuTextureDescriptor WGPU_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER = {
   .depthOrArrayLayers = 1,
   .mipLevelCount = 1,
   .sampleCount = 1,
-  .dimension = WGPU_TEXTURE_DIMENSION_2D
+  .dimension = WGPU_TEXTURE_DIMENSION_2D,
+  .textureBindingViewDimension = WGPU_TEXTURE_VIEW_DIMENSION_INVALID
 };
 
 const WGpuTextureViewDescriptor WGPU_TEXTURE_VIEW_DESCRIPTOR_DEFAULT_INITIALIZER = {
