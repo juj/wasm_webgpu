@@ -782,6 +782,14 @@ uint32_t wgpu_texture_sample_count(WGpuTexture texture);
 WGPU_TEXTURE_DIMENSION wgpu_texture_dimension(WGpuTexture texture);
 WGPU_TEXTURE_FORMAT wgpu_texture_format(WGpuTexture texture);
 WGPU_TEXTURE_USAGE_FLAGS wgpu_texture_usage(WGpuTexture texture);
+// Returns the textureBindingViewDimension parameter. In core mode, this will
+// always be undefined (WGPU_TEXTURE_VIEW_DIMENSION_INVALID), since this restriction
+// does not apply to core contexts.
+// In compatibility mode, returns the value of the textureBindingViewDimension
+// for the given texture. This function can be called to discover what the default
+// value applied by the implementation is, if
+// textureBindingViewDimension==WGPU_TEXTURE_VIEW_DIMENSION_INVALID was passed at
+// texture creation time.
 WGPU_TEXTURE_VIEW_DIMENSION wgpu_texture_binding_view_dimension(WGpuTexture texture);
 /*
 dictionary GPUTextureDescriptor : GPUObjectDescriptorBase {
