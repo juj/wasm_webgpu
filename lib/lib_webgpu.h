@@ -2117,6 +2117,12 @@ typedef int WGPU_VERTEX_FORMAT;
 static_assert(WGPU_VERTEX_FORMAT_FIRST_VALUE == WGPU_TEXTURE_FORMAT_LAST_VALUE + 1, "WGPU_VERTEX_FORMAT enums must have values after WGPU_TEXTURE_FORMAT values!");
 #endif
 
+// Calculates the dimension/number of channels in the given format (1-4).
+int wgpu_vertex_format_channel_count(WGPU_VERTEX_FORMAT format);
+
+// Calculates the size of a single element in the given format (1-16).
+int wgpu_vertex_format_byte_size(WGPU_VERTEX_FORMAT format);
+
 /*
 enum GPUVertexStepMode {
     "vertex",
