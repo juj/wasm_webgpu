@@ -1491,6 +1491,9 @@ typedef struct WGpuBindGroupEntry
   // If 'resource' points to a WGpuBuffer, bufferBindOffset and bufferBindSize specify
   // the offset and length of the buffer to bind. If 'resource' does not point to a WGpuBuffer,
   // offset and size are ignored.
+  // If the bind group layout uses dynamic offsets (WGpuBindGroupLayoutEntry::hasDynamicOffset was true
+  // at bind group layout creation time), then bufferBindOffset and dynamic offset
+  // are added together when calling wgpu_encoder_set_bind_group(). (i.e. the offsets accumulate)
   uint64_t bufferBindOffset;
   uint64_t bufferBindSize; // If set to 0 (default), the whole buffer is bound.
 } WGpuBindGroupEntry;
@@ -1795,9 +1798,9 @@ enum GPUCullMode {
 */
 typedef int WGPU_CULL_MODE;
 #define WGPU_CULL_MODE_INVALID 0
-#define WGPU_CULL_MODE_NONE 1
-#define WGPU_CULL_MODE_FRONT 2
-#define WGPU_CULL_MODE_BACK 3
+#define WGPU_CULL_MODE_NONE 1 // All polygons pass this test.
+#define WGPU_CULL_MODE_FRONT 2 // The front-facing polygons are discarded, and do not process in later stages of the render pipeline.
+#define WGPU_CULL_MODE_BACK 3 // The back-facing polygons are discarded.
 
 /*
 dictionary GPUMultisampleState {
@@ -2177,8 +2180,8 @@ dictionary GPUVertexAttribute {
 */
 typedef struct WGpuVertexAttribute
 {
-  uint64_t offset;
-  uint32_t shaderLocation;
+  uint64_t offset; // The offset, in bytes, from the beginning of the element to the data for the attribute.
+  uint32_t shaderLocation; // The numeric location associated with this attribute, which will correspond with a "@location" attribute declared in the vertex.module.
   WGPU_VERTEX_FORMAT format;
 } WGpuVertexAttribute;
 
@@ -2359,6 +2362,7 @@ interface mixin GPUBindingCommandsMixin {
 typedef WGpuObjectBase WGpuBindingCommandsMixin;
 // Returns true if the given handle references a valid GPUBindingCommandsMixin. (one of: GPUComputePassEncoder, GPURenderPassEncoder, or GPURenderBundleEncoder)
 WGPU_BOOL wgpu_is_binding_commands_mixin(WGpuObjectBase object);
+// When dynamic offsets are used, they apply in the binding order, i.e. dynamicOffsets[0] applies to the first dynamic @binding, dynamicOffsets[1] the second dynamic @binding (not necessarily at index 1), and so on.
 void wgpu_encoder_set_bind_group(WGpuBindingCommandsMixin encoder, uint32_t index, WGpuBindGroup bindGroup, const uint32_t *dynamicOffsets _WGPU_DEFAULT_VALUE(0), uint32_t numDynamicOffsets _WGPU_DEFAULT_VALUE(0));
 
 // Some of the functions in GPURenderBundleEncoder, GPURenderPassEncoder and GPUComputePassEncoder are identical in implementation,
@@ -2547,7 +2551,7 @@ typedef struct WGpuRenderPassDepthStencilAttachment
   WGpuObjectBase view; // WGpuTexture, or WGpuTextureView
 
   WGPU_LOAD_OP depthLoadOp; // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR
-  float depthClearValue;
+  float depthClearValue; // Must be between 0.0 and 1.0, inclusive.
 
   WGPU_STORE_OP depthStoreOp;
   WGPU_BOOL depthReadOnly;
