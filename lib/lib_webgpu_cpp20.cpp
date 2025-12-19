@@ -43,7 +43,6 @@ const WGpuSamplerDescriptor WGPU_SAMPLER_DESCRIPTOR_DEFAULT_INITIALIZER = {
   .lodMinClamp = 0,
   .lodMaxClamp = 32,
   .maxAnisotropy = 1
-
 };
 
 const WGpuBindGroupLayoutEntry WGPU_BUFFER_BINDING_LAYOUT_ENTRY_DEFAULT_INITIALIZER = {
