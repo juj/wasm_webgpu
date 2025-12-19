@@ -299,13 +299,17 @@ typedef int WGPU_FEATURES_BITFIELD;
    Because of that reason, it is prefixed here with HTML_ as opposed to WGPU_.
 enum PredefinedColorSpace {
     "srgb",
-    "display-p3"
+    "srgb-linear",
+    "display-p3",
+    "display-p3-linear"
 };
 */
 typedef int HTML_PREDEFINED_COLOR_SPACE;
 #define HTML_PREDEFINED_COLOR_SPACE_INVALID 0
 #define HTML_PREDEFINED_COLOR_SPACE_SRGB 1
-#define HTML_PREDEFINED_COLOR_SPACE_DISPLAY_P3 2
+#define HTML_PREDEFINED_COLOR_SPACE_SRGB_LINEAR 2
+#define HTML_PREDEFINED_COLOR_SPACE_DISPLAY_P3 3
+#define HTML_PREDEFINED_COLOR_SPACE_DISPLAY_P3_LINEAR 4
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
