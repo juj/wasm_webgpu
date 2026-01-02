@@ -1222,6 +1222,8 @@ typedef struct WGpuSamplerDescriptor
   float lodMaxClamp;              // default = 32
   WGPU_COMPARE_FUNCTION compare;  // default = WGPU_COMPARE_FUNCTION_INVALID (not used)
   uint32_t maxAnisotropy;         // default = 1. N.b. this is 32-bit wide in the bindings implementation for simplicity, unlike in the IDL which specifies a unsigned short.
+                                  //                   Most implementations support maxAnisotropy values in range between 1 and 16, inclusive.
+                                  //                   The used value of maxAnisotropy will be clamped to the maximum value that the platform supports. 
 } WGpuSamplerDescriptor;
 extern const WGpuSamplerDescriptor WGPU_SAMPLER_DESCRIPTOR_DEFAULT_INITIALIZER;
 
@@ -3110,7 +3112,7 @@ typedef struct WGpuRenderPassColorAttachment
 {
   WGpuObjectBase view; // WGpuTexture, or WGpuTextureView
   int depthSlice;
-  WGpuObjectBase resolveTarget; // WGpuTexture, or WGpuTextureView
+  WGpuObjectBase resolveTarget; // WGpuTexture, or WGpuTextureView. Describes the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
 
   WGPU_STORE_OP storeOp; // Required, be sure to set to WGPU_STORE_OP_STORE (default) or WGPU_STORE_OP_DISCARD
   WGPU_LOAD_OP loadOp; // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR.
