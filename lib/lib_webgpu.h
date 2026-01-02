@@ -1102,12 +1102,12 @@ typedef int WGPU_TEXTURE_FORMAT;
 #define WGPU_TEXTURE_FORMAT_DEPTH32FLOAT_STENCIL8 49
     // BC compressed formats usable if "texture-compression-bc" is both
     // supported by the device/user agent and enabled in requestDevice.
-#define WGPU_TEXTURE_FORMAT_BC1_RGBA_UNORM        50
-#define WGPU_TEXTURE_FORMAT_BC1_RGBA_UNORM_SRGB   51
-#define WGPU_TEXTURE_FORMAT_BC2_RGBA_UNORM        52
-#define WGPU_TEXTURE_FORMAT_BC2_RGBA_UNORM_SRGB   53
-#define WGPU_TEXTURE_FORMAT_BC3_RGBA_UNORM        54
-#define WGPU_TEXTURE_FORMAT_BC3_RGBA_UNORM_SRGB   55
+#define WGPU_TEXTURE_FORMAT_BC1_RGBA_UNORM        50 // DXT1
+#define WGPU_TEXTURE_FORMAT_BC1_RGBA_UNORM_SRGB   51 // DXT1
+#define WGPU_TEXTURE_FORMAT_BC2_RGBA_UNORM        52 // DXT3, or DXT2 + premultiplied alpha
+#define WGPU_TEXTURE_FORMAT_BC2_RGBA_UNORM_SRGB   53 // DXT3, or DXT2 + premultiplied alpha
+#define WGPU_TEXTURE_FORMAT_BC3_RGBA_UNORM        54 // DXT5, or DXT4 + premultiplied alpha
+#define WGPU_TEXTURE_FORMAT_BC3_RGBA_UNORM_SRGB   55 // DXT5, or DXT4 + premultiplied alpha
 #define WGPU_TEXTURE_FORMAT_BC4_R_UNORM           56
 #define WGPU_TEXTURE_FORMAT_BC4_R_SNORM           57
 #define WGPU_TEXTURE_FORMAT_BC5_RG_UNORM          58
