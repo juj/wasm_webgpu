@@ -43,6 +43,7 @@ typedef struct WGpuSupportedLimits WGpuSupportedLimits;
 typedef int WGPU_FEATURES_BITFIELD;
 typedef int HTML_PREDEFINED_COLOR_SPACE;
 typedef struct WGpuAdapterInfo WGpuAdapterInfo;
+typedef int WGPU_FEATURE_LEVEL;
 typedef struct WGpuRequestAdapterOptions WGpuRequestAdapterOptions;
 typedef int WGPU_POWER_PREFERENCE;
 typedef WGpuObjectBase WGpuAdapter;

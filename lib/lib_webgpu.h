@@ -409,9 +409,14 @@ const char * const * navigator_gpu_get_wgsl_language_features(void);
 // If this information is needed often (e.g. in an inner loop of a shader cross-compiler), then it is recommended to cache the return value,
 // since the supported WGSL language features will not change during page lifetime.
 WGPU_BOOL navigator_gpu_is_wgsl_language_feature_supported(const char *feature);
+
+typedef int WGPU_FEATURE_LEVEL;
+#define WGPU_FEATURE_LEVEL_CORE 0
+#define WGPU_FEATURE_LEVEL_COMPATIBILITY 1
+
 /*
 dictionary GPURequestAdapterOptions {
-    DOMString featureLevel = "core"; // TODO: Currently unused, since no actual implementations exist.
+    DOMString featureLevel = "core";
     GPUPowerPreference powerPreference;
     boolean forceFallbackAdapter = false;
     boolean xrCompatible = false;
@@ -419,6 +424,7 @@ dictionary GPURequestAdapterOptions {
 */
 typedef struct WGpuRequestAdapterOptions
 {
+  WGPU_FEATURE_LEVEL featureLevel;
   // Optionally provides a hint indicating what class of adapter should be selected from the system’s available adapters.
   // The value of this hint may influence which adapter is chosen, but it must not influence whether an adapter is returned or not.
   // Note: The primary utility of this hint is to influence which GPU is used in a multi-GPU system. For instance, some laptops
@@ -439,7 +445,7 @@ enum GPUPowerPreference {
 };
 */
 typedef int WGPU_POWER_PREFERENCE;
-#define WGPU_POWER_PREFERENCE_INVALID 0
+#define WGPU_POWER_PREFERENCE_DEFAULT 0
 #define WGPU_POWER_PREFERENCE_LOW_POWER 1
 #define WGPU_POWER_PREFERENCE_HIGH_PERFORMANCE 2
 
