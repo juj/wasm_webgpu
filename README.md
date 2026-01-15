@@ -153,11 +153,15 @@ Wasm_Webgpu supports each of the three main memory models that Emscripten suppor
 
 When building code samples, pass `-DMEMORY64=1` to CMake to test compiling in Wasm64 build mode.
 
-## 🚥 Emscripten Version Requirements
+## 🚥 Emscripten version requirements and compatibility
 
 Wasm_Webgpu requires Emscripten 3.1.35 or newer.
 
-## 🔬 API Unit Tests
+At this point the system header is developed without backwards or forward compatibility scaffolds or promises. This means that the latest `main` branch always aims to reflect the current WebGPU specification 1:1. Any commit may introduce a breaking change, look out for "breaking change" in commit messages. There is no binary ABI compatibility.
+
+This enables keeping the header simple, and fixing any API design errors without introducing legacy overhead cost. If you are targeting for production, it is best to pin the header to a specific version in time, until you are able to update. Middleware utility library development (i.e. creating a WebGPU library for ingestion of a 3rd party WebGPU engine) on top of wasm_webgpu at this point is therefore not advised.
+
+## 🔬 API unit tests
 
 Run `test.py --browser="C:\Users\clb\AppData\Local\Google\Chrome SxS\Application\chrome.exe" <test1> <test2> ... <testN>` to run unit tests.
 
