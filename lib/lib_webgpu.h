@@ -850,19 +850,22 @@ typedef int WGPU_TEXTURE_DIMENSION;
 typedef [EnforceRange] unsigned long GPUTextureUsageFlags;
 [Exposed=(Window, DedicatedWorker)]
 namespace GPUTextureUsage {
-    const GPUFlagsConstant COPY_SRC          = 0x01;
-    const GPUFlagsConstant COPY_DST          = 0x02;
-    const GPUFlagsConstant TEXTURE_BINDING   = 0x04;
-    const GPUFlagsConstant STORAGE_BINDING   = 0x08;
-    const GPUFlagsConstant RENDER_ATTACHMENT = 0x10;
+    const GPUFlagsConstant COPY_SRC             = 0x01;
+    const GPUFlagsConstant COPY_DST             = 0x02;
+    const GPUFlagsConstant TEXTURE_BINDING      = 0x04;
+    const GPUFlagsConstant STORAGE_BINDING      = 0x08;
+    const GPUFlagsConstant RENDER_ATTACHMENT    = 0x10;
+    const GPUFlagsConstant TRANSIENT_ATTACHMENT = 0x20;
+
 };
 */
 typedef int WGPU_TEXTURE_USAGE_FLAGS;
-#define WGPU_TEXTURE_USAGE_COPY_SRC            0x01
-#define WGPU_TEXTURE_USAGE_COPY_DST            0x02
-#define WGPU_TEXTURE_USAGE_TEXTURE_BINDING     0x04
-#define WGPU_TEXTURE_USAGE_STORAGE_BINDING     0x08
-#define WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT   0x10
+#define WGPU_TEXTURE_USAGE_COPY_SRC             0x01
+#define WGPU_TEXTURE_USAGE_COPY_DST             0x02
+#define WGPU_TEXTURE_USAGE_TEXTURE_BINDING      0x04
+#define WGPU_TEXTURE_USAGE_STORAGE_BINDING      0x08
+#define WGPU_TEXTURE_USAGE_RENDER_ATTACHMENT    0x10
+#define WGPU_TEXTURE_USAGE_TRANSIENT_ATTACHMENT 0x20
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
