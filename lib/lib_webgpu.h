@@ -2138,6 +2138,9 @@ int wgpu_vertex_format_channel_count(WGPU_VERTEX_FORMAT format);
 // Calculates the size of a single element in the given format (1-16).
 int wgpu_vertex_format_byte_size(WGPU_VERTEX_FORMAT format);
 
+// Returns a textual representation of the given format, useful for debug printing purposes.
+const char *wgpu_vertex_format_to_string(WGPU_VERTEX_FORMAT format);
+
 // Parses the WGSL element data type of a vertex format.
 typedef int WGPU_WGSL_ELEMENT_TYPE;
 #define WGPU_WGSL_ELEMENT_TYPE_FLOAT 0 // f32, vec2f, vec3f or vec4f
