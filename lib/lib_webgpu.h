@@ -3314,6 +3314,14 @@ void offscreen_canvas_set_size(OffscreenCanvasId id, int width, int height);
 
 #endif
 
+// EXPERIMENTAL: Not part of the ratified spec yet.
+// setImmediateData: https://github.com/gpuweb/gpuweb/blob/main/proposals/immediate-data.md
+// encoder: The current render pass, compute pass or render bundle encoder.
+// offset: Offset into the GPU-side immediate data area to upload to. In range 0 - 64. Condition offset + size <= 64 must hold.
+// ptr: CPU-side starting address of the data to upload.
+// size: The number of bytes to upload. This must be a multiple of 4 bytes.
+void wgpu_encoder_set_immediate_data(WGpuBindingCommandsMixin encoder, uint32_t offset, const void *ptr, uint32_t size);
+
 #ifdef __cplusplus
 } // ~extern "C"
 #endif
