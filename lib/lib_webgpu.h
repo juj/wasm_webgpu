@@ -2686,8 +2686,9 @@ dictionary GPURenderBundleEncoderDescriptor : GPURenderPassLayout {
 */
 typedef struct WGpuRenderBundleEncoderDescriptor
 {
+  const WGPU_TEXTURE_FORMAT *colorFormats;
+  _WGPU_PTR_PADDING(0);
   int numColorFormats;
-  const WGPU_TEXTURE_FORMAT *colorFormats; // TODO: Wasm64
   WGPU_TEXTURE_FORMAT depthStencilFormat;
   uint32_t sampleCount;
   WGPU_BOOL depthReadOnly;
