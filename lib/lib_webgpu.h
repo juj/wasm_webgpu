@@ -124,11 +124,6 @@ dictionary GPUObjectDescriptorBase {
     USVString label;
 };
 */
-#define WGPU_OBJECT_LABEL_MAX_LENGTH 256
-typedef struct WGpuObjectDescriptorBase // TODO: Currently unused. Actually use this, or remove
-{
-  char label[WGPU_OBJECT_LABEL_MAX_LENGTH];
-} WGpuObjectDescriptorBase;
 
 /*
 dictionary GPUExtent3DDict {
@@ -2239,7 +2234,6 @@ dictionary GPUCommandBufferDescriptor : GPUObjectDescriptorBase {
 typedef struct WGpuCommandBufferDescriptor
 {
   uint32_t unused_padding; // Appease mixed C and C++ compilation to agree on non-zero struct size. Remove this once label is added
-  // TODO: add label
 } WGpuCommandBufferDescriptor;
 
 /*
@@ -2649,8 +2643,7 @@ dictionary GPURenderBundleDescriptor : GPUObjectDescriptorBase {
 */
 typedef struct WGpuRenderBundleDescriptor
 {
-  uint32_t unused_padding; // Appease mixed C and C++ compilation to agree on non-zero struct size. Remove this once label is added
-  // TODO add label
+  uint32_t unused_padding; // Appease mixed C and C++ compilation to agree on non-zero struct size.
 } WGpuRenderBundleDescriptor;
 
 /*
