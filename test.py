@@ -21,8 +21,8 @@ if not os.path.exists(test_dir):
 
 modes = [
  ['-O0', '-sASSERTIONS=1', '-jsDWEBGPU_DEBUG=1'],
-# ['-O3'],
-# ['-Oz', '--closure', '1', '--closure-args=--externs=lib/webgpu-closure-externs.js'],
+ ['-O3'],
+ ['-Oz', '--closure', '1', '--closure-args=--externs=lib/webgpu-closure-externs.js'],
 ]
 
 # Uncomment for quick testing in one mode.
