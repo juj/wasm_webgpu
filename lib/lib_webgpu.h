@@ -2819,6 +2819,7 @@ void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCa
 // Reads the configuration of the given canvas context.
 // Note: If getConfiguration() returns an empty object, then this function will return a null pointer.
 // IMPORTANT! The return value from this function is malloc()ed. Call free() on the returned pointer to avoid leaking memory.
+// (there intentionally exists no separate wgpu_canvas_context_get_configuration_free() or such, but plain free() is ok)
 WGpuCanvasConfiguration *wgpu_canvas_context_get_configuration(WGpuCanvasContext canvasContext);
 #else
 void wgpu_canvas_context_configure(WGpuCanvasContext canvasContext, const WGpuCanvasConfiguration *config NOTNULL, int width _WGPU_DEFAULT_VALUE(0), int height _WGPU_DEFAULT_VALUE(0));
