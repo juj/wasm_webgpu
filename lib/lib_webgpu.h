@@ -235,6 +235,11 @@ typedef struct WGpuSupportedLimits
 
 VERIFY_STRUCT_SIZE(WGpuSupportedLimits, 38*sizeof(uint32_t));
 
+// Assertion in lib_webgpu.js function $wgpuReadSupportedLimits() must be kept in sync:
+#define _WGPU_NUM_64BIT_LIMIT_FIELDS 3
+#define _WGPU_NUM_32BIT_LIMIT_FIELDS 32
+VERIFY_STRUCT_SIZE(WGpuSupportedLimits, (_WGPU_NUM_64BIT_LIMIT_FIELDS*2+_WGPU_NUM_32BIT_LIMIT_FIELDS)*sizeof(uint32_t));
+
 /*
 [Exposed=(Window, DedicatedWorker)]
 interface GPUSupportedFeatures {
