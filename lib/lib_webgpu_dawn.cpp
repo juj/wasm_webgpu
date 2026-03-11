@@ -2747,6 +2747,10 @@ void wgpu_device_set_uncapturederror_callback(WGpuDevice device, WGpuDeviceError
     WGpuDeviceErrorCallback callback;
     void* userData;
   };
+  // N.b. this allocation is currently never freed. This is not a problem for applications that only statically call
+  // wgpu_device_set_uncapturederror_callback() once to set up the uncaptured error handler. To free up these allocations,
+  // we'd need to add a mapping for each device --> closure scopes, and delete the previous one if overridden, and
+  // at WGpuDevice deletion.
   _Data* data = new _Data{device, callback, userData};
   wgpuDeviceSetUncapturedErrorCallback(_device, [](WGPUErrorType type, WGPUStringView message, void* userdata) {
     _Data* data = (_Data*)userdata;
