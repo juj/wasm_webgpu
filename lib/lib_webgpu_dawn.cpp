@@ -2029,7 +2029,12 @@ void wgpu_shader_module_get_compilation_info_async(WGpuShaderModule shaderModule
 WGpuBindGroupLayout wgpu_pipeline_get_bind_group_layout(WGpuObjectBase pipelineBase, uint32_t index) {
   assert(wgpu_is_compute_pipeline(pipelineBase) || wgpu_is_render_pipeline(pipelineBase));
 
-  WGPUBindGroupLayout bindGroupLayout = wgpuRenderPipelineGetBindGroupLayout(_wgpu_get_dawn<WGPURenderPipeline>(pipelineBase), index);
+  WGPUBindGroupLayout bindGroupLayout;
+  if (wgpu_is_compute_pipeline(pipelineBase)) {
+    bindGroupLayout = wgpuComputePipelineGetBindGroupLayout(_wgpu_get_dawn<WGPUComputePipeline>(pipelineBase), index);
+  } else {
+    bindGroupLayout = wgpuRenderPipelineGetBindGroupLayout(_wgpu_get_dawn<WGPURenderPipeline>(pipelineBase), index);
+  }
   return _wgpu_store(kWebGPUBindGroupLayout, bindGroupLayout);
 }
 
