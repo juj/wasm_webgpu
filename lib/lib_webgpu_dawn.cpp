@@ -1593,13 +1593,17 @@ WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const W
   return _wgpu_store_and_set_parent(kWebGPURenderPipeline, pipeline, device);
 }
 
+// N.b. wgpu_device_create_render_pipeline_async() can currently only be called from a single thread, but that is fine since
+// WebGPU is currently a single-threaded API.
+static WGPURenderPipelineDescriptor _desc = {};
+
 void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc,
     WGpuCreatePipelineCallback callback, void *userData) {
   assert(wgpu_is_device(device));
   assert(renderPipelineDesc != nullptr);
   assert(callback);
 
-  WGPURenderPipelineDescriptor _desc = {};
+  _desc = {};
   _desc.layout = renderPipelineDesc->layout > 0 ? _wgpu_get_dawn<WGPUPipelineLayout>(renderPipelineDesc->layout) : 0;
   _desc.nextInChain = nullptr;
   _desc.label = WGPU_STRING_VIEW_INIT;
@@ -1723,15 +1727,15 @@ void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRende
     WGpuRenderPipeline _pipeline = _wgpu_store_and_set_parent(kWebGPURenderPipeline, pipeline, data->device);
     data->callback(data->device, nullptr, _pipeline, data->userdata);
     delete data;
+
+    if (_desc.fragment != nullptr) {
+      for (int i = 0; i < _desc.fragment->targetCount; ++i)
+        delete _desc.fragment->targets[i].blend;
+    }
+
+    for (int i = 0; i < _desc.vertex.bufferCount; ++i)
+      delete[] _desc.vertex.buffers[i].attributes;
   }, data);
-
-  if (_desc.fragment != nullptr) {
-    for (int i = 0; i < _desc.fragment->targetCount; ++i)
-      delete _desc.fragment->targets[i].blend;
-  }
-
-  for (int i = 0; i < _desc.vertex.bufferCount; ++i)
-    delete[] _desc.vertex.buffers[i].attributes;
 }
 
 WGpuCommandEncoder wgpu_device_create_command_encoder(WGpuDevice device, const WGpuCommandEncoderDescriptor *commandEncoderDesc) {
