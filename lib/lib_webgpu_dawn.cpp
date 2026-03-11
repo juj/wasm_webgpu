@@ -1007,7 +1007,9 @@ void navigator_gpu_request_adapter_async_simple(WGpuRequestAdapterCallback adapt
 }
 
 WGpuAdapter navigator_gpu_request_adapter_sync_simple() {
-  WGpuRequestAdapterOptions options = { WGPU_POWER_PREFERENCE_HIGH_PERFORMANCE, false };
+  WGpuRequestAdapterOptions options = {};
+  options.powerPreference = WGPU_POWER_PREFERENCE_HIGH_PERFORMANCE;
+  options.forceFallbackAdapter = false;
   return navigator_gpu_request_adapter_sync(&options);
 }
 
