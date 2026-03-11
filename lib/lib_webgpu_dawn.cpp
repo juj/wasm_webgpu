@@ -1014,7 +1014,7 @@ WGPU_TEXTURE_FORMAT navigator_gpu_get_preferred_canvas_format(WGpuAdapter adapte
   wgpuSurfaceGetCapabilities(context->surface, _wgpu_get_dawn<WGPUAdapter>(adapter), &capabilities);
   assert(capabilities.formats && capabilities.formatCount > 0);
 
-  return capabilities.formats[0];
+  return dawn_to_wgpu_texture_format(capabilities.formats[0]);
 }
 
 WGPU_BOOL wgpu_is_adapter(WGpuObjectBase object) {
