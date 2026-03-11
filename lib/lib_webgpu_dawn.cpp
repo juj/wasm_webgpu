@@ -2199,7 +2199,7 @@ static void wgpuReadGpuTexelCopyBufferInfo(const WGpuTexelCopyBufferInfo* source
 }
 
 void wgpu_command_encoder_copy_buffer_to_texture(WGpuCommandEncoder commandEncoder, const WGpuTexelCopyBufferInfo *source,
-    const WGpuTexelCopyBufferInfo *destination, uint32_t copyWidth, uint32_t copyHeight, uint32_t copyDepthOrArrayLayers) {
+    const WGpuTexelCopyTextureInfo *destination, uint32_t copyWidth, uint32_t copyHeight, uint32_t copyDepthOrArrayLayers) {
   assert(wgpu_is_command_encoder(commandEncoder));
   assert(source);
   assert(destination);
