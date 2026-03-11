@@ -2564,7 +2564,7 @@ void wgpu_queue_write_texture(WGpuQueue queue, const WGpuTexelCopyTextureInfo *d
   WGPUTextureDataLayout dataLayout{ nullptr, 0, bytesPerBlockRow, blockRowsPerImage};
   WGPUExtent3D extents {writeWidth, writeHeight, writeDepthOrArrayLayers};
 
-  wgpuQueueWriteTexture(_queue, &_destination, data, bytesPerBlockRow * blockRowsPerImage, &dataLayout, &extents);
+  wgpuQueueWriteTexture(_queue, &_destination, data, bytesPerBlockRow * blockRowsPerImage * writeDepthOrArrayLayers, &dataLayout, &extents);
 }
 
 void wgpu_queue_copy_external_image_to_texture(WGpuQueue queue, const WGpuCopyExternalImageSourceInfo *source, const WGpuCopyExternalImageDestInfo *destination,
