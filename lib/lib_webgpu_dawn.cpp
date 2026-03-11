@@ -2333,6 +2333,8 @@ void wgpu_encoder_end(WGpuBindingCommandsMixin encoder) {
     wgpuRenderPassEncoderEnd(_wgpu_get_dawn<WGPURenderPassEncoder>(encoder));
   else if (wgpu_is_compute_pass_encoder(encoder))
     wgpuComputePassEncoderEnd(_wgpu_get_dawn<WGPUComputePassEncoder>(encoder));
+  else if (wgpu_is_render_bundle_encoder(encoder))
+    wgpuRenderBundleEncoderEnd(_wgpu_get_dawn<WGPURenderBundleEncoder>(encoder));
   wgpu_object_destroy(encoder);
 }
 
