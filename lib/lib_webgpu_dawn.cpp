@@ -2368,14 +2368,14 @@ void wgpu_render_commands_mixin_set_index_buffer(WGpuRenderCommandsMixin renderC
   assert(wgpu_is_render_commands_mixin(renderCommandsMixin));
 
   if (size == (double_int53_t)-1)
-    size = wgpuBufferGetSize(_wgpu_get_dawn<WGPUBuffer>(buffer));
+    size = (uint64_t)(wgpuBufferGetSize(_wgpu_get_dawn<WGPUBuffer>(buffer)) - offset);
 
   if (wgpu_is_render_pass_encoder(renderCommandsMixin)) {
     wgpuRenderPassEncoderSetIndexBuffer(_wgpu_get_dawn<WGPURenderPassEncoder>(renderCommandsMixin), _wgpu_get_dawn<WGPUBuffer>(buffer),
-        (WGPUIndexFormat)indexFormat, (uint64_t)offset, (uint64_t)(size - offset));
+        (WGPUIndexFormat)indexFormat, (uint64_t)offset, (uint64_t)size);
   } else if (wgpu_is_render_bundle_encoder(renderCommandsMixin)) {
     wgpuRenderBundleEncoderSetIndexBuffer(_wgpu_get_dawn<WGPURenderBundleEncoder>(renderCommandsMixin), _wgpu_get_dawn<WGPUBuffer>(buffer),
-        (WGPUIndexFormat) indexFormat, (uint64_t) offset, (uint64_t)(size - offset));
+        (WGPUIndexFormat) indexFormat, (uint64_t) offset, (uint64_t)size);
   }
 }
 
@@ -2383,14 +2383,14 @@ void wgpu_render_commands_mixin_set_vertex_buffer(WGpuRenderCommandsMixin render
   assert(wgpu_is_render_commands_mixin(renderCommandsMixin));
 
   if (size == (double_int53_t)-1)
-    size = wgpuBufferGetSize(_wgpu_get_dawn<WGPUBuffer>(buffer));
+    size = (uint64_t)(wgpuBufferGetSize(_wgpu_get_dawn<WGPUBuffer>(buffer)) - offset);
 
   if (wgpu_is_render_pass_encoder(renderCommandsMixin)) {
     WGPURenderPassEncoder _encoder =  _wgpu_get_dawn<WGPURenderPassEncoder>(renderCommandsMixin);
-    wgpuRenderPassEncoderSetVertexBuffer(_encoder, (uint32_t)slot, _wgpu_get_dawn<WGPUBuffer>(buffer), (uint64_t)offset, (uint64_t)(size - offset));
+    wgpuRenderPassEncoderSetVertexBuffer(_encoder, (uint32_t)slot, _wgpu_get_dawn<WGPUBuffer>(buffer), (uint64_t)offset, (uint64_t)size);
   } else if (wgpu_is_render_bundle_encoder(renderCommandsMixin)) {
     WGPURenderBundleEncoder _encoder = _wgpu_get_dawn<WGPURenderBundleEncoder>(renderCommandsMixin);
-    wgpuRenderBundleEncoderSetVertexBuffer(_encoder, (uint32_t) slot, _wgpu_get_dawn<WGPUBuffer>(buffer), (uint64_t) offset, (uint64_t)(size - offset));
+    wgpuRenderBundleEncoderSetVertexBuffer(_encoder, (uint32_t) slot, _wgpu_get_dawn<WGPUBuffer>(buffer), (uint64_t) offset, (uint64_t)size);
   }
 }
 
