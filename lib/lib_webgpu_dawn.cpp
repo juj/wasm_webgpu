@@ -653,6 +653,14 @@ WGPU_DEVICE_LOST_REASON Dawn_to_WGPU_DEVICE_LOST_REASON[] = {
 };
 #define dawn_to_wgpu_device_lost_reason(reason) Dawn_to_WGPU_DEVICE_LOST_REASON[reason]
 
+const WGPU_ERROR_TYPE Dawn_to_WGPU_ERROR_TYPE[] = {
+  WGPU_ERROR_TYPE_NO_ERROR,
+  WGPU_ERROR_TYPE_VALIDATION,
+  WGPU_ERROR_TYPE_OUT_OF_MEMORY,
+  WGPU_ERROR_TYPE_UNKNOWN_ERROR,
+};
+#define dawn_to_wgpu_error_type(type) Dawn_to_WGPU_ERROR_TYPE[type]
+
 const WGPUCompositeAlphaMode WGPU_CANVAS_ALPHA_MODE_to_Dawn[] = {
   WGPUCompositeAlphaMode_Force32,
   WGPUCompositeAlphaMode_Opaque,
@@ -2725,7 +2733,7 @@ void wgpu_device_pop_error_scope_async(WGpuDevice device, WGpuDeviceErrorCallbac
   wgpuDevicePopErrorScope(_device, [](WGPUErrorType type, WGPUStringView message, void* userdata) {
     _Data* data = (_Data*)userdata;
     if (message.data && message.data[0] != 0)
-      data->callback(data->device, type, message.data, data->userData);
+      data->callback(data->device, dawn_to_wgpu_error_type(type), message.data, data->userData);
     delete data;
   }, data);
 }
@@ -2743,7 +2751,7 @@ void wgpu_device_set_uncapturederror_callback(WGpuDevice device, WGpuDeviceError
   wgpuDeviceSetUncapturedErrorCallback(_device, [](WGPUErrorType type, WGPUStringView message, void* userdata) {
     _Data* data = (_Data*)userdata;
     if (message.data && message.data[0] != 0)
-      data->callback(data->device, type, message.data, data->userData);
+      data->callback(data->device, dawn_to_wgpu_error_type(type), message.data, data->userData);
   }, data);
 }
 
