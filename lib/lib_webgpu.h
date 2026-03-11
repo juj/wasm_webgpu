@@ -48,6 +48,7 @@
 
 // This macro allows structs that contain pointers to be explicitly aligned up to 8 bytes so that
 // even in 32-bit pointer builds, struct alignments are checked to match against Wasm64 builds.
+// Invariant: every struct that contains pointers should be annotated with _WGPU_ALIGN_TO_64BITS alignment.
 #if __cplusplus >= 201103L
 #define _WGPU_ALIGN_TO_64BITS alignas(8)
 #else
@@ -2686,7 +2687,7 @@ dictionary GPURenderBundleEncoderDescriptor : GPURenderPassLayout {
     boolean stencilReadOnly = false;
 };
 */
-typedef struct WGpuRenderBundleEncoderDescriptor
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuRenderBundleEncoderDescriptor
 {
   const WGPU_TEXTURE_FORMAT *colorFormats;
   _WGPU_PTR_PADDING(0);
@@ -2695,7 +2696,10 @@ typedef struct WGpuRenderBundleEncoderDescriptor
   uint32_t sampleCount;
   WGPU_BOOL depthReadOnly;
   WGPU_BOOL stencilReadOnly;
+  uint32_t unused_padding;
 } WGpuRenderBundleEncoderDescriptor;
+
+VERIFY_STRUCT_SIZE(WGpuRenderBundleEncoderDescriptor, 8*sizeof(uint32_t));
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
