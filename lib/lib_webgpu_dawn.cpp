@@ -2332,7 +2332,7 @@ void wgpu_encoder_set_pipeline(WGpuBindingCommandsMixin encoder, WGpuObjectBase 
   else if (wgpu_is_compute_pass_encoder(encoder))
     wgpuComputePassEncoderSetPipeline(_wgpu_get_dawn<WGPUComputePassEncoder>(encoder), _wgpu_get_dawn<WGPUComputePipeline>(pipeline));
   else if (wgpu_is_render_bundle_encoder(encoder))
-    wgpuRenderBundleEncoderSetPipeline(_wgpu_get_dawn<WGPURenderBundleEncoder>(encoder), _wgpu_get_dawn<WGPUComputePipeline>(pipeline));
+    wgpuRenderBundleEncoderSetPipeline(_wgpu_get_dawn<WGPURenderBundleEncoder>(encoder), _wgpu_get_dawn<WGPURenderPipeline>(pipeline));
 }
 
 void wgpu_encoder_end(WGpuBindingCommandsMixin encoder) {
