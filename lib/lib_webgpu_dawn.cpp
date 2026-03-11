@@ -835,7 +835,7 @@ void _wgpu_object_destroy(_WGpuObject* obj) {
     wgpuRenderBundleDestroy((WGPURenderBundle)obj->dawnObject);
     break;
   case kWebGPURenderBundleEncoder:
-    wgpuRenderBundleEncoderDestroy((WGPURenderEncoderBundle)obj->dawnObject);
+    wgpuRenderBundleEncoderDestroy((WGPURenderBundleEncoder)obj->dawnObject);
     break;
   default:
     assert(false);
