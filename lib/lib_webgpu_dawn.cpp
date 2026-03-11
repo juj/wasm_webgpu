@@ -1030,7 +1030,7 @@ WGPU_BOOL wgpu_is_adapter(WGpuObjectBase object) {
 
 WGPU_FEATURES_BITFIELD wgpu_adapter_or_device_get_features(WGpuAdapter adapterOrDevice) {
   _WGpuObject* obj = _wgpu_get(adapterOrDevice);
-  assert(obj && (obj->type != kWebGPUDevice || obj->type != kWebGPUAdapter));
+  assert(obj && (obj->type == kWebGPUDevice || obj->type == kWebGPUAdapter));
 
   bool isDevice = obj->type == kWebGPUDevice;
 
@@ -1048,7 +1048,7 @@ WGPU_FEATURES_BITFIELD wgpu_adapter_or_device_get_features(WGpuAdapter adapterOr
 
 WGPU_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapterOrDevice, WGPU_FEATURES_BITFIELD feature) {
   _WGpuObject* obj = _wgpu_get(adapterOrDevice);
-  assert(obj && (obj->type != kWebGPUDevice || obj->type != kWebGPUAdapter));
+  assert(obj && (obj->type == kWebGPUDevice || obj->type == kWebGPUAdapter));
 
   int fi = 32 - clz32(feature);
   if (fi >= _wgpu_num_features)
@@ -1061,7 +1061,7 @@ WGPU_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapterOrDevice, W
 
 void wgpu_adapter_or_device_get_limits(WGpuAdapter adapterOrDevice, WGpuSupportedLimits* limits) {
   _WGpuObject* obj = _wgpu_get(adapterOrDevice);
-  assert(obj && (obj->type != kWebGPUDevice || obj->type != kWebGPUAdapter));
+  assert(obj && (obj->type == kWebGPUDevice || obj->type == kWebGPUAdapter));
 
   WGPUSupportedLimits _limits;
   _limits.nextInChain = nullptr;
