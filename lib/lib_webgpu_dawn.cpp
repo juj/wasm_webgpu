@@ -1050,7 +1050,7 @@ WGPU_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapterOrDevice, W
   _WGpuObject* obj = _wgpu_get(adapterOrDevice);
   assert(obj && (obj->type == kWebGPUDevice || obj->type == kWebGPUAdapter));
 
-  int fi = 32 - clz32(feature);
+  int fi = 31 - clz32(feature);
   if (fi >= _wgpu_num_features)
     return false;
   WGPUFeatureName _feature = WGPU_FEATURES_BITFIELD_to_Dawn[fi];
