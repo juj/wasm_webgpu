@@ -2311,6 +2311,9 @@ void wgpu_encoder_set_bind_group(WGpuBindingCommandsMixin encoder, uint32_t inde
   else if (wgpu_is_compute_pass_encoder(encoder))
     wgpuComputePassEncoderSetBindGroup(_wgpu_get_dawn<WGPUComputePassEncoder>(encoder), index, _wgpu_get_dawn<WGPUBindGroup>(bindGroup),
       numDynamicOffsets, dynamicOffsets);
+  else if (wgpu_is_render_bundle_encoder(encoder))
+    wgpuRenderBundleEncoderSetBindGroup(_wgpu_get_dawn<WGPURenderBundleEncoder>(encoder), index, _wgpu_get_dawn<WGPUBindGroup>(bindGroup),
+      numDynamicOffsets, dynamicOffsets);
 }
 
 void wgpu_encoder_set_pipeline(WGpuBindingCommandsMixin encoder, WGpuObjectBase pipeline) {
