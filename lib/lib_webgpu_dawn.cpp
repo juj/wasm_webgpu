@@ -2323,6 +2323,8 @@ void wgpu_encoder_set_pipeline(WGpuBindingCommandsMixin encoder, WGpuObjectBase 
     wgpuRenderPassEncoderSetPipeline(_wgpu_get_dawn<WGPURenderPassEncoder>(encoder), _wgpu_get_dawn<WGPURenderPipeline>(pipeline));
   else if (wgpu_is_compute_pass_encoder(encoder))
     wgpuComputePassEncoderSetPipeline(_wgpu_get_dawn<WGPUComputePassEncoder>(encoder), _wgpu_get_dawn<WGPUComputePipeline>(pipeline));
+  else if (wgpu_is_render_bundle_encoder(encoder))
+    wgpuRenderBundleEncoderSetPipeline(_wgpu_get_dawn<WGPURenderBundleEncoder>(encoder), _wgpu_get_dawn<WGPUComputePipeline>(pipeline));
 }
 
 void wgpu_encoder_end(WGpuBindingCommandsMixin encoder) {
