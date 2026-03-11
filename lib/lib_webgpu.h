@@ -620,6 +620,7 @@ void wgpu_device_create_compute_pipeline_async(WGpuDevice device, WGpuShaderModu
 WGpuRenderPipeline wgpu_device_create_render_pipeline(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc NOTNULL);
 void wgpu_device_create_render_pipeline_async(WGpuDevice device, const WGpuRenderPipelineDescriptor *renderPipelineDesc NOTNULL, WGpuCreatePipelineCallback callback, void *userData);
 
+// Creates a WebGPU Command Encoder. There are currently no fields specified in the spec for commandEncoderDesc, so just pass a pointer to a default-initialized object (&WGPU_COMMAND_ENCODER_DESCRIPTOR_DEFAULT_INITIALIZER), or a null pointer.
 WGpuCommandEncoder wgpu_device_create_command_encoder(WGpuDevice device, const WGpuCommandEncoderDescriptor *commandEncoderDesc);
 // Same as above, but without any descriptor args.
 WGpuCommandEncoder wgpu_device_create_command_encoder_simple(WGpuDevice device);
