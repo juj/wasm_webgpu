@@ -1191,7 +1191,8 @@ void wgpu_adapter_request_device_async_simple(WGpuAdapter adapter, WGpuRequestDe
 
 WGpuDevice wgpu_adapter_request_device_sync_simple(WGpuAdapter adapter) {
   assert(wgpu_is_adapter(adapter));
-  return wgpu_adapter_request_device_sync(adapter, nullptr);
+  WGpuDeviceDescriptor defaultDesc = {};
+  return wgpu_adapter_request_device_sync(adapter, &defaultDesc);
 }
 
 WGPU_BOOL wgpu_is_device(WGpuObjectBase object) {
