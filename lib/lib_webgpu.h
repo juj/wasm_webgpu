@@ -3095,6 +3095,9 @@ typedef struct _WGPU_ALIGN_TO_64BITS WGpuCanvasConfiguration
 } WGpuCanvasConfiguration;
 extern const WGpuCanvasConfiguration WGPU_CANVAS_CONFIGURATION_DEFAULT_INITIALIZER;
 
+// N.b. this struct is malloc()ed in wgpu_canvas_context_get_configuration() in JS side, so if this size changes, remember to update JS side.
+VERIFY_STRUCT_SIZE(WGpuCanvasConfiguration, 10*sizeof(uint32_t));
+
 /*
 dictionary GPURenderPassTimestampWrites {
     required GPUQuerySet querySet;
