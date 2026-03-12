@@ -39,7 +39,8 @@ if len(options.tests_to_run) > 0:
 
 output_file = os.path.join(test_dir, 'test.html')
 
-cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp11.cpp' if options.std_cpp11 else 'lib/lib_webgpu_cpp20.cpp', '-o', output_file, '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun', '-profiling-funcs', '-Wno-experimental']
+cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp11.cpp' if options.std_cpp11 else 'lib/lib_webgpu_cpp20.cpp',
+       '-o', output_file, '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun', '-profiling-funcs', '-Wno-experimental']
 
 if options.wasm64:
   cmd += ['-sMEMORY64']

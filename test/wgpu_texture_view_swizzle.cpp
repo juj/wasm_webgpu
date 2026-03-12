@@ -1,4 +1,4 @@
-// flags: -sEXIT_RUNTIME=1
+// flags: -sEXIT_RUNTIME=0
 
 #include "lib_webgpu.h"
 #include <assert.h>
