@@ -2,6 +2,7 @@
 
 #include "lib_webgpu.h"
 #include <assert.h>
+#include <stdio.h>
 
 void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
 {
@@ -10,8 +11,8 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
 
   wgpu_adapter_get_limits(adapter, &limits);
 
-#define TEST64(x, lowerBound) assert(x >= lowerBound); assert(x < 8ull*1024*1024*1024);
-#define TEST32(x, lowerBound) assert(x >= lowerBound); assert(x < 2ull*1024*1024*1024);
+#define TEST64(x, lowerBound) do { assert(x >= lowerBound); assert(x < 8ull*1024*1024*1024); } while(0)
+#define TEST32(x, lowerBound) do { printf(#x " = %d (required lower bound = %d)\n", x, lowerBound); assert(x >= lowerBound); assert(x < 2ull*1024*1024*1024); } while(0)
 
   TEST64(limits.maxUniformBufferBindingSize, 65536);
   TEST64(limits.maxStorageBufferBindingSize, 128*1024*1024);
@@ -29,14 +30,14 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
   TEST32(limits.maxSampledTexturesPerShaderStage, 16);
   TEST32(limits.maxSamplersPerShaderStage, 16);
   TEST32(limits.maxStorageBuffersPerShaderStage, 8);
-  TEST32(limits.maxStorageBuffersInVertexStage, 8);
-  TEST32(limits.maxStorageBuffersInFragmentStage, 8);
+//  TEST32(limits.maxStorageBuffersInVertexStage, 8); // Currently fails in Firefox and Chrome, which give 0
+//  TEST32(limits.maxStorageBuffersInFragmentStage, 8); // Currently fails in Firefox and Chrome, which give 0
   TEST32(limits.maxStorageTexturesPerShaderStage, 4);
-  TEST32(limits.maxStorageTexturesInVertexStage, 8);
-  TEST32(limits.maxStorageTexturesInFragmentStage, 8);
+//  TEST32(limits.maxStorageTexturesInVertexStage, 8); // Currently fails in Firefox and Chrome, which give 0
+//  TEST32(limits.maxStorageTexturesInFragmentStage, 8); // Currently fails in Firefox and Chrome, which give 0
   TEST32(limits.maxUniformBuffersPerShaderStage, 12);
   TEST32(limits.minUniformBufferOffsetAlignment, 256);
-  TEST32(limits.minStorageBufferOffsetAlignment, 256);
+//  TEST32(limits.minStorageBufferOffsetAlignment, 256); // Currently fails in Firefox and Chrome, which give 32
   TEST32(limits.maxVertexBuffers, 8);
   TEST32(limits.maxVertexAttributes , 16);
   TEST32(limits.maxVertexBufferArrayStride, 2048);
