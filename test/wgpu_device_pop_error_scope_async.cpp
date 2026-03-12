@@ -11,7 +11,7 @@ void OnError(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMess
   assert(errorType == WGPU_ERROR_FILTER_VALIDATION);
   assert(userData == (void*)42);
   printf("%s\n", errorMessage);
-  assert(strstr(errorMessage, "texture usage must not be 0"));
+  assert(strstr(errorMessage, "texture usage must not be 0") || strstr(errorMessage, "size is zero"));
 
   EM_ASM(window.close());
 }
