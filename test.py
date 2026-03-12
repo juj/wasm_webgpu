@@ -14,7 +14,7 @@ parser.add_argument('tests_to_run',nargs='*')
 
 options = parser.parse_args(sys.argv[1:])
 
-test_dir = tempfile.TemporaryDirectory().name
+test_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out')
 
 if not os.path.exists(test_dir):
     os.makedirs(test_dir)
@@ -76,4 +76,3 @@ for f in failures:
 print('')
 print(f'{passes}/{passes+len(failures)} tests passed.')
 
-shutil.rmtree(test_dir)
