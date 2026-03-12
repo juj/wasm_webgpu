@@ -602,12 +602,17 @@ enum GPUPipelineErrorReason {
     "internal",
 };
 */
-typedef struct WGpuPipelineError
+typedef struct _WGPU_ALIGN_TO_64BITS WGpuPipelineError
 {
   const char *name; // The name of the DOMException type that represents this error.
+  _WGPU_PTR_PADDING(0);
   const char *message; // A possibly human-readable message or description of the error.
+  _WGPU_PTR_PADDING(1);
   const char *reason; // One of GPUPipelineErrorReason values.
+  _WGPU_PTR_PADDING(2);
 } WGpuPipelineError;
+
+VERIFY_STRUCT_SIZE(WGpuPipelineError, 6*sizeof(uint32_t));
 
 // When this callback fires, on success the 'pipeline' parameter is nonzero.
 // On failure, pipeline is 0, and in WEBGPU_DEBUG builds 'error' parameter identifies details about the failure. (in release builds the error parameter will be null)
