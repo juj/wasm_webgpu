@@ -1,4 +1,4 @@
-import argparse, glob, subprocess, os, sys, re, tempfile, shutil
+import argparse, glob, subprocess, os, sys, re, tempfile, shutil, time
 
 parser = argparse.ArgumentParser()
 
@@ -50,6 +50,23 @@ elif options.bigint:
 failures = []
 passes = 0
 
+def kill_firefox():
+  try:
+    subprocess.check_call(['taskkill', '/f', '/t', '/im', 'firefox.exe'], timeout=15, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  except:
+    pass
+
+def num_firefox_processes():
+  procs = subprocess.check_output(["tasklist","/FI","IMAGENAME eq firefox.exe", '/fo', 'csv']).decode("ascii","ignore")
+  return len(procs.splitlines()[1:])
+
+def wait_firefox_quit():
+  for i in range(10):
+    if num_firefox_processes() == 0:
+      return
+    time.sleep(0.3)
+  raise TimeoutError("Firefox took too long to quit.")
+
 for m in modes:
   for t in tests:
     print('')
@@ -65,9 +82,15 @@ for m in modes:
       if options.browser: browser_cmd += ['--browser', options.browser]
       browser_cmd += [output_file]
       print(str(browser_cmd))
-      subprocess.check_call(browser_cmd)
+      subprocess.check_call(browser_cmd, timeout=15)
+# Test code logic for interactive test debugging
+#      wait_firefox_quit()
+
       passes += 1
+#      shutil.move(t, os.path.join('ok', t))
+
     except Exception as e:
+#      kill_firefox()
       print(str(e))
       failures += [run]
 
