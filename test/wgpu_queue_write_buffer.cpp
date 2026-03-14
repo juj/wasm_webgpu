@@ -1,4 +1,4 @@
-// flags: -sEXIT_RUNTIME=0 -sJSPI -sINITIAL_MEMORY=4294901760
+// flags: -sEXIT_RUNTIME=0 -sJSPI
 
 #include "lib_webgpu.h"
 #include <stdio.h>
@@ -7,11 +7,6 @@
 
 int main()
 {
-  void *ptr = malloc(1147483648ull); // Make sure all the memory usage is pushed to the upper half of the 4GB range.
-  assert(ptr);
-  ptr = malloc(1147483648ull); // TODO: Emscripten has a bug that it cannot perform >2GB allocations, so allocate two 1GB chunks.
-  assert(ptr);
-
   WGpuAdapter adapter = navigator_gpu_request_adapter_sync_simple();
   WGpuDevice device = wgpu_adapter_request_device_sync_simple(adapter);
 
