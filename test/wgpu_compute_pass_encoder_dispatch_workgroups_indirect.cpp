@@ -62,7 +62,7 @@ int main()
   WGpuBindGroup bindGroup = wgpu_device_create_bind_group(device, layout, &entry, 1);
   wgpu_object_destroy(layout);
 
-  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0xFFFFFFFF)
+  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0x7FFFFFFF)
   {
     // Dispatch indirect
     WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);

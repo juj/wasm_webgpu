@@ -28,7 +28,7 @@ int main()
   uint32_t data[4] = { 0x11223344u, 0x55667788u, 0xAABBCCDDu, 0xEEFF0011u };
 
   // TODO: Firefox does not support Wasm64 with WebGPU.
-  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0xFFFFFFFF)
+  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0x7FFFFFFF)
   {
     wgpu_queue_write_buffer(wgpu_device_get_queue(device), buffer, 256, data, sizeof(data));
 

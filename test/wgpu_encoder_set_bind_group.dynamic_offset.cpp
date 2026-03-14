@@ -66,7 +66,7 @@ int main()
   WGpuBindGroup bg = wgpu_device_create_bind_group(device, bgl, &bgentry, 1);
   assert(bg);
 
-  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0xFFFFFFFF)
+  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0x7FFFFFFF)
   {
     // Dispatch compute using dynamic offset = align (targets second slot)
     uint32_t dynamicOffset = align;

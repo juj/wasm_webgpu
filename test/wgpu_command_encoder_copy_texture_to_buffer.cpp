@@ -34,7 +34,7 @@ int main()
   WGpuTexture texture = wgpu_device_create_texture(device, &tdesc);
   assert(texture);
 
-  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0xFFFFFFFF)
+  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0x7FFFFFFF)
   {
     // Upload pixel data to texture
     WGpuTexelCopyTextureInfo texDst = WGPU_TEXEL_COPY_TEXTURE_INFO_DEFAULT_INITIALIZER;
