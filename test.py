@@ -43,7 +43,7 @@ cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp11.cpp' if options.s
        '-o', output_file, '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun', '-profiling-funcs', '-Wno-experimental']
 
 if options.wasm64:
-  cmd += ['-sMEMORY64']
+  cmd += ['-sMEMORY64', '-sINITIAL_MEMORY=4300MB', '-sGLOBAL_BASE=4GB']
 elif options.bigint:
   cmd += ['-sWASM_BIGINT']
 
