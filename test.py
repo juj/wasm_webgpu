@@ -10,6 +10,8 @@ parser.add_argument('--wasm4gb', action='store_true',
                     help='If true, runs test suite in 4GB Wasm mode.')
 parser.add_argument('--wasm64', action='store_true',
                     help='If true, runs test suite in 64-bit Wasm mode. This implies -sWASM_BIGINT mode.')
+parser.add_argument('--sanitize', action='store_true',
+                    help='If true, runs with LLVM/Clang sanitizers enabled.')
 parser.add_argument('--std_cpp11', action='store_true',
                     help='If true, runs test suite in -std=c++11 mode.')
 parser.add_argument('tests_to_run',nargs='*')
@@ -47,10 +49,15 @@ cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp11.cpp' if options.s
 if options.wasm64 and options.wasm4gb:
   raise Exception('Testing --wasm64 and --wasm4gb are mutually exclusive!')
 
+if options.sanitize:
+  cmd += ['-fsanitize=address', '-fsanitize=undefined']
 if options.wasm64:
-  cmd += ['-sMEMORY64', '-sINITIAL_MEMORY=4300MB', '-sGLOBAL_BASE=4GB']
+  cmd += ['-sMEMORY64']
+  if not options.sanitize:
+    cmd += ['-sINITIAL_MEMORY=4300MB', '-sGLOBAL_BASE=4GB']
 elif options.wasm4gb:
-  cmd += ['-sINITIAL_MEMORY=2300MB', '-sGLOBAL_BASE=2GB']
+  if not options.sanitize:
+    cmd += ['-sINITIAL_MEMORY=2300MB', '-sGLOBAL_BASE=2GB']
 elif options.bigint:
   cmd += ['-sWASM_BIGINT']
 
