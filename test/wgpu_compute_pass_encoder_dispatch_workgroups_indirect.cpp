@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <emscripten/heap.h>
 
 int main()
 {
@@ -61,31 +62,34 @@ int main()
   WGpuBindGroup bindGroup = wgpu_device_create_bind_group(device, layout, &entry, 1);
   wgpu_object_destroy(layout);
 
-  // Dispatch indirect
-  WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
-  WGpuComputePassEncoder pass = wgpu_command_encoder_begin_compute_pass(encoder, 0);
-  wgpu_compute_pass_encoder_set_pipeline(pass, pipeline);
-  wgpu_encoder_set_bind_group(pass, 0, bindGroup, 0, 0);
-  wgpu_compute_pass_encoder_dispatch_workgroups_indirect(pass, indirectBuf, 0);
-  wgpu_compute_pass_encoder_end(pass);
+  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0xFFFFFFFF)
+  {
+    // Dispatch indirect
+    WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
+    WGpuComputePassEncoder pass = wgpu_command_encoder_begin_compute_pass(encoder, 0);
+    wgpu_compute_pass_encoder_set_pipeline(pass, pipeline);
+    wgpu_encoder_set_bind_group(pass, 0, bindGroup, 0, 0);
+    wgpu_compute_pass_encoder_dispatch_workgroups_indirect(pass, indirectBuf, 0);
+    wgpu_compute_pass_encoder_end(pass);
 
-  wgpu_command_encoder_copy_buffer_to_buffer(encoder, storageBuf, 0, readbackBuf, 0, 3 * sizeof(uint32_t));
-  wgpu_queue_submit_one_and_destroy(wgpu_device_get_queue(device), wgpu_command_encoder_finish(encoder));
+    wgpu_command_encoder_copy_buffer_to_buffer(encoder, storageBuf, 0, readbackBuf, 0, 3 * sizeof(uint32_t));
+    wgpu_queue_submit_one_and_destroy(wgpu_device_get_queue(device), wgpu_command_encoder_finish(encoder));
 
-  char msg[512];
-  WGPU_ERROR_TYPE error = wgpu_device_pop_error_scope_sync(device, msg, sizeof(msg));
-  if (strlen(msg) > 0) printf("%s\n", msg);
-  assert(!error);
+    char msg[512];
+    WGPU_ERROR_TYPE error = wgpu_device_pop_error_scope_sync(device, msg, sizeof(msg));
+    if (strlen(msg) > 0) printf("%s\n", msg);
+    assert(!error);
 
-  uint32_t results[3] = {};
-  wgpu_buffer_map_sync(readbackBuf, WGPU_MAP_MODE_READ);
-  wgpu_buffer_get_mapped_range(readbackBuf, 0);
-  wgpu_buffer_read_mapped_range(readbackBuf, 0, 0, results, sizeof(results));
+    uint32_t results[3] = {};
+    wgpu_buffer_map_sync(readbackBuf, WGPU_MAP_MODE_READ);
+    wgpu_buffer_get_mapped_range(readbackBuf, 0);
+    wgpu_buffer_read_mapped_range(readbackBuf, 0, 0, results, sizeof(results));
 
-  printf("Results: %u %u %u\n", results[0], results[1], results[2]);
-  assert(results[0] == 10);
-  assert(results[1] == 11);
-  assert(results[2] == 12);
+    printf("Results: %u %u %u\n", results[0], results[1], results[2]);
+    assert(results[0] == 10);
+    assert(results[1] == 11);
+    assert(results[2] == 12);
+  }
 
   printf("Test OK\n");
   EM_ASM(window.close());

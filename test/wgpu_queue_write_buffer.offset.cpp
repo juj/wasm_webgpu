@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <emscripten/heap.h>
 
 int main()
 {
@@ -25,12 +26,17 @@ int main()
   // Write a known pattern at bufferOffset=256 (one block in)
   // bufferOffset must be a multiple of 4
   uint32_t data[4] = { 0x11223344u, 0x55667788u, 0xAABBCCDDu, 0xEEFF0011u };
-  wgpu_queue_write_buffer(wgpu_device_get_queue(device), buffer, 256, data, sizeof(data));
 
-  char msg[512];
-  WGPU_ERROR_TYPE error = wgpu_device_pop_error_scope_sync(device, msg, sizeof(msg));
-  if (strlen(msg) > 0) printf("%s\n", msg);
-  assert(!error);
+  // TODO: Firefox does not support Wasm64 with WebGPU.
+  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0xFFFFFFFF)
+  {
+    wgpu_queue_write_buffer(wgpu_device_get_queue(device), buffer, 256, data, sizeof(data));
+
+    char msg[512];
+    WGPU_ERROR_TYPE error = wgpu_device_pop_error_scope_sync(device, msg, sizeof(msg));
+    if (strlen(msg) > 0) printf("%s\n", msg);
+    assert(!error);
+  }
 
   // TODO: Currently fails in Firefox, reads back 0.
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))

@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <emscripten/heap.h>
 
 int main()
 {
@@ -33,58 +34,61 @@ int main()
   WGpuTexture texture = wgpu_device_create_texture(device, &tdesc);
   assert(texture);
 
-  // Upload pixel data to texture
-  WGpuTexelCopyTextureInfo texDst = WGPU_TEXEL_COPY_TEXTURE_INFO_DEFAULT_INITIALIZER;
-  texDst.texture = texture;
-  wgpu_queue_write_texture(wgpu_device_get_queue(device), &texDst,
-    srcPixels, bytesPerRow, H, W, H);
-
-  // Create destination buffer (bytesPerRow must be ≥ 256 and multiple of 256)
-  WGpuBufferDescriptor bdesc = {
-    .size = bufSize,
-    .usage = WGPU_BUFFER_USAGE_COPY_DST | WGPU_BUFFER_USAGE_MAP_READ,
-  };
-  WGpuBuffer dstBuf = wgpu_device_create_buffer(device, &bdesc);
-  assert(dstBuf);
-
-  // Copy texture to buffer
-  WGpuTexelCopyTextureInfo texSrc = WGPU_TEXEL_COPY_TEXTURE_INFO_DEFAULT_INITIALIZER;
-  texSrc.texture = texture;
-
-  WGpuTexelCopyBufferInfo bufDst = {
-    .offset = 0,
-    .bytesPerRow = alignedBytesPerRow,
-    .rowsPerImage = H,
-    .buffer = dstBuf,
-  };
-
-  WGpuCommandEncoder enc = wgpu_device_create_command_encoder_simple(device);
-  wgpu_command_encoder_copy_texture_to_buffer(enc, &texSrc, &bufDst, W, H);
-  wgpu_queue_submit_one_and_destroy(wgpu_device_get_queue(device), wgpu_command_encoder_finish(enc));
-
-  char msg[512];
-  WGPU_ERROR_TYPE error = wgpu_device_pop_error_scope_sync(device, msg, sizeof(msg));
-  if (strlen(msg) > 0) printf("%s\n", msg);
-  assert(!error);
-
-  // Read back and verify each row
-  wgpu_buffer_map_sync(dstBuf, WGPU_MAP_MODE_READ);
-  wgpu_buffer_get_mapped_range(dstBuf, 0);
-  for (uint32_t row = 0; row < H; ++row)
+  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0xFFFFFFFF)
   {
-    uint8_t rowData[W * 4] = { 0 };
-    wgpu_buffer_read_mapped_range(dstBuf, 0, row * alignedBytesPerRow, rowData, sizeof(rowData));
-    for (uint32_t col = 0; col < W * 4; ++col)
+    // Upload pixel data to texture
+    WGpuTexelCopyTextureInfo texDst = WGPU_TEXEL_COPY_TEXTURE_INFO_DEFAULT_INITIALIZER;
+    texDst.texture = texture;
+    wgpu_queue_write_texture(wgpu_device_get_queue(device), &texDst,
+      srcPixels, bytesPerRow, H, W, H);
+
+    // Create destination buffer (bytesPerRow must be ≥ 256 and multiple of 256)
+    WGpuBufferDescriptor bdesc = {
+      .size = bufSize,
+      .usage = WGPU_BUFFER_USAGE_COPY_DST | WGPU_BUFFER_USAGE_MAP_READ,
+    };
+    WGpuBuffer dstBuf = wgpu_device_create_buffer(device, &bdesc);
+    assert(dstBuf);
+
+    // Copy texture to buffer
+    WGpuTexelCopyTextureInfo texSrc = WGPU_TEXEL_COPY_TEXTURE_INFO_DEFAULT_INITIALIZER;
+    texSrc.texture = texture;
+
+    WGpuTexelCopyBufferInfo bufDst = {
+      .offset = 0,
+      .bytesPerRow = alignedBytesPerRow,
+      .rowsPerImage = H,
+      .buffer = dstBuf,
+    };
+
+    WGpuCommandEncoder enc = wgpu_device_create_command_encoder_simple(device);
+    wgpu_command_encoder_copy_texture_to_buffer(enc, &texSrc, &bufDst, W, H);
+    wgpu_queue_submit_one_and_destroy(wgpu_device_get_queue(device), wgpu_command_encoder_finish(enc));
+
+    char msg[512];
+    WGPU_ERROR_TYPE error = wgpu_device_pop_error_scope_sync(device, msg, sizeof(msg));
+    if (strlen(msg) > 0) printf("%s\n", msg);
+    assert(!error);
+
+    // Read back and verify each row
+    wgpu_buffer_map_sync(dstBuf, WGPU_MAP_MODE_READ);
+    wgpu_buffer_get_mapped_range(dstBuf, 0);
+    for (uint32_t row = 0; row < H; ++row)
     {
-      uint8_t expected = srcPixels[row * bytesPerRow + col];
-      if (rowData[col] != expected)
+      uint8_t rowData[W * 4] = { 0 };
+      wgpu_buffer_read_mapped_range(dstBuf, 0, row * alignedBytesPerRow, rowData, sizeof(rowData));
+      for (uint32_t col = 0; col < W * 4; ++col)
       {
-        printf("Mismatch at row=%u col=%u: got %u expected %u\n", row, col, rowData[col], expected);
-        assert(0);
+        uint8_t expected = srcPixels[row * bytesPerRow + col];
+        if (rowData[col] != expected)
+        {
+          printf("Mismatch at row=%u col=%u: got %u expected %u\n", row, col, rowData[col], expected);
+          assert(0);
+        }
       }
     }
+    wgpu_buffer_unmap(dstBuf);
   }
-  wgpu_buffer_unmap(dstBuf);
 
   printf("Test OK\n");
   EM_ASM(window.close());
