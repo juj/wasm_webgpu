@@ -405,6 +405,9 @@ WGPU_TEXTURE_FORMAT navigator_gpu_get_preferred_canvas_format(WGpuAdapter adapte
 // Returns an array of strings representing supported WGSL language features. The array of strings is terminated by a null string.
 // If you do not need to enumerate though all supported language features, you can use the simpler navigator_gpu_is_wgsl_language_feature_supported()
 // function.
+// N.b. this function allocates memory on the caller's stack frame, so the returned pointer is not valid only in the function that called
+// navigator_gpu_get_wgsl_language_features(). It is recommended to parse the contents of the returned pointer to internal data structures, to
+// avoid calling this function multiple times.
 const char * const * navigator_gpu_get_wgsl_language_features(void);
 // Tests if the given WGSL language feature is supported. (the given feature string exists in navigator.gpu.wgslLanguageFeatures set).
 // If this information is needed often (e.g. in an inner loop of a shader cross-compiler), then it is recommended to cache the return value,
