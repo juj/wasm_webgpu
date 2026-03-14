@@ -78,7 +78,7 @@ for m in modes:
     print(' '.join(run))
     try:
       subprocess.check_call(run)
-      browser_cmd = ['emrun.bat']
+      browser_cmd = ['emrun.bat', '--safe-firefox-profile']
       if options.browser: browser_cmd += ['--browser', options.browser]
       browser_cmd += [output_file]
       print(str(browser_cmd))
