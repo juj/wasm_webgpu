@@ -6,6 +6,8 @@ parser.add_argument('--browser',
                     help='Specifies the browser executable to run the tests in.')
 parser.add_argument('--bigint', action='store_true',
                     help='If true, runs test suite in Emscripten -sWASM_BIGINT mode.')
+parser.add_argument('--wasm4gb', action='store_true',
+                    help='If true, runs test suite in 4GB Wasm mode.')
 parser.add_argument('--wasm64', action='store_true',
                     help='If true, runs test suite in 64-bit Wasm mode. This implies -sWASM_BIGINT mode.')
 parser.add_argument('--std_cpp11', action='store_true',
@@ -42,8 +44,13 @@ output_file = os.path.join(test_dir, 'test.html')
 cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp11.cpp' if options.std_cpp11 else 'lib/lib_webgpu_cpp20.cpp',
        '-o', output_file, '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun', '-profiling-funcs', '-Wno-experimental']
 
+if options.wasm64 and options.wasm4gb:
+  raise Exception('Testing --wasm64 and --wasm4gb are mutually exclusive!')
+
 if options.wasm64:
   cmd += ['-sMEMORY64', '-sINITIAL_MEMORY=4300MB', '-sGLOBAL_BASE=4GB']
+elif options.wasm4gb:
+  cmd += ['-sINITIAL_MEMORY=2300MB', '-sGLOBAL_BASE=2GB']
 elif options.bigint:
   cmd += ['-sWASM_BIGINT']
 
