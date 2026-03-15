@@ -23,13 +23,13 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
     {
       // Succeeded: verify the object is valid
       // (bgl captured via userData)
-      WGpuBindGroupLayout *pBgl = (WGpuBindGroupLayout*)udata;
-      assert(*pBgl);
-      assert(wgpu_is_bind_group_layout(*pBgl));
+      WGpuBindGroupLayout pBgl = (WGpuBindGroupLayout)udata;
+      assert(pBgl);
+      assert(wgpu_is_bind_group_layout(pBgl));
     }
     // Either success or validation error is acceptable.
     EM_ASM(window.close());
-  }, &bgl);
+  }, (void*)bgl);
 }
 
 void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
