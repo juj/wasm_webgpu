@@ -75,7 +75,7 @@ def num_firefox_processes():
   return len(procs.splitlines()[1:])
 
 def wait_firefox_quit():
-  for i in range(10):
+  for i in range(100):
     if num_firefox_processes() == 0:
       return
     time.sleep(0.3)
