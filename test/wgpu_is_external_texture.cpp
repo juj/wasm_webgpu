@@ -15,7 +15,7 @@ WGPU_BOOL PollVideoReady(double time, void *userData)
 {
   // HTMLMediaElement.HAVE_CURRENT_DATA == 2: the video has decoded at least one frame
   // and importExternalTexture() is permitted.
-  if (!EM_ASM_INT({ return wgpuTestVideo && wgpuTestVideo.readyState >= 2; }))
+  if (!EM_ASM_INT({ return window['wgpuTestVideo'] && window['wgpuTestVideo'].readyState >= 2; }))
     return WGPU_TRUE; // not ready yet, keep polling
 
   WGpuExternalTextureDescriptor desc = WGPU_EXTERNAL_TEXTURE_DESCRIPTOR_DEFAULT_INITIALIZER;
@@ -51,7 +51,7 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
     video.srcObject = canvas.captureStream(25);
     video.play();
 
-    window.wgpuTestVideo = video; // kept alive for readyState polling
+    window['wgpuTestVideo'] = video; // kept alive for readyState polling
     return wgpuStore(video);      // returns the integer wgpu[] table ID
   });
 
