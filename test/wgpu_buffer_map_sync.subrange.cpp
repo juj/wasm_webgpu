@@ -20,7 +20,7 @@ int main()
   WGpuBuffer buffer = wgpu_device_create_buffer(device, &desc);
   assert(buffer);
 
-  // TODO: Currently fails in Firefox, reads back 0.
+  // GPUBuffer.mapAsync() does not work in Firefox, but reads back 0. https://bugzilla.mozilla.org/show_bug.cgi?id=2023418
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
     // Write known data into the second 256-byte block (offset=256, size=256)

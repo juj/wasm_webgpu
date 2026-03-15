@@ -43,8 +43,7 @@ int main()
     .aspect = WGPU_TEXTURE_ASPECT_ALL
   };
 
-  // Currently fails in Firefox with https://bugzilla.mozilla.org/show_bug.cgi?id=2022805:
-  // "TypeError: GPUQueue.writeBuffer: ArrayBufferView branch of (ArrayBuffer or ArrayBufferView) can't be an ArrayBuffer or an ArrayBufferView larger than 2 GB"
+  // No Wasm4GB/Wasm64 support in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2022805
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
     wgpu_queue_write_texture(wgpu_device_get_queue(device), &copyTexture, data, 8, 8, 8, 8);

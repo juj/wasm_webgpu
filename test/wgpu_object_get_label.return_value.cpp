@@ -18,7 +18,7 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
   const char *testLabel = "hello-label";
   wgpu_object_set_label(buffer, testLabel);
 
-  // TODO: Currently fails in Firefox, reads back 0.
+  // Saving label does not work in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2023421
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
     char dst[64];

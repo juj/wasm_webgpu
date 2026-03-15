@@ -26,8 +26,8 @@ int main()
 
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
 
-  // Currently fails in Firefox with https://bugzilla.mozilla.org/show_bug.cgi?id=2022805:
-  // "TypeError: GPUQueue.writeBuffer: ArrayBufferView branch of (ArrayBuffer or ArrayBufferView) can't be an ArrayBuffer or an ArrayBufferView larger than 2 GB"
+  // No Wasm4GB/Wasm64 support in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2022805
+  // GPUBuffer.mapAsync() does not work in Firefox, but reads back 0. https://bugzilla.mozilla.org/show_bug.cgi?id=2023418
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
     uint64_t *data = (uint64_t *)malloc(16);

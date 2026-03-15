@@ -17,7 +17,7 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
   // Set a label then clear it with an empty string
   wgpu_object_set_label(buffer, "my-buffer");
 
-  // TODO: Currently fails in Firefox, reads back 0.
+  // Saving label does not work in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2023421
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
     char label[64];

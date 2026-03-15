@@ -19,7 +19,7 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
   char label[32];
   wgpu_object_get_label(queue, label, sizeof(label));
   printf("Queue label: \"%s\"\n", label);
-  // TODO: Label is not getting saved in Firefox. Verify if this is a spec issue or a Firefox issue?
+  // Saving label does not work in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2023421
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
     assert(!strcmp(label, "ThisIsNameForMyQueue"));

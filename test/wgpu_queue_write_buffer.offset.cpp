@@ -27,7 +27,7 @@ int main()
   // bufferOffset must be a multiple of 4
   uint32_t data[4] = { 0x11223344u, 0x55667788u, 0xAABBCCDDu, 0xEEFF0011u };
 
-  // TODO: Firefox does not support Wasm64 with WebGPU.
+  // No Wasm4GB/Wasm64 support in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2022805
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0x7FFFFFFF)
   {
     wgpu_queue_write_buffer(wgpu_device_get_queue(device), buffer, 256, data, sizeof(data));
@@ -38,7 +38,7 @@ int main()
     assert(!error);
   }
 
-  // TODO: Currently fails in Firefox, reads back 0.
+  // GPUBuffer.mapAsync() does not work in Firefox, but reads back 0. https://bugzilla.mozilla.org/show_bug.cgi?id=2023418
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
     // Read back and verify the written region
