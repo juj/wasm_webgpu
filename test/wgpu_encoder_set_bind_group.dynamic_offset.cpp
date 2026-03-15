@@ -66,8 +66,8 @@ int main()
   WGpuBindGroup bg = wgpu_device_create_bind_group(device, bgl, &bgentry, 1);
   assert(bg);
 
-  // No Wasm4GB/Wasm64 support in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2022805
-  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0x7FFFFFFF)
+  // GPUBuffer.mapAsync() does not work in Firefox, but reads back 0. https://bugzilla.mozilla.org/show_bug.cgi?id=2023418
+  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
     // Dispatch compute using dynamic offset = align (targets second slot)
     uint32_t dynamicOffset = align;

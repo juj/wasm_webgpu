@@ -43,7 +43,7 @@ int main()
     .aspect = WGPU_TEXTURE_ASPECT_ALL
   };
 
-  // No Wasm4GB/Wasm64 support in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2022805
+  // GPUBuffer.mapAsync() does not work in Firefox, but reads back 0. https://bugzilla.mozilla.org/show_bug.cgi?id=2023418
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
     wgpu_queue_write_texture(wgpu_device_get_queue(device), &copyTexture, data, 8, 8, 8, 8);

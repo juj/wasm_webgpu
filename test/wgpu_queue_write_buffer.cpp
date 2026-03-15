@@ -26,7 +26,6 @@ int main()
 
   WGpuCommandEncoder encoder = wgpu_device_create_command_encoder(device, 0);
 
-  // No Wasm4GB/Wasm64 support in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2022805
   // GPUBuffer.mapAsync() does not work in Firefox, but reads back 0. https://bugzilla.mozilla.org/show_bug.cgi?id=2023418
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {

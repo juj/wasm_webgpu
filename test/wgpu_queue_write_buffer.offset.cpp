@@ -27,16 +27,12 @@ int main()
   // bufferOffset must be a multiple of 4
   uint32_t data[4] = { 0x11223344u, 0x55667788u, 0xAABBCCDDu, 0xEEFF0011u };
 
-  // No Wasm4GB/Wasm64 support in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2022805
-  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0x7FFFFFFF)
-  {
-    wgpu_queue_write_buffer(wgpu_device_get_queue(device), buffer, 256, data, sizeof(data));
+  wgpu_queue_write_buffer(wgpu_device_get_queue(device), buffer, 256, data, sizeof(data));
 
-    char msg[512];
-    WGPU_ERROR_TYPE error = wgpu_device_pop_error_scope_sync(device, msg, sizeof(msg));
-    if (strlen(msg) > 0) printf("%s\n", msg);
-    assert(!error);
-  }
+  char msg[512];
+  WGPU_ERROR_TYPE error = wgpu_device_pop_error_scope_sync(device, msg, sizeof(msg));
+  if (strlen(msg) > 0) printf("%s\n", msg);
+  assert(!error);
 
   // GPUBuffer.mapAsync() does not work in Firefox, but reads back 0. https://bugzilla.mozilla.org/show_bug.cgi?id=2023418
   if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))

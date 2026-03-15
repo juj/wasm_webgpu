@@ -61,8 +61,8 @@ int main()
   WGpuComputePassEncoder pass = wgpu_command_encoder_begin_compute_pass(enc, 0);
   wgpu_encoder_set_pipeline(pass, pipeline);
 
-  // No Wasm4GB/Wasm64 support in Firefox: https://bugzilla.mozilla.org/show_bug.cgi?id=2022805
-  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}) || emscripten_get_heap_max() <= (size_t)0x7FFFFFFF)
+  // GPUBuffer.mapAsync() does not work in Firefox, but reads back 0. https://bugzilla.mozilla.org/show_bug.cgi?id=2023418
+  if (!EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
     wgpu_encoder_set_bind_group(pass, 0, bg, 0, 0);
     wgpu_compute_pass_encoder_dispatch_workgroups(pass, 1, 1, 1);
