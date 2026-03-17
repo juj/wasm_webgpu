@@ -2899,7 +2899,8 @@ typedef int WGPU_ERROR_TYPE;
 #define WGPU_ERROR_TYPE_NO_ERROR      0
 #define WGPU_ERROR_TYPE_OUT_OF_MEMORY 1
 #define WGPU_ERROR_TYPE_VALIDATION    2
-#define WGPU_ERROR_TYPE_UNKNOWN_ERROR 3
+#define WGPU_ERROR_TYPE_INTERNAL      3
+#define WGPU_ERROR_TYPE_UNKNOWN       4
 
 /*
 [Exposed=(Window, DedicatedWorker), SecureContext]
