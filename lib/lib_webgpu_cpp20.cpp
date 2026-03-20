@@ -98,6 +98,15 @@ const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACH
   .stencilReadOnly = false
 };
 
+const WGpuRenderBundleEncoderDescriptor WGPU_RENDER_BUNDLE_ENCODER_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  .colorFormats = 0,
+  .numColorFormats = 0,
+  .depthStencilFormat = 0,
+  .sampleCount = 1,
+  .depthReadOnly = WGPU_FALSE,
+  .stencilReadOnly = WGPU_FALSE
+};
+
 const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
   .access = WGPU_STORAGE_TEXTURE_ACCESS_WRITE_ONLY,
   .viewDimension = WGPU_TEXTURE_VIEW_DIMENSION_2D

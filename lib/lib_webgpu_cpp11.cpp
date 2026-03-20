@@ -118,6 +118,16 @@ const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACH
   false, /* stencilReadOnly */
 };
 
+const WGpuRenderBundleEncoderDescriptor WGPU_RENDER_BUNDLE_ENCODER_DESCRIPTOR_DEFAULT_INITIALIZER = {
+  0, /* colorFormats */
+  PTR_PAD_ZERO
+  0, /* numColorFormats */
+  0, /* depthStencilFormat */
+  1, /* sampleCount */
+  WGPU_FALSE, /*depthReadOnly*/
+  WGPU_FALSE, /*stencilReadOnly*/
+};
+
 const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
   WGPU_STORAGE_TEXTURE_ACCESS_WRITE_ONLY, /* access */
   WGPU_TEXTURE_FORMAT_INVALID, /* format */

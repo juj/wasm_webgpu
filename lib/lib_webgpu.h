@@ -2702,11 +2702,12 @@ typedef struct _WGPU_ALIGN_TO_64BITS WGpuRenderBundleEncoderDescriptor
   _WGPU_PTR_PADDING(0);
   int numColorFormats;
   WGPU_TEXTURE_FORMAT depthStencilFormat;
-  uint32_t sampleCount;
+  uint32_t sampleCount; // Default = 1. (pass 1 to disable MSAA, passing 0 here is not valid)
   WGPU_BOOL depthReadOnly;
   WGPU_BOOL stencilReadOnly;
   uint32_t unused_padding;
 } WGpuRenderBundleEncoderDescriptor;
+extern const WGpuRenderBundleEncoderDescriptor WGPU_RENDER_BUNDLE_ENCODER_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 VERIFY_STRUCT_SIZE(WGpuRenderBundleEncoderDescriptor, 8*sizeof(uint32_t));
 
