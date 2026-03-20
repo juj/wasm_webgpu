@@ -25,8 +25,8 @@ if not os.path.exists(test_dir):
 
 modes = [
  ['-O0', '-sASSERTIONS=1', '-jsDWEBGPU_DEBUG=1'],
- ['-O3'],
- ['-Oz', '--closure', '1', '--closure-args=--externs=lib/webgpu-closure-externs.js'],
+ ['-O3', '--profiling-funcs'],
+ ['-Oz', '--closure', '1', '--closure-args=--externs=lib/webgpu-closure-externs.js', '--profiling-funcs'],
 ]
 
 # Uncomment for quick testing in one mode.
@@ -37,9 +37,9 @@ def contains_substring(s, arr):
     if sub in s:
       return True
 
-tests = glob.glob('test/*.cpp')
+tests = list(glob.glob('test/*.cpp'))
 if len(options.tests_to_run) > 0:
-  tests = filter(lambda t: contains_substring(t, options.tests_to_run), tests)
+  tests = list(filter(lambda t: contains_substring(t, options.tests_to_run), tests))
 
 output_file = os.path.join(test_dir, 'test.html')
 
