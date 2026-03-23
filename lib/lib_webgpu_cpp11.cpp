@@ -124,8 +124,9 @@ const WGpuRenderBundleEncoderDescriptor WGPU_RENDER_BUNDLE_ENCODER_DESCRIPTOR_DE
   0, /* numColorFormats */
   0, /* depthStencilFormat */
   1, /* sampleCount */
-  WGPU_FALSE, /*depthReadOnly*/
-  WGPU_FALSE, /*stencilReadOnly*/
+  WGPU_FALSE, /* depthReadOnly */
+  WGPU_FALSE, /* stencilReadOnly */
+  0, /* unused_padding */
 };
 
 const WGpuStorageTextureBindingLayout WGPU_STORAGE_TEXTURE_BINDING_LAYOUT_DEFAULT_INITIALIZER = {
