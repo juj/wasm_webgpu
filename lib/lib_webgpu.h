@@ -1636,6 +1636,8 @@ typedef struct _WGPU_ALIGN_TO_64BITS WGpuCompilationMessage
   // that a lineNum of 1 indicates the first line of the shader code.
   // If the message corresponds to a substring this points to the line on which the substring
   // begins. Must be 0 if the message does not correspond to any specific point in the shader code.
+  // N.b. lineNum, linePos, offset and length are intentionally uint32_t instead of uint64_t to
+  // ease Wasm<->JS marshalling. (uint64_t is overkill)
   uint32_t lineNum;
 
   // The offset, in UTF-16 code units, from the beginning of line lineNum of the shader code
