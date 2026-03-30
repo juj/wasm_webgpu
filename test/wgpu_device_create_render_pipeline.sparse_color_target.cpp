@@ -28,13 +28,6 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
   targets[1].format = colorFormat;
   targets[1].writeMask = WGPU_COLOR_WRITE_ALL;
 
-  // https://bugzilla.mozilla.org/show_bug.cgi?id=2023423: sparse GPUColorTargetState on beginRenderPass not supported
-  if (EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
-  {
-    EM_ASM(window.close());
-    return;
-  }
-
   WGpuRenderPipelineDescriptor desc = WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITIALIZER;
   desc.vertex.module = shader;
   desc.vertex.entryPoint = "vs";

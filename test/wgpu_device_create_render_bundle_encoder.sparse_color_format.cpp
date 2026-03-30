@@ -21,7 +21,7 @@ void ObtainedWebGpuDevice(WGpuDevice device, void *userData)
   desc.numColorFormats = 2;
   desc.sampleCount = 1;
 
-  // Sparse formats list works in Firefox Nightly, but not yet in Firefox stable.
+  // Sparse formats list works in Firefox Nightly, but not yet in Firefox 149 stable.
   // TODO: Remove this when sparse BGLs are supported.
   if (EM_ASM_INT({return navigator.userAgent.includes("Firefox")}))
   {
