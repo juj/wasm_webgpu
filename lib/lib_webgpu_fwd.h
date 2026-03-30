@@ -11,7 +11,7 @@ extern "C" {
 // unsigned integers. On the web, this will be a 'double',
 // on other platforms it will be a 64-bit unsigned integer.
 // The reason for using double on the web is due to the
-// JavaScript WebGPU API does not not allow utilizing
+// JavaScript WebGPU API does not allow utilizing
 // BigInt to represent real 64-bit integers, so only 53 bits
 // of integer values is available.
 #ifdef __EMSCRIPTEN__
