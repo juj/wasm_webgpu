@@ -58,7 +58,7 @@
 // The _WGPU_PTR_PADDING() macro pads pointers in 32-bit builds up to 64-bits so that memory layout
 // of WebGPU structures is identical in 32-bit and 64-bit builds. This way the JS side marshalling
 // can stay the same (except for reading pointers).
-#ifdef __wasm64__
+#if defined(__wasm64__) || defined(_WIN64) || defined(__x86_64__) || defined(__aarch64__)
 #define _WGPU_PTR_PADDING(x)
 #else
 #define _WGPU_PTR_PADDING(x) uint32_t unused_padding_to_make_32bit_ptrs_64bit_##x;

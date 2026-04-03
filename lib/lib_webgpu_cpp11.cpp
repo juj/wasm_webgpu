@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-#ifdef __wasm64__
+#if defined(__wasm64__) || defined(_WIN64) || defined(__x86_64__) || defined(__aarch64__)
 #define PTR_PAD_ZERO
 #else
 #define PTR_PAD_ZERO 0,
