@@ -95,10 +95,8 @@ WGpuCanvasContext wgpu_canvas_get_webgpu_context(const char *canvasSelector NOTN
 
 // Initializes a WebGPU rendering context to the given Offscreen Canvas.
 WGpuCanvasContext wgpu_offscreen_canvas_get_webgpu_context(OffscreenCanvasId id);
-#elif defined (_WIN32)
-WGpuCanvasContext wgpu_canvas_get_webgpu_context(void *hwnd);
 #else
-#error Targeting currently unsupported platform! (no declaration for wgpu_canvas_get_webgpu_context())
+WGpuCanvasContext wgpu_canvas_get_webgpu_context(void *hwnd);
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
