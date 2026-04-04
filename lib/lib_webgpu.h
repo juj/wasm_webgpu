@@ -13,7 +13,9 @@
 #pragma warning(push)
 #endif
 
-#ifdef __clang__
+#ifdef __EMSCRIPTEN__
+// In Web builds we have JavaScript code that reads/writes the structs, so verify that their binary layout
+// will not generate any padding or other unexpected offsets.
 #pragma clang diagnostic error "-Wpadded"
 #endif
 
