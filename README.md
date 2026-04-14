@@ -1,4 +1,4 @@
-# WebGPU in Wasm via Emscripten (or Dawn)
+# WebGPU in Wasm via Emscripten
 
 <img align=right src='./screenshots/webgpu-logo.svg' width=27%>
 
@@ -18,11 +18,13 @@ Then `#include "lib_webgpu.h"` to access the API, compile in `lib_webpgu.cpp` an
 
 For your convenience, a forward declaration header is also provided, and can be included with `#include "lib_webgpu_fwd.h"`.
 
-# Using WebGPU via Dawn
+# Using WebGPU via Dawn (Experimental)
 
 It is also possible to target WebGPU outside the browser via Dawn. When doing so, also compile the dawn-specific file with your project:
 
  - [lib/lib_webgpu_dawn.cpp](lib/lib_webgpu_dawn.cpp)
+
+Although this implementation has at the moment gotten outdated, as it is not the main target of this repository.
 
 ## 🗓 Implementation Status
 
