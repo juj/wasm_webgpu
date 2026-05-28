@@ -1090,6 +1090,7 @@ void wgpu_adapter_or_device_get_limits(WGpuAdapter adapterOrDevice, WGpuSupporte
   limits->maxTextureArrayLayers = _limits.limits.maxTextureArrayLayers;
   limits->maxBindGroups = _limits.limits.maxBindGroups;
   limits->maxBindGroupsPlusVertexBuffers = _limits.limits.maxBindGroupsPlusVertexBuffers;
+  limits->maxImmediateSize = _limits.limits.maxImmediateSize;
   limits->maxBindingsPerBindGroup = _limits.limits.maxBindingsPerBindGroup;
   limits->maxDynamicUniformBuffersPerPipelineLayout = _limits.limits.maxDynamicUniformBuffersPerPipelineLayout;
   limits->maxDynamicStorageBuffersPerPipelineLayout = _limits.limits.maxDynamicStorageBuffersPerPipelineLayout;
@@ -1154,6 +1155,7 @@ WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDevic
   limits.maxTextureArrayLayers = descriptor->requiredLimits.maxTextureArrayLayers;
   limits.maxBindGroups = descriptor->requiredLimits.maxBindGroups;
   limits.maxBindGroupsPlusVertexBuffers = descriptor->requiredLimits.maxBindGroupsPlusVertexBuffers;
+  limits.maxImmediateSize = descriptor->requiredLimits.maxImmediateSize;
   limits.maxBindingsPerBindGroup = descriptor->requiredLimits.maxBindingsPerBindGroup;
   limits.maxDynamicUniformBuffersPerPipelineLayout = descriptor->requiredLimits.maxDynamicUniformBuffersPerPipelineLayout;
   limits.maxDynamicStorageBuffersPerPipelineLayout = descriptor->requiredLimits.maxDynamicStorageBuffersPerPipelineLayout;
@@ -1348,7 +1350,7 @@ WGpuBindGroupLayout wgpu_device_create_bind_group_layout(WGpuDevice device, cons
   return _wgpu_store_and_set_parent(kWebGPUBindGroupLayout, layout, device);
 }
 
-WGpuPipelineLayout wgpu_device_create_pipeline_layout(WGpuDevice device, const WGpuBindGroupLayout* bindGroupLayouts, int numLayouts) {
+WGpuPipelineLayout wgpu_device_create_pipeline_layout(WGpuDevice device, const WGpuBindGroupLayout* bindGroupLayouts, int numLayouts, int immediateSize) {
   assert(wgpu_is_device(device));
   assert(numLayouts == 0 || bindGroupLayouts != nullptr);
 
@@ -1359,6 +1361,7 @@ WGpuPipelineLayout wgpu_device_create_pipeline_layout(WGpuDevice device, const W
   WGPUPipelineLayoutDescriptor _desc = {};
   _desc.bindGroupLayoutCount = numLayouts;
   _desc.bindGroupLayouts = layouts.data();
+  _desc.immediateSize = immediateSize;
 
   WGPUPipelineLayout pipelineLayout = wgpuDeviceCreatePipelineLayout(_wgpu_get_dawn<WGPUDevice>(device), &_desc);
   return _wgpu_store_and_set_parent(kWebGPUPipelineLayout, pipelineLayout, device);

@@ -151,6 +151,7 @@ interface GPUSupportedLimits {
     readonly attribute unsigned long maxTextureArrayLayers;
     readonly attribute unsigned long maxBindGroups;
     readonly attribute unsigned long maxBindGroupsPlusVertexBuffers;
+    readonly attribute unsigned long maxImmediateSize;
     readonly attribute unsigned long maxBindingsPerBindGroup;
     readonly attribute unsigned long maxDynamicUniformBuffersPerPipelineLayout;
     readonly attribute unsigned long maxDynamicStorageBuffersPerPipelineLayout;
@@ -201,6 +202,7 @@ typedef struct WGpuSupportedLimits
   uint32_t maxTextureArrayLayers; // required >= 256
   uint32_t maxBindGroups; // required >= 4
   uint32_t maxBindGroupsPlusVertexBuffers; // required >= 24
+  uint32_t maxImmediateSize; // required >= 64
   uint32_t maxBindingsPerBindGroup; // required >= 1000
   uint32_t maxDynamicUniformBuffersPerPipelineLayout; // required >= 8
   uint32_t maxDynamicStorageBuffersPerPipelineLayout; // required >= 4
@@ -580,8 +582,8 @@ WGpuExternalTexture wgpu_device_import_external_texture(WGpuDevice device, const
 WGpuBindGroupLayout wgpu_device_create_bind_group_layout(WGpuDevice device, const WGpuBindGroupLayoutEntry *bindGroupLayoutEntries, int numEntries);
 
 // N.b. not currently using signature WGpuPipelineLayout wgpu_device_create_pipeline_layout(WGpuDevice device, const WGpuPipelineLayoutDescriptor *pipelineLayoutDesc);
-// since WGpuPipelineLayoutDescriptor is a single element struct consisting only of a single array. (if it is expanded in the future, switch to using that signature)
-WGpuPipelineLayout wgpu_device_create_pipeline_layout(WGpuDevice device, const WGpuBindGroupLayout *bindGroupLayouts, int numLayouts);
+// since WGpuPipelineLayoutDescriptor has only two fields. (if it is expanded in the future, switch to using that signature)
+WGpuPipelineLayout wgpu_device_create_pipeline_layout(WGpuDevice device, const WGpuBindGroupLayout *bindGroupLayouts, int numLayouts, int immediateSize _WGPU_DEFAULT_VALUE(0));
 
 // N.b. not currently using signature WGpuBindGroup wgpu_device_create_bind_group(WGpuDevice device, const WGpuBindGroupDescriptor *bindGroupDesc);
 // since WGpuBindGroupDescriptor is a such a light struct. (if it is expanded in the future, switch to using that signature)
@@ -1546,6 +1548,7 @@ WGPU_BOOL wgpu_is_pipeline_layout(WGpuObjectBase object);
 /*
 dictionary GPUPipelineLayoutDescriptor : GPUObjectDescriptorBase {
     required sequence<GPUBindGroupLayout?> bindGroupLayouts;
+    GPUSize32 immediateSize = 0;
 };
 */
 // Currently unused.
@@ -2404,6 +2407,9 @@ interface mixin GPUBindingCommandsMixin {
         [AllowShared] Uint32Array dynamicOffsetsData,
                       GPUSize64 dynamicOffsetsDataStart,
                       GPUSize32 dynamicOffsetsDataLength);
+
+    undefined setImmediates(GPUSize32 rangeOffset, AllowSharedBufferSource data,
+        optional GPUSize64 dataOffset = 0, optional GPUSize64 dataSize);
 };
 */
 typedef WGpuObjectBase WGpuBindingCommandsMixin;
@@ -2411,6 +2417,14 @@ typedef WGpuObjectBase WGpuBindingCommandsMixin;
 WGPU_BOOL wgpu_is_binding_commands_mixin(WGpuObjectBase object);
 // When dynamic offsets are used, they apply in the binding order, i.e. dynamicOffsets[0] applies to the first dynamic @binding, dynamicOffsets[1] the second dynamic @binding (not necessarily at index 1), and so on.
 void wgpu_encoder_set_bind_group(WGpuBindingCommandsMixin encoder, uint32_t index, WGpuBindGroup bindGroup, const uint32_t *dynamicOffsets _WGPU_DEFAULT_VALUE(0), uint32_t numDynamicOffsets _WGPU_DEFAULT_VALUE(0));
+
+// Passes a set of immediate data to the encoder.
+// encoder: The current render pass, compute pass or render bundle encoder.
+// offset: Offset into the GPU-side immediate data area to upload to. In range 0 - maxImmediateSize limit.
+//         Condition offset + size <= maxImmediateSize must hold. Also, offset must be a multiple of 4 bytes.
+// ptr: CPU-side starting address of the data to upload.
+// size: The number of bytes to upload. This must be a multiple of 4 bytes.
+void wgpu_encoder_set_immediates(WGpuBindingCommandsMixin encoder, uint32_t offset, const void *ptr, uint32_t size);
 
 // Some of the functions in GPURenderBundleEncoder, GPURenderPassEncoder and GPUComputePassEncoder are identical in implementation,
 // so group them under a common base class.
@@ -3335,14 +3349,6 @@ void offscreen_canvas_size(OffscreenCanvasId id, int *outWidth NOTNULL, int *out
 void offscreen_canvas_set_size(OffscreenCanvasId id, int width, int height);
 
 #endif
-
-// EXPERIMENTAL: Not part of the ratified spec yet.
-// setImmediateData: https://github.com/gpuweb/gpuweb/blob/main/proposals/immediate-data.md
-// encoder: The current render pass, compute pass or render bundle encoder.
-// offset: Offset into the GPU-side immediate data area to upload to. In range 0 - 64. Condition offset + size <= 64 must hold.
-// ptr: CPU-side starting address of the data to upload.
-// size: The number of bytes to upload. This must be a multiple of 4 bytes.
-void wgpu_encoder_set_immediate_data(WGpuBindingCommandsMixin encoder, uint32_t offset, const void *ptr, uint32_t size);
 
 #ifdef __cplusplus
 } // ~extern "C"

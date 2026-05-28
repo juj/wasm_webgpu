@@ -169,6 +169,7 @@ void ObtainedWebGpuAdapter(WGpuAdapter result, void *userData)
   ADAPTER_LIMIT(maxTextureArrayLayers);
   ADAPTER_LIMIT(maxBindGroups);
   ADAPTER_LIMIT(maxBindGroupsPlusVertexBuffers);
+  ADAPTER_LIMIT(maxImmediateSize);
   ADAPTER_LIMIT(maxDynamicUniformBuffersPerPipelineLayout);
   ADAPTER_LIMIT(maxDynamicStorageBuffersPerPipelineLayout);
   ADAPTER_LIMIT(maxSampledTexturesPerShaderStage);

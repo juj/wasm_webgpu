@@ -308,6 +308,7 @@ const stringArrays = {
     'maxTextureArrayLayers',
     'maxBindGroups',
     'maxBindGroupsPlusVertexBuffers',
+    'maxImmediateSize',
     'maxBindingsPerBindGroup',
     'maxDynamicUniformBuffersPerPipelineLayout',
     'maxDynamicStorageBuffersPerPipelineLayout',

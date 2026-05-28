@@ -24,6 +24,7 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
   TEST32(limits.maxTextureArrayLayers, 256);
   TEST32(limits.maxBindGroups, 4);
   TEST32(limits.maxBindGroupsPlusVertexBuffers, 24);
+  TEST32(limits.maxImmediateSize, 64);
   TEST32(limits.maxBindingsPerBindGroup, 1000);
   TEST32(limits.maxDynamicUniformBuffersPerPipelineLayout, 8);
   TEST32(limits.maxDynamicStorageBuffersPerPipelineLayout, 4);
