@@ -229,13 +229,14 @@ typedef struct WGpuSupportedLimits
   uint32_t maxComputeWorkgroupSizeY; // required >= 256
   uint32_t maxComputeWorkgroupSizeZ; // required >= 64
   uint32_t maxComputeWorkgroupsPerDimension; // required >= 65535
+  uint32_t padding;
 } WGpuSupportedLimits;
 
-VERIFY_STRUCT_SIZE(WGpuSupportedLimits, 38*sizeof(uint32_t));
+VERIFY_STRUCT_SIZE(WGpuSupportedLimits, 40*sizeof(uint32_t));
 
 // Assertion in lib_webgpu.js function $wgpuReadSupportedLimits() must be kept in sync:
 #define _WGPU_NUM_64BIT_LIMIT_FIELDS 3
-#define _WGPU_NUM_32BIT_LIMIT_FIELDS 32
+#define _WGPU_NUM_32BIT_LIMIT_FIELDS 33 + 1 // +1 for padding field
 VERIFY_STRUCT_SIZE(WGpuSupportedLimits, (_WGPU_NUM_64BIT_LIMIT_FIELDS*2+_WGPU_NUM_32BIT_LIMIT_FIELDS)*sizeof(uint32_t));
 
 /*
