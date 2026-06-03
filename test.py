@@ -43,7 +43,7 @@ if len(options.tests_to_run) > 0:
 
 output_file = os.path.join(test_dir, 'test.html')
 
-cmd = ['em++.bat', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp11.cpp' if options.std_cpp11 else 'lib/lib_webgpu_cpp20.cpp',
+cmd = ['em++', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp11.cpp' if options.std_cpp11 else 'lib/lib_webgpu_cpp20.cpp',
        '-o', output_file, '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun', '-profiling-funcs', '-Wno-experimental']
 
 if options.wasm64 and options.wasm4gb:
@@ -89,10 +89,13 @@ for m in modes:
     if len(flags) > 0:
       for f in flags:
         run += f.split(' ')
+    if 'firefox' in options.browser:
+      run += ['-sMIN_FIREFOX_VERSION=152']
+
     print(' '.join(run))
     try:
       subprocess.check_call(run)
-      browser_cmd = ['emrun.bat', '--safe-firefox-profile']
+      browser_cmd = ['emrun', '--safe-firefox-profile']
       if options.browser: browser_cmd += ['--browser', options.browser]
       browser_cmd += [output_file]
       print(str(browser_cmd))
