@@ -83,7 +83,7 @@ endif()
 include_directories("${LIB_DIR}")
 include_directories("${COMMON_DIR}")
 
-add_library(webgpu STATIC ${LIB_DIR}/lib_webgpu.cpp ${LIB_DIR}/lib_webgpu_cpp20.cpp)
+add_library(webgpu STATIC ${LIB_DIR}/lib_webgpu.cpp)
 
 add_executable(clear_screen clear_screen/clear_screen.c)
 target_link_libraries(clear_screen webgpu)

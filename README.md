@@ -10,11 +10,10 @@ To utilize the library in your own application, copy the contents of the `lib/` 
  - [lib/lib_webgpu.js](lib/lib_webgpu.js)
  - [lib/lib_webgpu.cpp](lib/lib_webgpu.cpp)
  - [lib/lib_webgpu_fwd.h](lib/lib_webgpu_fwd.h)
- - [lib/lib_webgpu_cpp20.cpp](lib/lib_webgpu_cpp20.cpp) or [lib/lib_webgpu_cpp11.cpp](lib/lib_webgpu_cpp11.cpp), depending on if your compiler has C++20 or C++11.
 
 <img align=right src='./screenshots/emscripten-logo.svg' width=30%>
 
-Then `#include "lib_webgpu.h"` to access the API, compile in `lib_webpgu.cpp` and `lib_webgpu_cpp20.cpp` with the rest of your project files, and finally link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](samples/CMakeLists.txt) for example usage.
+Then `#include "lib_webgpu.h"` to access the API, compile in `lib_webpgu.cpp` with the rest of your project files (using `-std=c++20`), and finally link with `--js-library /absolute/path/to/lib_webgpu.js` on the Emscripten command line to include the code. See the provided [CMakeLists.txt](samples/CMakeLists.txt) for example usage.
 
 For your convenience, a forward declaration header is also provided, and can be included with `#include "lib_webgpu_fwd.h"`.
 

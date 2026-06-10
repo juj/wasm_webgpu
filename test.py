@@ -12,8 +12,6 @@ parser.add_argument('--wasm64', action='store_true',
                     help='If true, runs test suite in 64-bit Wasm mode. This implies -sWASM_BIGINT mode.')
 parser.add_argument('--sanitize', action='store_true',
                     help='If true, runs with LLVM/Clang sanitizers enabled.')
-parser.add_argument('--std_cpp11', action='store_true',
-                    help='If true, runs test suite in -std=c++11 mode.')
 parser.add_argument('tests_to_run',nargs='*')
 
 options = parser.parse_args(sys.argv[1:])
@@ -43,8 +41,7 @@ if len(options.tests_to_run) > 0:
 
 output_file = os.path.join(test_dir, 'test.html')
 
-cmd = ['em++', 'lib/lib_webgpu.cpp', 'lib/lib_webgpu_cpp11.cpp' if options.std_cpp11 else 'lib/lib_webgpu_cpp20.cpp',
-       '-o', output_file, '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun', '-profiling-funcs', '-Wno-experimental']
+cmd = ['em++', 'lib/lib_webgpu.cpp', '-o', output_file, '-Ilib/', '--js-library', 'lib/lib_webgpu.js', '--emrun', '-profiling-funcs', '-Wno-experimental']
 
 if options.wasm64 and options.wasm4gb:
   raise Exception('Testing --wasm64 and --wasm4gb are mutually exclusive!')
