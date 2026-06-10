@@ -1,11 +1,20 @@
 #include "lib_webgpu.h"
 
-// Default initializers for WebGPU descriptors, using C++20 standard.
-// Only add either this file or lib_webgpu_cpp11.cpp to your project, but not both.
+// Default initializers for WebGPU descriptors.
 
-#ifdef __cplusplus
-extern "C" {
+#if __cplusplus < 202002L
+#warning This file requires being compiled with C++20 enabled (-std=c++20)
 #endif
+
+// The initializers below omit fields that are intended to default-initialize to zero.
+// Ignore Clang warnings about those.
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-field-initializers"
+#pragma clang diagnostic ignored "-Wmissing-designated-field-initializers"
+#endif
+
+extern "C" {
 
 const WGpuRequestAdapterOptions WGPU_REQUEST_ADAPTER_OPTIONS_DEFAULT_INITIALIZER = {
 };
@@ -88,7 +97,7 @@ const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACH
   .view = 0,
 
   .depthLoadOp = WGPU_LOAD_OP_LOAD,
-  .depthClearValue = WGPU_NAN,
+  .depthClearValue = (float)WGPU_NAN,
   .depthStoreOp = WGPU_STORE_OP_UNDEFINED,
   .depthReadOnly = false,
 
@@ -140,13 +149,13 @@ const WGpuRenderPassDescriptor WGPU_RENDER_PASS_DESCRIPTOR_DEFAULT_INITIALIZER =
 };
 
 const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {
-  .blend = (WGpuBlendState) {
-    .color = (WGpuBlendComponent) {
+  .blend = WGpuBlendState{
+    .color = WGpuBlendComponent {
       .operation = WGPU_BLEND_OPERATION_DISABLED, // Color blending is disabled by default. Set to WGPU_BLEND_OPERATION_ADD to enable.
       .srcFactor = WGPU_BLEND_FACTOR_SRC,
       .dstFactor = WGPU_BLEND_FACTOR_ONE_MINUS_SRC
     },
-    .alpha = (WGpuBlendComponent) {
+    .alpha = WGpuBlendComponent {
       .operation = WGPU_BLEND_OPERATION_ADD, // If blending is enabled, default to copying src alpha. (no blend in alpha value)
       .srcFactor = WGPU_BLEND_FACTOR_ONE,
       .dstFactor = WGPU_BLEND_FACTOR_ZERO
@@ -156,29 +165,29 @@ const WGpuColorTargetState WGPU_COLOR_TARGET_STATE_DEFAULT_INITIALIZER = {
 };
 
 const WGpuRenderPipelineDescriptor WGPU_RENDER_PIPELINE_DESCRIPTOR_DEFAULT_INITIALIZER = {
-  .primitive = (WGpuPrimitiveState) {
+  .primitive = WGpuPrimitiveState {
     .topology = WGPU_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
     .frontFace = WGPU_FRONT_FACE_CCW,
     .cullMode = WGPU_CULL_MODE_NONE
   },
-  .depthStencil = (WGpuDepthStencilState) {
+  .depthStencil = WGpuDepthStencilState {
     .depthCompare = WGPU_COMPARE_FUNCTION_INVALID,
     .stencilReadMask = 0xFFFFFFFFu,
     .stencilWriteMask = 0xFFFFFFFFu,
-    .stencilFront = (WGpuStencilFaceState) {
+    .stencilFront = WGpuStencilFaceState {
       .compare = WGPU_COMPARE_FUNCTION_ALWAYS,
       .failOp = WGPU_STENCIL_OPERATION_KEEP,
       .depthFailOp = WGPU_STENCIL_OPERATION_KEEP,
       .passOp = WGPU_STENCIL_OPERATION_KEEP
     },
-    .stencilBack = (WGpuStencilFaceState) {
+    .stencilBack = WGpuStencilFaceState {
       .compare = WGPU_COMPARE_FUNCTION_ALWAYS,
       .failOp = WGPU_STENCIL_OPERATION_KEEP,
       .depthFailOp = WGPU_STENCIL_OPERATION_KEEP,
       .passOp = WGPU_STENCIL_OPERATION_KEEP
     },
   },
-  .multisample = (WGpuMultisampleState) {
+  .multisample = WGpuMultisampleState {
     .count = 1,
     .mask = 0xFFFFFFFFu,
   },
@@ -193,7 +202,7 @@ extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEF
   .depthSlice = -1,
   .storeOp = WGPU_STORE_OP_STORE,
   .loadOp = WGPU_LOAD_OP_LOAD,
-  .clearValue = (WGpuColor) {
+  .clearValue = WGpuColor {
     .r = 0.0,
     .g = 0.0,
     .b = 0.0,
@@ -202,7 +211,7 @@ extern const WGpuRenderPassColorAttachment WGPU_RENDER_PASS_COLOR_ATTACHMENT_DEF
 };
 
 extern const WGpuCopyExternalImageSourceInfo WGPU_COPY_EXTERNAL_IMAGE_SOURCE_INFO_DEFAULT_INITIALIZER = {
-  .origin = (WGpuOrigin2D) {
+  .origin = WGpuOrigin2D {
     .x = 0,
     .y = 0
   }
@@ -210,7 +219,7 @@ extern const WGpuCopyExternalImageSourceInfo WGPU_COPY_EXTERNAL_IMAGE_SOURCE_INF
 
 extern const WGpuTexelCopyTextureInfo WGPU_TEXEL_COPY_TEXTURE_INFO_DEFAULT_INITIALIZER = {
   .mipLevel = 0,
-  .origin = (WGpuOrigin3D) {
+  .origin = WGpuOrigin3D {
     .x = 0,
     .y = 0,
     .z = 0
@@ -220,7 +229,7 @@ extern const WGpuTexelCopyTextureInfo WGPU_TEXEL_COPY_TEXTURE_INFO_DEFAULT_INITI
 
 extern const WGpuCopyExternalImageDestInfo WGPU_COPY_EXTERNAL_IMAGE_DEST_INFO_DEFAULT_INITIALIZER = {
   .mipLevel = 0,
-  .origin = (WGpuOrigin3D) {
+  .origin = WGpuOrigin3D {
     .x = 0,
     .y = 0,
     .z = 0
@@ -230,6 +239,8 @@ extern const WGpuCopyExternalImageDestInfo WGPU_COPY_EXTERNAL_IMAGE_DEST_INFO_DE
   .premultipliedAlpha = WGPU_FALSE
 };
 
-#ifdef __cplusplus
 } // ~extern "C"
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
 #endif
