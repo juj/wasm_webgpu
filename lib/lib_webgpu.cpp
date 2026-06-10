@@ -1,10 +1,6 @@
 #include "lib_webgpu.h"
 #include <assert.h>
 
-#if __cplusplus < 202002L
-#warning This file requires being compiled with C++20 enabled (-std=c++20)
-#endif
-
 // The initializers below omit fields that are intended to default-initialize to zero.
 // Ignore Clang warnings about those.
 #if defined(__clang__)
