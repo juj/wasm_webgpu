@@ -1601,6 +1601,7 @@ typedef struct _WGPU_ALIGN_TO_64BITS WGpuShaderModuleDescriptor
   int numHints;
   uint32_t unused_padding;
 } WGpuShaderModuleDescriptor;
+extern const WGpuShaderModuleDescriptor WGPU_SHADER_MODULE_DESCRIPTOR_DEFAULT_INITIALIZER;
 
 /*
 enum GPUCompilationMessageType {
