@@ -2613,16 +2613,19 @@ typedef struct WGpuRenderPassDepthStencilAttachment
 {
   WGpuObjectBase view; // WGpuTexture, or WGpuTextureView
 
-  WGPU_LOAD_OP depthLoadOp; // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR
-  float depthClearValue; // Must be between 0.0 and 1.0, inclusive.
+  // If view.format has a depth aspect and depthReadOnly == false, then depthLoadOp must be either WGPU_LOAD_OP_LOAD or WGPU_LOAD_OP_CLEAR, and depthStoreOp either WGPU_STORE_OP_STORE or WGPU_STORE_OP_DISCARD.
+  // Otherwise depthLoadOp and depthStoreOp must both be WGPU_LOAD_OP_UNDEFINED.
+  WGPU_LOAD_OP depthLoadOp; // Defaults to WGPU_LOAD_OP_UNDEFINED.
+  float depthClearValue; // Must be between 0.0 and 1.0, inclusive. Defaults to WGPU_NAN.
 
-  WGPU_STORE_OP depthStoreOp;
-  WGPU_BOOL depthReadOnly;
+  WGPU_STORE_OP depthStoreOp; // Defaults to WGPU_STORE_OP_UNDEFINED.
+  WGPU_BOOL depthReadOnly; // Defaults to false.
 
-  WGPU_LOAD_OP stencilLoadOp;  // Either WGPU_LOAD_OP_LOAD (== default, 0) or WGPU_LOAD_OP_CLEAR
-  uint32_t stencilClearValue;
-  WGPU_STORE_OP stencilStoreOp;
-  WGPU_BOOL stencilReadOnly;
+  // If view.format has a stencil aspect and stencilReadOnly == false, then stencilLoadOp must be either WGPU_LOAD_OP_LOAD or WGPU_LOAD_OP_CLEAR, and stencilStoreOp either WGPU_STORE_OP_STORE or WGPU_STORE_OP_DISCARD.
+  WGPU_LOAD_OP stencilLoadOp;  // Defaults to WGPU_LOAD_OP_UNDEFINED.
+  uint32_t stencilClearValue; // Defaults to 0.
+  WGPU_STORE_OP stencilStoreOp; // Defaults to WGPU_STORE_OP_UNDEFINED.
+  WGPU_BOOL stencilReadOnly; // Defaults to false.
 } WGpuRenderPassDepthStencilAttachment;
 extern const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER;
 

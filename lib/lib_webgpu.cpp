@@ -340,12 +340,12 @@ const WGpuComputePassDescriptor WGPU_COMPUTE_PASS_DESCRIPTOR_DEFAULT_INITIALIZER
 const WGpuRenderPassDepthStencilAttachment WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_DEFAULT_INITIALIZER = {
   .view = 0,
 
-  .depthLoadOp = WGPU_LOAD_OP_LOAD,
+  .depthLoadOp = WGPU_LOAD_OP_UNDEFINED,
   .depthClearValue = (float)WGPU_NAN,
   .depthStoreOp = WGPU_STORE_OP_UNDEFINED,
   .depthReadOnly = false,
 
-  .stencilLoadOp = WGPU_LOAD_OP_LOAD,
+  .stencilLoadOp = WGPU_LOAD_OP_UNDEFINED,
   .stencilClearValue = 0,
   .stencilStoreOp = WGPU_STORE_OP_UNDEFINED,
   .stencilReadOnly = false
