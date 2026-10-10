@@ -2096,6 +2096,7 @@ enum GPUVertexFormat {
     "sint32x4",
     "unorm10-10-10-2",
     "unorm8x4-bgra",
+    "snorm10-10-10-2",
 };
 */
 // The numbering on these types continues at the end of WGPU_TEXTURE_FORMAT
@@ -2144,6 +2145,7 @@ typedef int WGPU_VERTEX_FORMAT;
 #define WGPU_VERTEX_FORMAT_SINT32X4        140
 #define WGPU_VERTEX_FORMAT_UNORM10_10_10_2 141
 #define WGPU_VERTEX_FORMAT_UNORM8X4_BGRA   142
+#define WGPU_VERTEX_FORMAT_SNORM10_10_10_2 143
 
 #if __cplusplus >= 201103L
 static_assert(WGPU_VERTEX_FORMAT_FIRST_VALUE == WGPU_TEXTURE_FORMAT_LAST_VALUE + 1, "WGPU_VERTEX_FORMAT enums must have values after WGPU_TEXTURE_FORMAT values!");

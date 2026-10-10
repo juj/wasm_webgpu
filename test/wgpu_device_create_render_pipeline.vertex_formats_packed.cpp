@@ -1,5 +1,5 @@
 // Tests creating render pipelines using float16 and packed vertex attribute formats
-// (FLOAT16X2, FLOAT16X4, UNORM10_10_10_2, UNORM8X4_BGRA) to exercise
+// (FLOAT16X2, FLOAT16X4, UNORM10_10_10_2, UNORM8X4_BGRA, SNORM10_10_10_2) to exercise
 // GPUTextureAndVertexFormats indices 127, 128, 141, 142 in the marshalling layer.
 // These are the highest-index vertex format entries in the shared table.
 // flags: -sEXIT_RUNTIME=0
@@ -19,6 +19,7 @@ static const FmtCase kCases[] = {
   { WGPU_VERTEX_FORMAT_FLOAT16X4,      4, "float16x4"       },  // index 128
   { WGPU_VERTEX_FORMAT_UNORM10_10_10_2,4, "unorm10-10-10-2" },  // index 141
   { WGPU_VERTEX_FORMAT_UNORM8X4_BGRA,  4, "unorm8x4-bgra"   },  // index 142
+  { WGPU_VERTEX_FORMAT_SNORM10_10_10_2,4, "snorm10-10-10-2" },  // index 143
 };
 
 static void onError(WGpuDevice d, WGPU_ERROR_TYPE t, const char *m, void *u)
