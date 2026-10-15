@@ -269,6 +269,9 @@ enum GPUFeatureName {
     "texture-formats-tier2",
     "primitive-index",
     "texture-component-swizzle",
+    "subgroup-size-control",
+    "texture-compression-unaligned",
+    "atomic-vec2u-min-max",
 };
 */
 typedef int WGPU_FEATURES_BITFIELD;
@@ -294,9 +297,13 @@ typedef int WGPU_FEATURES_BITFIELD;
 #define WGPU_FEATURE_TEXTURE_FORMATS_TIER2             0x80000
 #define WGPU_FEATURE_PRIMITIVE_INDEX                  0x100000
 #define WGPU_FEATURE_TEXTURE_COMPONENT_SWIZZLE        0x200000
+#define WGPU_FEATURE_SUBGROUP_SIZE_CONTROL            0x400000
+#define WGPU_FEATURE_TEXTURE_COMPRESSION_UNALIGNED    0x800000
+#define WGPU_FEATURE_ATOMIC_VEC2U_MIN_MAX            0x1000000
 
-#define WGPU_FEATURE_FIRST_UNUSED_BIT                 0x400000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
+#define WGPU_FEATURE_FIRST_UNUSED_BIT                0x2000000 // Allows examining the number of actually used bits in a WGPU_FEATURES_BITFIELD value.
 
+#define WGPU_FEATURE_COUNT 25 // The total number of features that are available
 /*
 // WebGPU reuses the color space enum from the HTML Canvas specification:
    https://html.spec.whatwg.org/multipage/canvas.html#predefinedcolorspace

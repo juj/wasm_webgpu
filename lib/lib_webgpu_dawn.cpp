@@ -123,8 +123,14 @@ const WGPUFeatureName WGPU_FEATURES_BITFIELD_to_Dawn[] = {
   WGPUFeatureName_TextureFormatsTier2,
   WGPUFeatureName_PrimitiveIndex,
   WGPUFeatureName_TextureComponentSwizzle,
+  WGPUFeatureName_SubgroupSizeControl,
+  WGPUFeatureName_TextureCompressionUnaligned,
+  WGPUFeatureName_AtomicVec2uMinMax,
 };
-const int _wgpu_num_features = 22;
+
+#if __cplusplus >= 201103L
+static_assert(sizeof(WGPU_FEATURES_BITFIELD_to_Dawn)/sizeof(WGPU_FEATURES_BITFIELD_to_Dawn[0]) == WGPU_FEATURE_COUNT, "WGPU_FEATURES_BITFIELD_to_Dawn enum size does not match with WGPU_FEATURE_COUNT. Out of date?");
+#endif
 
 const WGPUPowerPreference WGPU_POWER_PREFERENCE_to_Dawn[] = {
   WGPUPowerPreference_Undefined,
@@ -1045,7 +1051,7 @@ WGPU_FEATURES_BITFIELD wgpu_adapter_or_device_get_features(WGpuAdapter adapterOr
   bool isDevice = obj->type == kWebGPUDevice;
 
   WGPU_FEATURES_BITFIELD featuresBitMask = 0;
-  for (int i = 0, id = 1; i < _wgpu_num_features; ++i) {
+  for (int i = 0, id = 1; i < WGPU_FEATURE_COUNT; ++i) {
     WGPUFeatureName feature = WGPU_FEATURES_BITFIELD_to_Dawn[i];
     if (isDevice && wgpuDeviceHasFeature((WGPUDevice)obj->dawnObject, feature))
       featuresBitMask |= id;
@@ -1061,7 +1067,7 @@ WGPU_BOOL wgpu_adapter_or_device_supports_feature(WGpuAdapter adapterOrDevice, W
   assert(obj && (obj->type == kWebGPUDevice || obj->type == kWebGPUAdapter));
 
   int fi = 31 - clz32(feature);
-  if (fi >= _wgpu_num_features)
+  if (fi >= WGPU_FEATURE_COUNT)
     return false;
   WGPUFeatureName _feature = WGPU_FEATURES_BITFIELD_to_Dawn[fi];
   if (obj->type == kWebGPUDevice)
@@ -1139,7 +1145,7 @@ WGpuDevice wgpu_adapter_request_device_sync(WGpuAdapter adapter, const WGpuDevic
   assert(descriptor);
 
   std::vector<WGPUFeatureName> features;
-  for (int i = 0, id = 1; i < _wgpu_num_features; ++i, id *= 2) {
+  for (int i = 0, id = 1; i < WGPU_FEATURE_COUNT; ++i, id *= 2) {
     if (descriptor->requiredFeatures & id)
       features.push_back(WGPU_FEATURES_BITFIELD_to_Dawn[i]);
   }

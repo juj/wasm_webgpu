@@ -35,6 +35,9 @@ void ObtainedWebGpuAdapter(WGpuAdapter adapter, void *userData)
   if ((features & WGPU_FEATURE_TEXTURE_FORMATS_TIER2             ) != 0) printf("WGPU_FEATURE_TEXTURE_FORMATS_TIER2             \n");
   if ((features & WGPU_FEATURE_PRIMITIVE_INDEX                   ) != 0) printf("WGPU_FEATURE_PRIMITIVE_INDEX                   \n");
   if ((features & WGPU_FEATURE_TEXTURE_COMPONENT_SWIZZLE         ) != 0) printf("WGPU_FEATURE_TEXTURE_COMPONENT_SWIZZLE         \n");
+  if ((features & WGPU_FEATURE_SUBGROUP_SIZE_CONTROL             ) != 0) printf("WGPU_FEATURE_SUBGROUP_SIZE_CONTROL             \n");
+  if ((features & WGPU_FEATURE_TEXTURE_COMPRESSION_UNALIGNED     ) != 0) printf("WGPU_FEATURE_TEXTURE_COMPRESSION_UNALIGNED     \n");
+  if ((features & WGPU_FEATURE_ATOMIC_VEC2U_MIN_MAX              ) != 0) printf("WGPU_FEATURE_ATOMIC_VEC2U_MIN_MAX              \n");
 
   EM_ASM(window.close());
 }

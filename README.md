@@ -27,7 +27,7 @@ Although this implementation has at the moment gotten outdated, as it is not the
 
 ## 🗓 Implementation Status
 
-The repository was last updated to match the API IDL of the WebGPU specification as of 🗓 **15th of January 2026**.
+The repository was last updated to match the API IDL of the WebGPU specification as of 🗓 **16th of October 2026**.
 
 ## 🏃‍ Quick Getting Started
 
