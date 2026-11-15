@@ -143,7 +143,6 @@ WGPU_BOOL wgpu_vertex_format_is_unorm(WGPU_VERTEX_FORMAT format)
 {
   return format == WGPU_VERTEX_FORMAT_UNORM10_10_10_2
       || format == WGPU_VERTEX_FORMAT_UNORM8X4_BGRA
-      || format == WGPU_VERTEX_FORMAT_SNORM10_10_10_2
       || format == WGPU_VERTEX_FORMAT_UNORM16
       || format == WGPU_VERTEX_FORMAT_UNORM16X2
       || format == WGPU_VERTEX_FORMAT_UNORM16X4
