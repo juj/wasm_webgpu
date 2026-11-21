@@ -2922,7 +2922,7 @@ partial interface GPUDevice {
 };
 */
 // message: The string message of the device loss event. The string is valid only for the duration of the callback.
-typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message NOTNULL, void *userData);
+typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message, void *userData);
 void wgpu_device_set_lost_callback(WGpuDevice device, WGpuDeviceLostCallback callback, void *userData);
 
 // Specifies the type of an error that occurred.
