@@ -2921,6 +2921,7 @@ partial interface GPUDevice {
     readonly attribute Promise<GPUDeviceLostInfo> lost;
 };
 */
+// message: The string message of the device loss event. The string is valid only for the duration of the callback.
 typedef void (*WGpuDeviceLostCallback)(WGpuDevice device, WGPU_DEVICE_LOST_REASON deviceLostReason, const char *message NOTNULL, void *userData);
 void wgpu_device_set_lost_callback(WGpuDevice device, WGpuDeviceLostCallback callback, void *userData);
 
@@ -2976,7 +2977,7 @@ void wgpu_device_push_error_scope(WGpuDevice device, WGPU_ERROR_FILTER filter);
 
 // Callback type for popped error scopes.
 // errorType: The type of error that occurred, or WGPU_ERROR_FILTER_NO_ERROR.
-// errorMessage: Points to string message of the error, or null pointer if no error occurred.
+// errorMessage: the error string, or null if no error occurred. The string is valid only for the duration of the callback.
 typedef void (*WGpuDeviceErrorCallback)(WGpuDevice device, WGPU_ERROR_TYPE errorType, const char *errorMessage, void *userData);
 void wgpu_device_pop_error_scope_async(WGpuDevice device, WGpuDeviceErrorCallback callback, void *userData);
 
