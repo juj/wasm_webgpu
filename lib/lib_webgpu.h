@@ -372,6 +372,7 @@ WGPU_BOOL navigator_gpu_available(void);
 // This function can be used to remove access to WebGPU API on the current JS page. This can be useful for debugging or sandboxing purposes. Note that
 // if the page has already initialized a WebGPU context, then the context is not affected. Amounts to a 'delete navigator.gpu' operation.
 // After calling this function navigator_gpu_available() will return false.
+// This function only works in the calling JS Worker/main thread context.
 void navigator_delete_webgpu_api_access(void);
 
 // Returns the number of currently asyncified synchronous operations that are pending.
