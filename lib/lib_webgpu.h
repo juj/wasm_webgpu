@@ -395,10 +395,10 @@ typedef void (*WGpuRequestAdapterCallback)(WGpuAdapter adapter, void *userData);
 // Note: If the current browser is not aware of the WebGPU API, then this function will by design abort execution
 // (fail on assert, and throw a JS exception in release builds). To gracefully detect whether the current browser is new enough to be WebGPU API aware,
 // call the function navigator_gpu_available() to check.
-WGPU_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions *options NOTNULL, WGpuRequestAdapterCallback adapterCallback, void *userData);
+WGPU_BOOL navigator_gpu_request_adapter_async(const WGpuRequestAdapterOptions *options, WGpuRequestAdapterCallback adapterCallback, void *userData);
 // Requests a WebGPU adapter synchronously. Requires building with -sJSPI=1 linker flag to work.
 // options: may be null to request an adapter without specific options.
-WGpuAdapter navigator_gpu_request_adapter_sync(const WGpuRequestAdapterOptions *options NOTNULL);
+WGpuAdapter navigator_gpu_request_adapter_sync(const WGpuRequestAdapterOptions *options);
 
 // Like above, but tiny code size without options.
 void navigator_gpu_request_adapter_async_simple(WGpuRequestAdapterCallback adapterCallback);
