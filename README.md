@@ -111,6 +111,7 @@ When building with Emscripten linker flag `-sJSPI` (requires Emscripten 3.1.59 o
 - `navigator_gpu_request_adapter_sync` and `navigator_gpu_request_adapter_sync_simple`: Synchronously request a GPUAdapter.
 - `wgpu_adapter_request_device_sync` and `wgpu_adapter_request_device_sync_simple`: Synchronously request a GPUDevice.
 - `wgpu_buffer_map_sync`: Synchronously map a GPUBuffer.
+- `wgpu_queue_on_submitted_work_done_sync`: Synchronously wait until all the work submitted to a GPUQueue has finished.
 - `wgpu_present_all_rendering_and_wait_for_next_animation_frame`: Presents current rendered frame, runs browser event loop, and waits until next animation frame. See the sample [clear_screen/clear_screen_sync.c](samples/clear_screen/clear_screen_sync.c) for an example.
 
 These functions enable a synchronous variant of the `_async` functions offered in the WebGPU specification. These can be useful for prototyping and test suites etc., though note that there are some concerns over the runtime performance of JSPI, so be very mindful about profiling the impact on performance when using JSPI.

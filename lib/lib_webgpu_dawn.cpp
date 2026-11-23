@@ -2577,6 +2577,19 @@ void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmi
   }, data);
 }
 
+void wgpu_queue_on_submitted_work_done_sync(WGpuQueue queue) {
+  assert(wgpu_is_queue(queue));
+
+  bool done = false;
+  wgpuQueueOnSubmittedWorkDone(_wgpu_get_dawn<WGPUQueue>(queue), [](WGPUQueueWorkDoneStatus status, void* userdata) {
+    *(bool*)userdata = true;
+  }, &done);
+
+  while (!done) {
+    wgpuInstanceProcessEvents(GetDawnInstance().Get());
+  }
+}
+
 void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, const void* data, double_int53_t size) {
   assert(wgpu_is_queue(queue));
   assert(wgpu_is_buffer(buffer));

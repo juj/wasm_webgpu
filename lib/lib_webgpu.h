@@ -2786,6 +2786,10 @@ void wgpu_queue_submit_multiple_and_destroy(WGpuQueue queue, const WGpuCommandBu
 typedef void (*WGpuOnSubmittedWorkDoneCallback)(WGpuQueue queue, void *userData);
 void wgpu_queue_set_on_submitted_work_done_callback(WGpuQueue queue, WGpuOnSubmittedWorkDoneCallback callback, void *userData);
 
+// Waits synchronously until the GPU has finished processing all the work that has been submitted to the given queue so far.
+// Requires building with -sJSPI=1 linker flag to work.
+void wgpu_queue_on_submitted_work_done_sync(WGpuQueue queue);
+
 // Uploads data to the given GPUBuffer. Data is copied from memory in byte addresses data[0], data[1], ... data[size-1], and uploaded
 // to the GPU buffer at byte offset bufferOffset, bufferOffset+1, ..., bufferOffset+size-1.
 void wgpu_queue_write_buffer(WGpuQueue queue, WGpuBuffer buffer, double_int53_t bufferOffset, const void *data NOTNULL, double_int53_t size);
